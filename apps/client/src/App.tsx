@@ -17,7 +17,6 @@ function App() {
           <Route key={'admin'} path='/admin' element={<Admin />}>
           </Route>
           <Route key={'customer'} path='/' element={<Customer />}>
-
           </Route>
         </Routes>
       </BrowserRouter>
