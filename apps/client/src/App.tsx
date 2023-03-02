@@ -1,28 +1,27 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { useState } from 'react'
+import styled from 'styled-components'
+import Admin from './pages/admin/Admin.jsx'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Customer from './pages/customer/Customer.js';
+
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+`
 
 function App() {
-  const [greeting, setGreeting] = useState<String>("");
-
-  useEffect(() => {
-    fetch("/api")
-      .then((res) => res.text())
-      .then(setGreeting);
-  }, []);
-
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>{greeting}</h1>
-    </div>
+    <Container>
+      <BrowserRouter>
+        <Routes>
+          <Route key={'admin'} path='/admin' element={<Admin />}>
+          </Route>
+          <Route key={'customer'} path='/' element={<Customer />}>
+
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </Container >
   )
 }
 
