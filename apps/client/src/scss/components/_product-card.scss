@@ -1,18 +1,19 @@
 .product-card {
     text-align: center;
     margin-bottom: 30px;
+    width: 300px;
+    height: 400px;
 
     &__image {
         padding-top: 100%;
         position: relative;
         overflow: hidden;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
 
         img {
             position: absolute;
             top: 0;
             left: 50%;
-            transform: translateX(-50%);
             height: 100%;
 
             &:nth-child(1) {

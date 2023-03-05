@@ -9,11 +9,11 @@ import FooterCustom from './components/Footer'
 const Customer = () => {
   return (
     <Layout>
-      <Header>
+      <Header id='header' style={{ height: 'var(--header-height)' }}>
         <HeaderCustom />
       </Header>
       <Content>
-        <Home></Home>
+        <Outlet />
       </Content>
       <Footer style={{ padding: 0, margin: 0 }}>
         <FooterCustom />

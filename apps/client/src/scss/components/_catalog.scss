@@ -1,12 +1,14 @@
 .catalog {
     @include flex(flex-start, flex-start);
+    padding: 20px 0 20px 20px;
 
     @include tablet {
         flex-direction: column;
     }
 
     &__filter {
-        width: 20%;
+        flex: 2;
+        width: 100%;
 
         @include tablet {
             width: max-content;
@@ -51,6 +53,7 @@
 
         &__close {
             display: none;
+
             @include tablet {
                 display: block;
                 font-size: 2rem;
@@ -60,7 +63,7 @@
     }
 
     &__content {
-        flex-grow: 1;
+        flex: 8;
 
         @include tablet {
             width: 100%;
