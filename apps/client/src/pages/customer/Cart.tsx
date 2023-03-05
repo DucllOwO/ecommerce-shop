@@ -1,30 +1,18 @@
+import { Button } from 'antd'
 import React, { useEffect, useState } from 'react'
 
-import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-
-import Helmet from '../components/Helmet'
-import CartItem from '../components/CartItem'
-import Button from '../components/Button'
-
-import productData from '../assets/fake-data/products'
-import numberWithCommas from '../utils/numberWithCommas'
+import CartItem, { CartItemType } from './components/CartItem'
+import Helmet from './components/Helmet'
 
 const Cart = () => {
 
-    const cartItems = useSelector((state) => state.cartItems.value)
 
-    const [cartProducts, setCartProducts] = useState(productData.getCartItemsInfo(cartItems))
+    const [cartProducts, setCartProducts] = useState<Array<CartItemType>>([])
 
     const [totalProducts, setTotalProducts] = useState(0)
 
     const [totalPrice, setTotalPrice] = useState(0)
-
-    useEffect(() => {
-        setCartProducts(productData.getCartItemsInfo(cartItems))
-        setTotalPrice(cartItems.reduce((total, item) => total + (Number(item.quantity) * Number(item.price)), 0))
-        setTotalProducts(cartItems.reduce((total, item) => total + Number(item.quantity), 0))
-    }, [cartItems])
 
     return (
         <Helmet title="Giỏ hàng">
@@ -35,26 +23,26 @@ const Cart = () => {
                             Bạn đang có {totalProducts} sản phẩm trong giỏ hàng
                         </p>
                         <div className="cart__info__txt__price">
-                            <span>Thành tiền:</span> <span>{numberWithCommas(Number(totalPrice))}</span>
+                            <span>Thành tiền:</span> <span>{100000000}</span>
                         </div>
                     </div>
                     <div className="cart__info__btn">
-                        <Button size="block">
+                        <Button>
                             Đặt hàng
                         </Button>
                         <Link to="/catalog">
-                            <Button size="block">
+                            <Button>
                                 Tiếp tục mua hàng
                             </Button>
                         </Link>
-                        
+
                     </div>
                 </div>
                 <div className="cart__list">
                     {
-                        cartProducts.map((item, index) => (
-                            <CartItem item={item} key={index}/>
-                        ))
+                        cartProducts ? cartProducts.map((item: CartItemType, index) => (
+                            <CartItem key={index} {...item} />
+                        )) : null
                     }
                 </div>
             </div>
