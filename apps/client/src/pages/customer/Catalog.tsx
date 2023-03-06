@@ -1,10 +1,71 @@
 import { Button, List, Spin } from 'antd'
+import { DataNode } from 'antd/es/tree'
 import { useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import productData from '../../assets/fake-data/products'
 import FilterTree from './components/FilterTree'
 import Helmet from './components/Helmet'
 import ProductCard from './components/ProductCard'
+
+const treeColorData: DataNode[] = [
+    {
+        title: 'Màu sắc',
+        key: 'color',
+        children: [
+            {
+                title: 'Đỏ',
+                key: 'red',
+            },
+            {
+                title: 'Xanh lá',
+                key: 'green',
+            },
+            {
+                title: 'Xanh biển',
+                key: 'Blue',
+            },
+            {
+                title: 'Cam',
+                key: 'orange',
+            },
+            {
+                title: 'Đen',
+                key: 'black',
+            },
+        ],
+    }
+];
+
+const treeSizeData: DataNode[] = [
+    {
+        title: 'Kích thước',
+        key: 'size',
+        children: [
+            {
+                title: 'XS',
+                key: 'xs',
+            },
+            {
+                title: 'S',
+                key: 's',
+            },
+            {
+                title: 'M',
+                key: 'm',
+            },
+            {
+                title: 'L',
+                key: 'l',
+            },
+            {
+                title: 'XL',
+                key: 'XL',
+            },
+
+        ],
+    },
+
+];
 
 const Catalog = () => {
 
@@ -23,7 +84,7 @@ const Catalog = () => {
                             Màu sắc
                         </div>
                         <div className="catalog__filter__widget__content">
-                            <FilterTree />
+                            <FilterTree treeData={treeColorData} />
                         </div>
                     </div>
 
@@ -32,7 +93,7 @@ const Catalog = () => {
                             Kích cỡ
                         </div>
                         <div className="catalog__filter__widget__content">
-                            <FilterTree />
+                            <FilterTree treeData={treeSizeData} />
                         </div>
                     </div>
                 </div>

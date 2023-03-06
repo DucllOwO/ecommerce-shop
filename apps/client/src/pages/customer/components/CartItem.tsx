@@ -1,3 +1,4 @@
+import { InputNumber } from 'antd'
 import React, { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -28,17 +29,7 @@ const CartItem = (props: CartItemType) => {
                     0
                 </div>
                 <div className="cart__item__info__quantity">
-                    <div className="product__info__item__quantity">
-                        <div className="product__info__item__quantity__btn">
-                            <i className="bx bx-minus"></i>
-                        </div>
-                        <div className="product__info__item__quantity__input">
-                            0
-                        </div>
-                        <div className="product__info__item__quantity__btn">
-                            <i className="bx bx-plus"></i>
-                        </div>
-                    </div>
+                    <InputNumber />
                 </div>
                 <div className="cart__item__del">
                     <i className='bx bx-trash'></i>

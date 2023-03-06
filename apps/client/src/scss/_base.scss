@@ -104,3 +104,8 @@ $val in $colors {
 .grid {
     display: grid;
 }
+
+.centerflex {
+    @include flex(center, center);
+    display: flex;
+}

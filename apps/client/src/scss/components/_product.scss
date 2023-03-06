@@ -8,7 +8,7 @@
     &__images {
         @include flex(flex-start, flex-start);
         width: 60%;
-        flex-wrap: wrap;
+        flex-direction: column;
 
         @include tablet {
             width: 80%;
@@ -18,26 +18,8 @@
             width: 100%;
         }
 
-        &__list {
-            width: 20%;
-
-            &__item {
-                cursor: pointer;
-            }
-        }
-
         &__main {
-            flex-grow: 1;
-            padding-top: 100%;
-            position: relative;
-
-            img {
-                position: absolute;
-                top: 0;
-                left: 50%;
-                height: 100%;
-                transform: translateX(-50%);
-            }
+            height: auto;
         }
     }
 
@@ -182,7 +164,7 @@
     }
 
     &__toggle {
-        position: absolute;
+        position: relative;
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
