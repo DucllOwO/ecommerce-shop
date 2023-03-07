@@ -10,9 +10,10 @@ import { ReviewModule } from './review/review.module';
 import { ReceiptModule } from './receipt/receipt.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { VoucherModule } from './voucher/voucher.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot(), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule],
+  imports: [AuthModule, ConfigModule.forRoot(), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

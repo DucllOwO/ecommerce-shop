@@ -1,34 +1,31 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { VoucherService } from './voucher.service';
-import { CreateVoucherDto } from './dto/create-voucher.dto';
-import { UpdateVoucherDto } from './dto/update-voucher.dto';
 
 @Controller('voucher')
 export class VoucherController {
   constructor(private readonly voucherService: VoucherService) {}
 
   @Post()
-  create(@Body() createVoucherDto: CreateVoucherDto) {
-    return this.voucherService.create(createVoucherDto);
+  create(@Body() createVoucherDto: Prisma.VoucherCreateInput) {
+    return this.voucherService.createVoucher(createVoucherDto);
   }
 
   @Get()
   findAll() {
-    return this.voucherService.findAll();
+    return this.voucherService.vouchers({});
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.voucherService.findOne(+id);
+  findOne(@Param('code') code: string) {
+    return this.voucherService.voucher({code});
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVoucherDto: UpdateVoucherDto) {
-    return this.voucherService.update(+id, updateVoucherDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.voucherService.remove(+id);
+  update(@Param('code') code: string, @Body() updateVoucherDto: Prisma.VoucherCreateInput) {
+    return this.voucherService.updateVoucher({
+      where: {code},
+      data: updateVoucherDto,
+    });
   }
 }
