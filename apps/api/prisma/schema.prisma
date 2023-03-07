@@ -10,19 +10,181 @@ datasource db {
   url      = "postgres://postgres:8JLOmCJ5lXO31OWX@db.lggcxbdwmetbsvmtuctl.supabase.co:5432/postgres"
 }
 
-model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  name     String?
-  password String  @default("123456")
-  posts    Post[]
+model Account {
+  username String  @id @db.VarChar(100)
+  password String  @db.VarChar(100)
+  is_admin Boolean @default(false)
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+model User {
+  id             String     @id @db.Char(11)
+  firstname      String     @db.VarChar(50)
+  lastname       String?    @db.VarChar(50)
+  email          String     @unique @db.VarChar(256)
+  phone_number   String?    @db.Char(10)
+  address        String?    @db.VarChar(150)
+  avatar         String     @default("https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png")
+  product_viewed String[]
+  Feedback       Feedback[]
+  Review         Review[]
+  Cart           Cart[]
+  Order          Order[]
+}
+
+model Feedback {
+  id       Int     @id @default(autoincrement())
+  content  String?
+  rate     Float
+  author   User?   @relation(fields: [authorID], references: [id], onDelete: NoAction)
+  authorID String? @db.Char(11)
+}
+
+model Discount {
+  id         Int          @id @default(autoincrement())
+  discount   Float        @default(0)
+  Tag        Tag[]
+  Collection Collection[]
+  Product    Product[]
+}
+
+model Tag {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(150)
+  discount   Discount? @relation(fields: [discountID], references: [id], onDelete: SetNull)
+  discountID Int?
+  Product    Product[]
+}
+
+model Collection {
+  id         Int       @id
+  name       String    @db.VarChar(150)
+  discount   Discount? @relation(fields: [discountID], references: [id], onDelete: SetNull)
+  discountID Int?
+  Product    Product[]
+}
+
+model Product {
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(256)
+  price         Int
+  description   String?
+  image         String[]
+  view          Int             @default(0)
+  sold          Int             @default(0)
+  discount      Discount?       @relation(fields: [discountID], references: [id], onDelete: SetNull)
+  discountID    Int?
+  tag           Tag             @relation(fields: [tagID], references: [id], onDelete: NoAction)
+  tagID         Int
+  collection    Collection?     @relation(fields: [collectionID], references: [id], onDelete: SetNull)
+  collectionID  Int?
+  ReceiptDetail ReceiptDetail[]
+  Review        Review[]
+  Product_item  Product_item[]
+}
+
+model Voucher {
+  code        String    @id @db.Char(6)
+  name        String    @db.VarChar(150)
+  discount    Float     @default(0)
+  description String?
+  due         DateTime
+  Receipt     Receipt[]
+}
+
+model Receipt {
+  id            Int             @id @default(autoincrement())
+  date          DateTime        @default(now())
+  cost          Int             @default(0)
+  status        String          @default("0") @db.Char(1)
+  voucher       Voucher?        @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
+  voucherCode   String?         @db.Char(6)
+  ReceiptDetail ReceiptDetail[]
+}
+
+model ReceiptDetail {
+  id        Int     @id @default(autoincrement())
+  receipt   Receipt @relation(fields: [receiptID], references: [id], onDelete: NoAction)
+  receiptID Int
+  product   Product @relation(fields: [productID], references: [id], onDelete: NoAction)
+  productID Int
+}
+
+model Review {
+  id        Int     @id @default(autoincrement())
+  comment   String?
+  rate      Float
+  author    User    @relation(fields: [authorID], references: [id], onDelete: NoAction)
+  authorID  String  @db.Char(11)
+  product   Product @relation(fields: [productID], references: [id], onDelete: NoAction)
+  productID Int
+}
+
+model Product_item {
+  id           Int            @id @default(autoincrement())
+  color        String         @db.VarChar(100)
+  size         String         @db.Char(4)
+  quantity     Int
+  image        String[]
+  product      Product        @relation(fields: [productID], references: [id], onDelete: NoAction)
+  productID    Int
+  Cart_detail  Cart_detail[]
+  Order_detail Order_detail[]
+}
+
+model Cart {
+  id          Int           @id @default(autoincrement())
+  quantity    Int           @default(1)
+  owner       User          @relation(fields: [userID], references: [id], onDelete: NoAction)
+  userID      String        @db.Char(11)
+  Cart_detail Cart_detail[]
+}
+
+model Cart_detail {
+  id           Int          @id @default(autoincrement())
+  cart         Cart         @relation(fields: [cartID], references: [id], onDelete: Cascade)
+  cartID       Int
+  product_item Product_item @relation(fields: [itemID], references: [id], onDelete: NoAction)
+  itemID       Int
+}
+
+model Order {
+  id           Int            @id @default(autoincrement())
+  date         DateTime       @default(now())
+  total_cost   Int            @default(0)
+  status       String         @default("0") @db.Char(1)
+  buyer        User           @relation(fields: [userID], references: [id], onDelete: NoAction)
+  userID       String         @db.Char(11)
+  Order_detail Order_detail[]
+}
+
+model Order_detail {
+  id           Int          @id @default(autoincrement())
+  product_item Product_item @relation(fields: [itemID], references: [id], onDelete: NoAction)
+  itemID       Int
+  order        Order        @relation(fields: [orderID], references: [id], onDelete: NoAction)
+  orderID      Int
+}
+
+model Yearly_report {
+  year           DateTime         @id
+  income         Int              @default(0)
+  sold_quantity  Int              @default(0)
+  Monthly_report Monthly_report[]
+}
+
+model Monthly_report {
+  month         DateTime       @id
+  income        Int            @default(0)
+  sold_quantity Int            @default(0)
+  yearly_report Yearly_report  @relation(fields: [year], references: [year], onDelete: NoAction)
+  year          DateTime
+  Daily_report  Daily_report[]
+}
+
+model Daily_report {
+  date           DateTime       @id @default(now())
+  income         Int            @default(0)
+  sold_quantity  Int            @default(0)
+  monthly_report Monthly_report @relation(fields: [month], references: [month], onDelete: NoAction)
+  month          DateTime
 }

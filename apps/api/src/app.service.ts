@@ -7,6 +7,7 @@ export class AppService {
 
 
   async getHello(): Promise<any> {
+    this.logger.log("Called")
     // const { data: user, error: userError } = await this.supabase.clientInstance
     //   .from(`account`)
     //   .select(`*, roomtype:room_type_id(*)`);
