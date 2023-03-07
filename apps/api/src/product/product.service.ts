@@ -9,7 +9,6 @@ export class ProductService {
   async product(
     productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
   ): Promise<Product | null> {
-    console.log(typeof productWhereUniqueInput.id)
     return this.prisma.product.findUnique({
       where: productWhereUniqueInput,
     });
