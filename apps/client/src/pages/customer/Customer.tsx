@@ -9,7 +9,7 @@ import FooterCustom from './components/Footer'
 const Customer = () => {
   return (
     <Layout>
-      <Header id='header' style={{ height: 'var(--header-height)' }}>
+      <Header style={{ height: 'var(--header-height)' }}>
         <HeaderCustom />
       </Header>
       <Content>

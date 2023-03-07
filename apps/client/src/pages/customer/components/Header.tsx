@@ -1,3 +1,6 @@
+import { ShoppingCartOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons'
+import { Dropdown, MenuProps } from 'antd'
+import Search from 'antd/es/input/Search'
 import React, { useRef, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
@@ -19,6 +22,25 @@ const mainNav = [
     {
         display: "Liên hệ",
         path: "/contact"
+    }
+]
+
+const items: MenuProps['items'] = [
+    {
+        key: '1',
+        label: (
+            <Link to='login'>
+                Đăng nhập
+            </Link>
+        ),
+    },
+    {
+        key: '2',
+        label: (
+            <Link to='signup'>
+                Đăng ký
+            </Link>
+        ),
     }
 ]
 
@@ -77,15 +99,21 @@ const HeaderCustom = () => {
                     </div>
                     <div className="header__menu__right">
                         <div className="header__menu__item header__menu__right__item">
-                            <i className="bx bx-search"></i>
+
+                            <Search
+                                placeholder="input search text"
+                                allowClear
+                                style={{ width: 200, fontWeight: '700' }}
+                            />
+
                         </div>
                         <div className="header__menu__item header__menu__right__item">
                             <Link to="/cart">
-                                <i className="bx bx-shopping-bag"></i>
+                                <ShoppingCartOutlined />
                             </Link>
                         </div>
                         <div className="header__menu__item header__menu__right__item">
-                            <i className="bx bx-user"></i>
+                            <Dropdown menu={{ items }} placement='bottom'><UserOutlined /></Dropdown>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,8 @@
 :root {
   --main-color: #4267b2;
+  --border-color: #8d8d8d;
 
-  --header-height: 100px;
+
+  --border-main: 10px;
+  --header-height: 70px;
 }

@@ -5,6 +5,8 @@ import Home from './pages/customer/Home.js';
 import Catalog from './pages/customer/Catalog.js';
 import Product from './pages/customer/Product.js';
 import Cart from './pages/customer/Cart.js';
+import Login from './pages/auth/Login.js';
+import SignUp from './pages/auth/SignUp.js';
 
 
 function App() {
@@ -12,6 +14,7 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
+
           <Route key={'admin'} path='/admin' element={<Admin />}>
           </Route>
           <Route key={'customer'} path='/' element={<Customer />}>
@@ -19,6 +22,8 @@ function App() {
             <Route key={'catalog'} path='catalog' element={<Catalog />}></Route>
             <Route key={'product'} path='product/:title' element={<Product />}></Route>
             <Route key={'cart'} path='cart' element={<Cart />}></Route>
+            <Route key={'login'} path='login' element={<Login />}></Route>
+            <Route key={'signup'} path='signup' element={<SignUp />}></Route>
           </Route>
         </Routes>
       </BrowserRouter>
