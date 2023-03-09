@@ -1,26 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
+import { Order, Prisma } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class OrderService {
-  create(createOrderDto: CreateOrderDto) {
-    return 'This action adds a new order';
+  constructor(private prisma: PrismaService) { }
+
+  async order(
+    receiptWhereUniqueInput: Prisma.ReceiptWhereUniqueInput,
+  ): Promise<Order | null> {
+    return this.prisma.order.findUnique({
+      where: receiptWhereUniqueInput,
+    });
   }
 
-  findAll() {
-    return `This action returns all order`;
+  async orders(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.OrderWhereUniqueInput;
+    where?: Prisma.OrderWhereInput;
+    orderBy?: Prisma.OrderOrderByWithRelationInput;
+  }): Promise<Order[]> {
+    const { skip, take, orderBy } = params;
+    return this.prisma.order.findMany({
+      skip,
+      take,
+      orderBy,
+    });
+  }
+  async createOrder(data: Prisma.OrderCreateInput) : Promise<Order>{
+    return this.prisma.order.create({
+      data,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
-  }
-
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async updateOrder(params: {
+    where: Prisma.OrderWhereUniqueInput,
+    data: Prisma.OrderCreateInput
+  }) : Promise<Order>{
+    const {where, data} = params
+    return this.prisma.order.update({
+      where,
+      data
+    });
   }
 }

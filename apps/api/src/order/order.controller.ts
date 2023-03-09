@@ -1,34 +1,30 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { OrderService } from './order.service';
-import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
-
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
+  create(@Body() createOrderDto: Prisma.OrderCreateInput) {
+    return this.orderService.createOrder(createOrderDto);
   }
 
   @Get()
   findAll() {
-    return this.orderService.findAll();
+    return this.orderService.orders({});
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.orderService.findOne(+id);
+    return this.orderService.order({id: Number(id)});
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.orderService.update(+id, updateOrderDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.orderService.remove(+id);
+  update(@Param('id') id: string, @Body() updateOrderDto: Prisma.OrderCreateInput) {
+    return this.orderService.updateOrder({
+      where: {id: Number(id)},
+      data: updateOrderDto
+    });
   }
 }

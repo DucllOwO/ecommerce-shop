@@ -11,9 +11,11 @@ import { ReceiptModule } from './receipt/receipt.module';
 import { FeedbackModule } from './feedback/feedback.module';
 import { VoucherModule } from './voucher/voucher.module';
 import { OrderModule } from './order/order.module';
+import { CartModule } from './cart/cart.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot(), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule],
+  imports: [AuthModule, ConfigModule.forRoot(), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
