@@ -105,6 +105,10 @@ $val in $colors {
     display: grid;
 }
 
+.second_text {
+    color: $txt-second-color;
+}
+
 .svgBg {
     width: 100%;
     background-color: #484DFF;

@@ -8,8 +8,8 @@ const Login = () => {
     <div className='svgBg centerflex'
     >
       <div className='auth_wrapper centerflex'>
-        <Title level={4} style={{ marginBottom: 50 }}>Chào mừng bạn đến tới Yolo</Title>
-        <Title level={2} style={{ marginBottom: 50 }}>Đăng ký</Title>
+
+        <Title level={2} style={{ marginBottom: 50 }}>Đăng nhập</Title>
         <Form
           name="normal_login"
           className="login-form"
