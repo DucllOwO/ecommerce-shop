@@ -18,7 +18,7 @@ export class AccountController {
 
   @Get(':id')
   findOne(@Param('email') email: string) {
-    return this.accountService.findOne(email);
+    return this.accountService.findOne({ email });
   }
 
   @Patch(':id')

@@ -1,14 +1,20 @@
 import { PrismaService } from './../prisma/prisma.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AccountService {
+  private readonly logger = new Logger(AccountService.name);
+  private readonly salt = 12;
   constructor(private prisma: PrismaService) {
 
   }
-  create(createAccountDto: Prisma.AccountCreateInput) {
-    return 'This action adds a new account';
+  async create(createAccountDto: Prisma.AccountCreateInput) {
+    console.log(createAccountDto.password)
+    const hashPassword = await bcrypt.hash(createAccountDto.password, this.salt)
+
+    return this.prisma.account.create({ data: { ...createAccountDto, password: hashPassword } });
   }
 
   findAll() {
@@ -17,7 +23,8 @@ export class AccountService {
 
   findOne(accountWhereInput: Prisma.AccountWhereUniqueInput) {
     return this.prisma.account.findUnique({
-      where: accountWhereInput
+      where: accountWhereInput,
+      include: { User: true }
     });
   }
 

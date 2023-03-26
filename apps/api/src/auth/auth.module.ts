@@ -1,3 +1,4 @@
+import { AccountModule } from './../account/account.module';
 import { PrismaService } from './../prisma/prisma.service';
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
@@ -11,7 +12,7 @@ import { JwtStrategy } from './strategies/jwt.stategy';
 
 @Module({
   providers: [AuthService, LocalStrategy, JwtStrategy],
-  imports: [UserModule, PassportModule, ConfigModule.forRoot(), JwtModule.register({
+  imports: [UserModule, AccountModule, PassportModule, ConfigModule.forRoot(), JwtModule.register({
     secret: process.env.JWT_SECRET,
     signOptions: { expiresIn: "7d" },
   })],

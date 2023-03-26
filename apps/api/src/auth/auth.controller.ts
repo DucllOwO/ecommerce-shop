@@ -9,9 +9,9 @@ export class AuthController {
 
   constructor(private authService: AuthService) { }
 
-  @UseGuards(LocalAuthGuard)
   @Post('login')
   login(@Body() loginUser: LoginUserDto) {
+    console.log(loginUser)
     if (!loginUser.email || !loginUser.password)
       throw new BadRequestException();
 
