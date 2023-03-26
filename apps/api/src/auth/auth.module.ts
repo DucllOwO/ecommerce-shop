@@ -1,3 +1,4 @@
+import { PrismaService } from './../prisma/prisma.service';
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from 'src/user/user.module';

@@ -1,26 +1,37 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { AccountService } from './../account/account.service';
+import { LoginUserDto } from './dto/loginUser.dto';
+import { PrismaService } from './../prisma/prisma.service';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
+import { NotFoundException } from '@nestjs/common/exceptions';
+import bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  constructor(private userService: UserService, private jwtService: JwtService) { }
+  private readonly salt = 12;
+  constructor(private accountService: AccountService, private jwtService: JwtService) { }
 
-  // async validateUser(email: string, password: string): Promise<any> {
-  //   const user = await this.userService.user({ email });
-  //   if (user && user.password === password) {
-  //     const { password, ...result } = user;
-  //     return result;
-  //   }
 
-  //   return null;
-  // }
+  async validateUser(loginUserDto: LoginUserDto) {
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const account = await this.accountService.findOne({ email: loginUserDto.email })
+
+    if (!account) {
+      throw new NotFoundException();
+    }
+
+    // hash loginuserdto password
+    const isMatch = await bcrypt.compare(loginUserDto.password, account.password)
+
+    // if true return access_token, false return UnauthorizedException
+    if (!isMatch)
+      throw new UnauthorizedException();
+
+    // return {
+    //   access_token: this.jwtService.sign(payload),
+    // };
+
   }
 }
