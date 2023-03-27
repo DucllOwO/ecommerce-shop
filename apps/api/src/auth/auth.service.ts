@@ -1,9 +1,8 @@
 import { AccountService } from './../account/account.service';
 import { LoginUserDto } from './dto/loginUser.dto';
-import { PrismaService } from './../prisma/prisma.service';
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { NotFoundException } from '@nestjs/common/exceptions';
 import * as bcrypt from 'bcrypt';
 
@@ -15,7 +14,6 @@ export class AuthService {
 
 
   async validateUser(loginUserDto: LoginUserDto) {
-
     const account = await this.accountService.findOne({ email: loginUserDto.email })
 
     if (!account) {

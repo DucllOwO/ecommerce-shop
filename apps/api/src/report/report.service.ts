@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Daily_report, Monthly_report, Prisma, Yearly_report } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ReportService {
@@ -13,7 +13,7 @@ export class ReportService {
       where: dailyReportWhereUniqueInput,
     });
   }
-  
+
   async dailyReports(params: {
     skip?: number;
     take?: number;
@@ -35,7 +35,7 @@ export class ReportService {
       where: monthlyReportWhereUniqueInput,
     });
   }
-  
+
   async monthlyReports(params: {
     skip?: number;
     take?: number;
@@ -57,7 +57,7 @@ export class ReportService {
       where: yearlyReportWhereUniqueInput,
     });
   }
-  
+
   async yearlyReports(params: {
     skip?: number;
     take?: number;

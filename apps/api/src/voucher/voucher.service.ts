@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, Voucher } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class VoucherService {
   constructor(private prisma: PrismaService) { }
-  
+
   async voucher(
     voucherWhereUniqueInput: Prisma.VoucherWhereUniqueInput,
   ): Promise<Voucher | null> {
@@ -27,7 +27,7 @@ export class VoucherService {
       orderBy,
     });
   }
-  createVoucher(data: Prisma.VoucherCreateInput) : Promise<Voucher>{
+  createVoucher(data: Prisma.VoucherCreateInput): Promise<Voucher> {
     return this.prisma.voucher.create({
       data
     });
@@ -36,8 +36,8 @@ export class VoucherService {
   updateVoucher(params: {
     where: Prisma.VoucherWhereUniqueInput,
     data: Prisma.VoucherCreateInput
-  }) : Promise<Voucher>{
-    const {where, data} = params
+  }): Promise<Voucher> {
+    const { where, data } = params
     return this.prisma.voucher.update({
       where,
       data,

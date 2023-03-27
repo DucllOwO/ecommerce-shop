@@ -1,3 +1,4 @@
+import { configuration } from './../config/configuration';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -16,7 +17,10 @@ import { ReportModule } from './report/report.module';
 import { AccountModule } from './account/account.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot(), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, AccountModule],
+  imports: [AuthModule, ConfigModule.forRoot({
+    isGlobal: true,
+
+  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, AccountModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

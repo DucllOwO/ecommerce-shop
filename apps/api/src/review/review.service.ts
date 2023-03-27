@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, Review } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ReviewService {
@@ -29,8 +29,7 @@ export class ReviewService {
     });
   }
 
-  async createReview(data : Prisma.ReviewCreateInput) : Promise<Review> 
-  {
+  async createReview(data: Prisma.ReviewCreateInput): Promise<Review> {
     return this.prisma.review.create({
       data,
     })
@@ -39,16 +38,15 @@ export class ReviewService {
   async updateReview(params: {
     where: Prisma.ReviewWhereUniqueInput,
     data: Prisma.ReviewCreateInput
-  }) : Promise<Review>
-  {
-    const {where, data} = params;
+  }): Promise<Review> {
+    const { where, data } = params;
     return this.prisma.review.update({
       where,
       data
     });
   }
 
-  async removeReview(where: Prisma.ReviewWhereUniqueInput) : Promise<Review> {
+  async removeReview(where: Prisma.ReviewWhereUniqueInput): Promise<Review> {
     return this.prisma.review.delete({
       where
     });
