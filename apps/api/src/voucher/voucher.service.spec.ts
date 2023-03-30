@@ -15,4 +15,12 @@ describe('VoucherService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('get all method', () => {
+    expect(service.vouchers({})).toHaveReturned();
+  })
+
+  // it('get one method', () => {
+  //   expect(service.voucher("000001")).toHaveReturnedWith({})
+  // })
 });
