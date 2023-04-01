@@ -8,6 +8,8 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build"
+  },
+  "dependencies": {
+    "node-sass": "^8.0.0"
   }
 }
- 
