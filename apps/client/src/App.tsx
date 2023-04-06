@@ -7,15 +7,17 @@ import Product from './pages/customer/Product.js';
 import Cart from './pages/customer/Cart.js';
 import Login from './pages/auth/Login.js';
 import SignUp from './pages/auth/SignUp.js';
+import Dashboard from './pages/admin/Dashboard.js';
 
 
 function App() {
   return (
-    <div>
+    <div style={{ width: '100%', height: '100%' }}>
       <BrowserRouter>
         <Routes>
 
           <Route key={'admin'} path='/admin' element={<Admin />}>
+            <Route key={'dashboard'} path='dashboard' index element={<Dashboard />} />
           </Route>
           <Route key={'customer'} path='/' element={<Customer />}>
             <Route key={'home'} index element={<Home />}></Route>
@@ -27,7 +29,7 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-    </div >
+    </div>
   )
 }
 
