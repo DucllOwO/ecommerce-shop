@@ -1,0 +1,33 @@
+.auth_wrapper {
+  width: 35%;
+  background: $main-bg;
+  border-radius: $border-main;
+  padding: 30px 20px;
+  flex-direction: column;
+  justify-content: flex-start;
+
+}
+
+
+.title {
+  margin-bottom: 30px;
+  color: red;
+}
+
+.forgot-password-txt {
+  font-size: medium;
+  margin-top: 30px;
+}
+
+.sign-up-wrapper {
+  margin-top: 50px;
+
+  &-txt {
+    color: $txt-second-color;
+  }
+
+  &-link {
+    font-weight: 700;
+    color: $main-color;
+  }
+}
