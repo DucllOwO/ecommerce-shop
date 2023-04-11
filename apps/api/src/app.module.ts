@@ -14,9 +14,11 @@ import { OrderModule } from './order/order.module';
 import { CartModule } from './cart/cart.module';
 import { ReportModule } from './report/report.module';
 import { TagModule } from './tag/tag.module';
+import { ProductItemModule } from './product-item/product-item.module';
+import { CollectionModule } from './collection/collection.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot(), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule],
+  imports: [AuthModule, ConfigModule.forRoot(), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

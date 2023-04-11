@@ -7,7 +7,7 @@ export class ReviewService {
   constructor(private prisma: PrismaService) { }
 
   async review(
-    reviewWhereUniqueInput: Prisma.ProductWhereUniqueInput,
+    reviewWhereUniqueInput: Prisma.ReviewWhereUniqueInput,
   ): Promise<Review | null> {
     return this.prisma.review.findUnique({
       where: reviewWhereUniqueInput,

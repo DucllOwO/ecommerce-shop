@@ -1,34 +1,36 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { TagService } from './tag.service';
-import { CreateTagDto } from './dto/create-tag.dto';
-import { UpdateTagDto } from './dto/update-tag.dto';
+import { Prisma } from '@prisma/client';
+
 
 @Controller('tag')
 export class TagController {
   constructor(private readonly tagService: TagService) {}
 
   @Post()
-  create(@Body() createTagDto: CreateTagDto) {
-    return this.tagService.create(createTagDto);
+  create(@Body() createTagDto: Prisma.TagCreateInput) {
+    return this.tagService.createTag(createTagDto);
   }
 
   @Get()
   findAll() {
-    return this.tagService.findAll();
+    return this.tagService.tags({});
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.tagService.findOne(+id);
+    return this.tagService.tag({id: Number(id)});
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTagDto: UpdateTagDto) {
-    return this.tagService.update(+id, updateTagDto);
+  update(@Param('id') id: string, @Body() updateTagDto: Prisma.TagCreateInput) {
+    return this.tagService.updateTag({
+      where: {id: Number(id)}, 
+      data: updateTagDto});
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.tagService.remove(+id);
+    return this.tagService.removeTag({ id: Number(id) });
   }
 }

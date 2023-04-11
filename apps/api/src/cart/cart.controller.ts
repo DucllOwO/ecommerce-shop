@@ -11,10 +11,10 @@ export class CartController {
     return this.cartService.createCart(createCartDto);
   }
 
-  @Get()
-  findAll() {
-    return this.cartService.carts({});
-  }
+  // @Get()
+  // findAll() {
+  //   return this.cartService.carts({});
+  // }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

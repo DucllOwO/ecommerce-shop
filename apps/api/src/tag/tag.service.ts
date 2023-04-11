@@ -1,26 +1,55 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTagDto } from './dto/create-tag.dto';
-import { UpdateTagDto } from './dto/update-tag.dto';
-
+import { Prisma, Review, Tag } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class TagService {
-  create(createTagDto: CreateTagDto) {
-    return 'This action adds a new tag';
+  constructor(private prisma: PrismaService) { }
+
+  async tag(
+    tagWhereUniqueInput: Prisma.TagWhereUniqueInput,
+  ): Promise<Tag | null> {
+    return this.prisma.tag.findUnique({
+      where: tagWhereUniqueInput,
+    });
   }
 
-  findAll() {
-    return `This action returns all tag`;
+  async tags(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.TagWhereUniqueInput;
+    where?: Prisma.TagWhereInput;
+    orderBy?: Prisma.TagOrderByWithRelationInput;
+  }): Promise<Tag[]> {
+    const { skip, take, orderBy } = params;
+    return this.prisma.tag.findMany({
+      skip,
+      take,
+      orderBy,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tag`;
+  async createTag(data : Prisma.TagCreateInput) : Promise<Tag> 
+  {
+    return this.prisma.tag.create({
+      data,
+    })
   }
 
-  update(id: number, updateTagDto: UpdateTagDto) {
-    return `This action updates a #${id} tag`;
+  async updateTag(params: {
+    where: Prisma.TagWhereUniqueInput,
+    data: Prisma.TagCreateInput
+  }) : Promise<Tag>
+  {
+    const {where, data} = params;
+    return this.prisma.tag.update({
+      where,
+      data
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tag`;
+  async removeTag(where: Prisma.TagWhereUniqueInput) : Promise<Tag> {
+    return this.prisma.tag.delete({
+      where
+    });
   }
 }
