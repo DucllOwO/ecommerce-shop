@@ -12,16 +12,24 @@ describe('CartService', () => {
     service = module.get<CartService>(CartService);
   });
 
-  it('should be defined', () => {
+  it('cart service should be defined', () => {
     expect(service).toBeDefined();
   });
 
   it('get cart should have returned', () => {
-    expect(service.cart({id: 1})).toHaveReturned();
+    expect(service.cart({
+      id: 1
+    })).toHaveReturned();
   })
 
   it('post cart should have returned', () => {
-    expect(service.createCart({owner: {connect: {id: '079202011909'}}})).toHaveReturned();
+    expect(service.createCart({
+      owner: {
+        connect: {
+          id: '079202011909'
+        }
+      }
+    })).toHaveReturned();
   })
   
 });

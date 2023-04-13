@@ -58,7 +58,7 @@ model Tag {
 }
 
 model Collection {
-  id         Int       @id
+  id         Int       @id @default(autoincrement())
   name       String    @db.VarChar(150)
   discount   Discount? @relation(fields: [discountID], references: [id], onDelete: SetNull)
   discountID Int?
