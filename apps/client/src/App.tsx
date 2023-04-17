@@ -8,6 +8,8 @@ import Cart from './pages/customer/Cart.js';
 import Login from './pages/auth/Login.js';
 import SignUp from './pages/auth/SignUp.js';
 import Dashboard from './pages/admin/Dashboard.js';
+import Order from './pages/admin/Order.js';
+import ProductManagement from './pages/admin/ProductManagement.js';
 
 
 function App() {
@@ -18,6 +20,8 @@ function App() {
 
           <Route key={'admin'} path='/admin' element={<Admin />}>
             <Route key={'dashboard'} path='dashboard' index element={<Dashboard />} />
+            <Route key={'order'} path='order' element={<Order />} />
+            <Route key={'product'} path='product' element={<ProductManagement />} />
           </Route>
           <Route key={'customer'} path='/' element={<Customer />}>
             <Route key={'home'} index element={<Home />}></Route>

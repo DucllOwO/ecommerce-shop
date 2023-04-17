@@ -7,6 +7,7 @@ import DeliveryIcon from '../assets/menu/in_transit_96px.png'
 import ReivewIcon from '../assets/menu/good_quality_96px.png'
 import ReceiptIcon from '../assets/menu/receipt_96px.png'
 import PolicyIcon from '../assets/menu/terms_and_conditions_96px.png'
+import DiscountIcon from '../assets/icon/loyalty_card_96px.png'
 import type { MenuProps } from 'antd/es/menu'
 import { Image, Menu } from 'antd'
 
@@ -83,8 +84,13 @@ const menu: MenuProps['items'] = [
     key: 'feedback',
     label: 'Đánh giá',
     icon: generateImageIcon(ReivewIcon)
-  }
-  ,
+  },
+  {
+    key: 'discount',
+    label: 'Giảm giá',
+    icon: generateImageIcon(DiscountIcon)
+  },
+
   {
     key: 'policy',
     label: 'Chính sách',

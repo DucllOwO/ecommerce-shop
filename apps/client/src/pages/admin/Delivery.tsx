@@ -1,7 +1,8 @@
 import React from 'react'
 import OrderTable from '../../components/Table/Order/OrderTable'
 
-const Order = () => {
+const Delivery = () => {
+  // different only status
   return (
     <div>
       <OrderTable />
@@ -9,4 +10,4 @@ const Order = () => {
   )
 }
 
-export default Order
+export default Delivery
