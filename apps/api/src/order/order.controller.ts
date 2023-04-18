@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { OrderService } from './order.service';
 @Controller('order')
@@ -17,6 +17,7 @@ export class OrderController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    // throw new BadRequestException();
     return this.orderService.order({id: Number(id)});
   }
 
