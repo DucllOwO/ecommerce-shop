@@ -1,13 +1,12 @@
 import React from 'react'
-
 import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { TABLE_HEIGHT } from '../../constant/styles';
 
 interface DataType {
   key: string;
   id: string;
-  name: string;
+  name: number;
+  discount: number;
 }
 
 const columns: ColumnsType<DataType> = [
@@ -18,8 +17,12 @@ const columns: ColumnsType<DataType> = [
     render: (text) => <a>{text}</a>,
   },
   {
-    title: 'Tên',
+    title: 'Tên nhãn',
     key: 'name',
+  },
+  {
+    title: 'Giảm giá',
+    key: 'discount',
   },
   {
     title: 'Thao tác',
@@ -28,10 +31,12 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-const CollectionTable = () => {
+const TagTable = () => {
   return (
-    <Table columns={columns} />
+    <Table
+      columns={columns}
+    />
   )
 }
 
-export default CollectionTable
+export default TagTable

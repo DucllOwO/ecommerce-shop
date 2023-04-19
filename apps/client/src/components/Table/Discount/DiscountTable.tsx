@@ -1,44 +1,36 @@
 import React from 'react'
-
 import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { TABLE_HEIGHT } from '../../../constant/styles';
 
 interface DataType {
   key: string;
   id: string;
   name: number;
-  description: string;
-  image: string;
-  view: number;
-  sold: number;
+  discount: number;
 }
 
 const columns: ColumnsType<DataType> = [
   {
-    title: 'ID',
+    title: 'Code',
     dataIndex: 'id',
     key: 'id',
     render: (text) => <a>{text}</a>,
   },
   {
-    title: 'Sản phẩm',
-    key: 'name_image',
+    title: 'Tên khuyến mãi',
+    key: 'name',
   },
   {
-    title: 'Gía',
-    dataIndex: 'price',
-    key: 'price',
+    title: 'Ngày hết hạn',
+    key: 'discount',
   },
   {
-    title: 'Lượt xem',
-    dataIndex: 'view',
-    key: 'view',
+    title: 'Giảm giá',
+    key: 'discount',
   },
   {
-    title: 'Bán',
-    dataIndex: 'sold',
-    key: 'sold',
+    title: 'Mô tả',
+    key: 'discount',
   },
   {
     title: 'Thao tác',
@@ -47,10 +39,11 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-const ProductTable = () => {
+
+const DiscountTable = () => {
   return (
     <Table columns={columns} />
   )
 }
 
-export default ProductTable
+export default DiscountTable

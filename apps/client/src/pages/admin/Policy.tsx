@@ -1,8 +1,9 @@
 import React from 'react'
+import PolicyCollapse from '../../components/Collapse/PolicyCollapse'
 
 const Policy = () => {
   return (
-    <div>Policy</div>
+    <PolicyCollapse />
   )
 }
 

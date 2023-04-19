@@ -1,8 +1,9 @@
 import React from 'react'
+import DiscountTable from '../../components/Table/Discount/DiscountTable'
 
 const Discount = () => {
   return (
-    <div>Discount</div>
+    <DiscountTable />
   )
 }
 

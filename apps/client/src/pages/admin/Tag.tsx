@@ -1,8 +1,9 @@
 import React from 'react'
+import TagTable from '../../components/Table/Tag/TagTable'
 
 const Tag = () => {
   return (
-    <div>Tag</div>
+    <TagTable />
   )
 }
 
