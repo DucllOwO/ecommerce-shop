@@ -31,6 +31,7 @@ model User {
   Review         Review[]
   Cart           Cart[]
   Order          Order[]
+  Receipt        Receipt[]
 }
 
 model Feedback {
@@ -100,6 +101,8 @@ model Receipt {
   status        String          @default("0") @db.Char(1)
   voucher       Voucher?        @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
   voucherCode   String?         @db.Char(6)
+  buyer         User            @relation(fields: [userID], references: [id], onDelete: NoAction)
+  userID        String          @db.Char(12)
   ReceiptDetail ReceiptDetail[]
 }
 
