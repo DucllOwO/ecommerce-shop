@@ -2,6 +2,7 @@ import React from 'react'
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
+import OrderModal from '../../Modal/OrderModal';
 
 interface DataType {
   key: string;
@@ -40,7 +41,10 @@ const columns: ColumnsType<DataType> = [
 
 const OrderTable = () => {
   return (
-    <Table columns={columns} style={{ height: TABLE_HEIGHT }} />
+    <>
+      <OrderModal />
+      <Table columns={columns} style={{ height: TABLE_HEIGHT }} />
+    </>
   )
 }
 
