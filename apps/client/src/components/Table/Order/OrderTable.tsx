@@ -1,16 +1,25 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
 import OrderModal from '../../Modal/OrderModal';
 
 interface DataType {
-  key: string;
-  id: string;
-  date: number;
+  key?: string;
+  id: number;
+  date: string;
   customer_name: string;
   total_amount: number;
 }
+
+const data = [
+  {
+    id: 1,
+    date: '2018-04-24 18:00:00',
+    customer_name: 'Nguyen tri Duck',
+    total_amount: 1000000000,
+  },
+]
 
 const columns: ColumnsType<DataType> = [
   {
@@ -26,24 +35,34 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: 'Khách hàng',
-    dataIndex: 'customer',
-    key: 'customer',
+    dataIndex: 'customer_name',
+    key: 'customer_name',
   },
   {
     title: 'Tổng tiền',
-    key: 'total_cost',
-    dataIndex: 'total_cost',
-    render: (_, { total_amount }) => (
-      '1'
+    key: 'total_amount',
+    dataIndex: 'total_amount',
+    render: (text) => (
+      text
     ),
   },
 ];
 
 const OrderTable = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   return (
     <>
-      <OrderModal />
-      <Table columns={columns} style={{ height: TABLE_HEIGHT }} />
+      <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record, rowIndex) => {
+        return {
+          onClick: (event) => {
+
+            console.log(`selectedRowKeys: ${rowIndex}`, 'selectedRows: ', record);
+            setIsModalOpen(prev => !prev)
+          }, // click row
+        };
+      }} />
     </>
   )
 }

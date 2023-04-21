@@ -1,10 +1,15 @@
 import { Tag, Descriptions, Modal, Divider } from 'antd'
 import React from 'react'
-import ProductItemTable from '../Table/Product/ProductItemTable'
+import { ModalProps } from '../../interface/ModalProps'
+import ProductOrderDetailTable from '../Table/Product/ProductDetailTable.Order'
 
-const OrderModal = () => {
+interface OrderModalProps extends ModalProps {
+
+}
+
+const OrderModal = ({ isOpen, setIsModalOpen }: OrderModalProps) => {
   return (
-    <Modal title={'Thông tin đơn hàng'} open={true} width={'70vw'}>
+    <Modal title={'Thông tin đơn hàng'} open={isOpen} width={'70vw'} footer={null} onCancel={() => setIsModalOpen((prev: boolean) => !prev)}>
       <Descriptions title="Thông tin người dùng" bordered>
         <Descriptions.Item label="ID" span={1}>1</Descriptions.Item>
         <Descriptions.Item label="Họ tên" span={2}>Nguyễn Trí Đức</Descriptions.Item>
@@ -22,7 +27,7 @@ const OrderModal = () => {
         <Descriptions.Item label="Tổng giá" span={3}>$60.00</Descriptions.Item>
       </Descriptions>
       <Divider />
-      <ProductItemTable />
+      <ProductOrderDetailTable />
     </Modal>
   )
 }

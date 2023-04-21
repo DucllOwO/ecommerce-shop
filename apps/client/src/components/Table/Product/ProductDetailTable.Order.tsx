@@ -55,78 +55,6 @@ const data = [
     quantity: 10,
     price: 1000000000,
   },
-  {
-    id: 1,
-    name: 'Ao vang khe',
-    image: 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png',
-    color: 'Vang',
-    size: 'XL',
-    quantity: 10,
-    price: 1000000000,
-  },
-  {
-    id: 1,
-    name: 'Ao vang khe',
-    image: 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png',
-    color: 'Vang',
-    size: 'XL',
-    quantity: 10,
-    price: 1000000000,
-  },
-  {
-    id: 1,
-    name: 'Ao vang khe',
-    image: 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png',
-    color: 'Vang',
-    size: 'XL',
-    quantity: 10,
-    price: 1000000000,
-  },
-  {
-    id: 1,
-    name: 'Ao vang khe',
-    image: 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png',
-    color: 'Vang',
-    size: 'XL',
-    quantity: 10,
-    price: 1000000000,
-  },
-  {
-    id: 1,
-    name: 'Ao vang khe',
-    image: 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png',
-    color: 'Vang',
-    size: 'XL',
-    quantity: 10,
-    price: 1000000000,
-  },
-  {
-    id: 1,
-    name: 'Ao vang khe',
-    image: 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png',
-    color: 'Vang',
-    size: 'XL',
-    quantity: 10,
-    price: 1000000000,
-  },
-  {
-    id: 1,
-    name: 'Ao vang khe',
-    image: 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png',
-    color: 'Vang',
-    size: 'XL',
-    quantity: 10,
-    price: 1000000000,
-  },
-  {
-    id: 1,
-    name: 'Ao vang khe',
-    image: 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png',
-    color: 'Vang',
-    size: 'XL',
-    quantity: 10,
-    price: 1000000000,
-  },
 ]
 
 const columns: ColumnsType<DataType> = [
@@ -172,10 +100,10 @@ const columns: ColumnsType<DataType> = [
   },
 ];
 
-const ProductItemTable = () => {
+const ProductOrderDetailTable = () => {
   return (
     <Table columns={columns} dataSource={data} pagination={{ pageSize: 4 }} />
   )
 }
 
-export default ProductItemTable
+export default ProductOrderDetailTable
