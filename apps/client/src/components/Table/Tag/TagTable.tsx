@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { Button, Space, Table, Typography, Image } from 'antd';
+import { Button, Space, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import TagModal from '../../Modal/TagModal';
-import EditIcon from '../../../assets/icon/edit_96px.png'
 import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
 import {
   EditFilled,
