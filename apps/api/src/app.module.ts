@@ -1,3 +1,4 @@
+import { configuration } from './../config/configuration';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -16,6 +17,7 @@ import { ReportModule } from './report/report.module';
 import { TagModule } from './tag/tag.module';
 import { ProductItemModule } from './product-item/product-item.module';
 import { CollectionModule } from './collection/collection.module';
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [AuthModule, ConfigModule.forRoot(), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule],

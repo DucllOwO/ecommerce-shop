@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Cart, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 
 @Injectable()
@@ -39,8 +39,8 @@ export class CartService {
   async updateCart(params: {
     where: Prisma.CartWhereUniqueInput,
     data: Prisma.CartCreateInput
-  }) : Promise<Cart>{
-    const {where, data} = params;
+  }): Promise<Cart> {
+    const { where, data } = params;
     return this.prisma.cart.update({
       where,
       data

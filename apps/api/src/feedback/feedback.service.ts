@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Feedback, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class FeedbackService {
@@ -29,19 +29,20 @@ export class FeedbackService {
     });
   }
 
-  async createFeedback(data: Prisma.FeedbackCreateInput) : Promise<Feedback>{
+  async createFeedback(data: Prisma.FeedbackCreateInput): Promise<Feedback> {
     return this.prisma.feedback.create({
       data,
     });
   }
 
-  async updateFeedback(params : {
-    where : Prisma.FeedbackWhereUniqueInput, 
-    data: Prisma.FeedbackCreateInput}) : Promise<Feedback>{
-      const {where, data} = params
-      return this.prisma.feedback.update({
-        where, 
-        data
+  async updateFeedback(params: {
+    where: Prisma.FeedbackWhereUniqueInput,
+    data: Prisma.FeedbackCreateInput
+  }): Promise<Feedback> {
+    const { where, data } = params
+    return this.prisma.feedback.update({
+      where,
+      data
     });
   }
 }

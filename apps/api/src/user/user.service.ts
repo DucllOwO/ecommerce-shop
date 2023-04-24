@@ -50,7 +50,7 @@ export class UserService {
 
   async deleteUser(where: Prisma.UserWhereUniqueInput): Promise<User> {
     //let user =
-  
+
     return this.prisma.user.delete({
       where,
     });
