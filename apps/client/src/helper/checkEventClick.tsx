@@ -1,6 +1,6 @@
 export const isClickOnAnImgTag = (event: React.MouseEvent) => {
   const target = event.target as Element;
-  if (target.tagName === 'IMG') {
+  if (target.className.includes('ant-image')) {
     return true;
   }
   return false;

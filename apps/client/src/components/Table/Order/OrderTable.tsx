@@ -3,6 +3,7 @@ import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
 import OrderModal from '../../Modal/OrderModal';
+import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
 
 interface DataType {
   key?: string;
@@ -57,9 +58,8 @@ const OrderTable = () => {
       <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record, rowIndex) => {
         return {
           onClick: (event) => {
-
-            console.log(`selectedRowKeys: ${rowIndex}`, 'selectedRows: ', record);
-            setIsModalOpen(prev => !prev)
+            if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event)))
+              setIsModalOpen(prev => !prev)
           }, // click row
         };
       }} />

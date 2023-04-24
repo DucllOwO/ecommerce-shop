@@ -6,7 +6,7 @@ interface ProductManagementProps {
 
 const ProductManagement = ({ }: ProductManagementProps) => {
   return (
-    <div>
+    <div style={{ height: 1000 }}>
       <ProductTable />
     </div>
   )
