@@ -20,7 +20,9 @@ import { CollectionModule } from './collection/collection.module';
 import { AccountModule } from './account/account.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot(), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule],
+  imports: [AuthModule, ConfigModule.forRoot({
+    isGlobal: true,
+  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
