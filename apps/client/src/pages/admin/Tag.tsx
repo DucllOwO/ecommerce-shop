@@ -1,4 +1,4 @@
-import { Form } from 'antd';
+import { Button, Form, Space } from 'antd';
 import { useState } from 'react'
 import TagTable, { TagType } from '../../components/Table/Tag/TagTable'
 
@@ -17,9 +17,12 @@ const Tag = () => {
   const [data, setData] = useState(originData);
 
   return (
-    <Form form={form} component={false}>
-      <TagTable form={form} data={data} setData={setData} />
-    </Form>
+    <Space direction='vertical' style={{ width: '100%' }}>
+      <Button type="primary">Thêm mới</Button>
+      <Form form={form} component={false}>
+        <TagTable form={form} data={data} setData={setData} />
+      </Form>
+    </Space>
   )
 }
 

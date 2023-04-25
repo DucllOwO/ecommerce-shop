@@ -1,4 +1,4 @@
-import { Form } from 'antd';
+import { Button, Form, Space } from 'antd';
 import { useState } from 'react'
 import ProductModal from '../../components/Modal/ProductModal';
 import ProductTable from '../../components/Table/Product/ProductTable';
@@ -23,8 +23,11 @@ const ProductManagement = () => {
 
   return (
     <>
-      {renderModal(isModalOpen, setIsModalOpen, isEditing, setIsEditing)}
-      <ProductTable data={data} setData={setData} setIsEditing={setIsEditing} setIsModalOpen={setIsModalOpen} />
+      <Space direction='vertical' style={{ width: '100%' }}>
+        <Button type="primary">Thêm mới</Button>
+        {renderModal(isModalOpen, setIsModalOpen, isEditing, setIsEditing)}
+        <ProductTable data={data} setData={setData} setIsEditing={setIsEditing} setIsModalOpen={setIsModalOpen} />
+      </Space>
     </>
   )
 }

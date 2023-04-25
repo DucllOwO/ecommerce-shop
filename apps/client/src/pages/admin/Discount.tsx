@@ -1,4 +1,4 @@
-import { Form } from 'antd'
+import { Button, Form, Space } from 'antd'
 import React, { useState } from 'react'
 import DiscountTable, { DiscountType } from '../../components/Table/Discount/DiscountTable'
 
@@ -16,9 +16,12 @@ const Discount = () => {
   const [data, setData] = useState(originData);
 
   return (
-    <Form form={form} component={false}>
-      <DiscountTable form={form} data={data} setData={setData} />
-    </Form>
+    <Space direction='vertical' style={{ width: '100%' }}>
+      <Button type="primary">Thêm mới</Button>
+      <Form form={form} component={false}>
+        <DiscountTable form={form} data={data} setData={setData} />
+      </Form>
+    </Space>
   )
 }
 
