@@ -1,64 +1,136 @@
-import React, { useState } from 'react'
-
-import { Button, Space, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import { TABLE_HEIGHT } from '../../constant/styles';
+import React, { FC, useState } from 'react'
+import { Button, Popconfirm, Space, Table, Typography } from 'antd';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
 import CollectionModal from '../Modal/CollectionModal';
-import { isClickOnAnSVGTag } from '../../helper/checkEventClick';
+import { isClickOnATableCell } from '../../helper/checkEventClick';
+import { TableProps } from '../../interface/TableProps';
+import EditableCell from './EditableCell';
 
-interface DataType {
+export interface CollectionType {
   id: string;
   name: string;
   discount: number;
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    width: '15%',
-    render: (text) => <p>{text}</p>,
-  },
-  {
-    title: 'Tên',
-    key: 'name',
-    dataIndex: 'name',
-    render: (text) => <p>{text}</p>,
-  },
-  {
-    title: 'Thao tác',
-    key: 'action',
-    width: "10%",
-    render: (text) => (<Space>
-      <Button shape="circle" icon={<EditFilled />} />
-      <Button shape="circle" icon={<DeleteFilled />} />
-    </Space>)
-  },
-];
+interface CollectionTableProps extends TableProps {
+  data: CollectionType[],
+}
 
-const data = [
-  {
-    id: '1',
-    name: 'Thu dong',
-    discount: 10,
-  }
-]
-
-const CollectionTable = () => {
+const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const [editingKey, setEditingKey] = useState<string | undefined>('');
+
+  const isEditing = (record: CollectionType) => record.id === editingKey;
+
+  const columns = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+      width: '15%',
+    },
+    {
+      title: 'Tên',
+      key: 'name',
+      dataIndex: 'name',
+      editable: true,
+    },
+    {
+      title: 'Thao tác',
+      key: 'action',
+      width: "10%",
+      render: (_: any, record: CollectionType) => {
+        const editable = isEditing(record);
+        return <Space>
+          {editable ? <>
+            <Typography.Link onClick={() => save(record.id)} style={{ marginRight: 8 }}>
+              Lưu
+            </Typography.Link>
+            <Popconfirm title="Bạn có chắc muốn hủy bỏ chỉnh sửa?" onConfirm={cancel}>
+              <a>Hủy</a>
+            </Popconfirm>
+          </> :
+            <>
+              <Button
+                disabled={editingKey !== ''}
+                onClick={() => edit(record)}
+                shape="circle" icon={<EditFilled />} />
+              <Button disabled={editingKey !== ''} shape="circle" icon={<DeleteFilled />} />
+            </>
+          }
+
+        </Space>
+      }
+    },
+  ];
+
+  const edit = (record: Partial<CollectionType>) => {
+    form.setFieldsValue({ name: '', discount: '', ...record });
+    setEditingKey(record.id);
+  };
+
+  const cancel = () => {
+    setEditingKey('');
+  };
+
+  const save = async (id: string) => {
+    try {
+      const row = (await form.validateFields()) as CollectionType;
+
+      const newData = [...data];
+      const index = newData.findIndex((item) => id === item.id);
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, {
+          ...item,
+          ...row,
+        });
+        setData(newData);
+        setEditingKey('');
+      } else {
+        newData.push(row);
+        setData(newData);
+        setEditingKey('');
+      }
+    } catch (errInfo) {
+      console.log('Validate Failed:', errInfo);
+    }
+  };
+
+  const mergedColumns = columns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record: CollectionType) => ({
+        record,
+        inputType: col.dataIndex === 'discount' ? 'number' : 'text',
+        dataIndex: col.dataIndex,
+        title: col.title,
+        editing: isEditing(record),
+      }),
+    };
+  });
+
 
   return (
     <>
       <CollectionModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <Table
-        columns={columns}
+        components={{
+          body: {
+            cell: EditableCell,
+          },
+        }}
+        columns={mergedColumns}
         dataSource={data}
+        rowClassName="editable-row"
         onRow={(record, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
-              if (!isClickOnAnSVGTag(event))
+              if (isClickOnATableCell(event))
                 setIsModalOpen(prev => !prev)
             }, // click row
           };

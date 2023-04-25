@@ -1,12 +1,13 @@
-import { Tag, Descriptions, Modal, Image as AntdImage, Select, Form, InputNumber, Switch, Upload, UploadFile, UploadProps, Input } from 'antd'
+import { Tag, Descriptions, Modal, Image as AntdImage, Select, Form, InputNumber, Switch, Upload, UploadFile, UploadProps, Input, Button } from 'antd'
 import AntdImgCrop from 'antd-img-crop'
 import { RcFile } from 'antd/es/upload'
-import { useState } from 'react'
+import { FC, useState } from 'react'
 import { ModalProps } from '../../interface/ModalProps'
 import ProductOrderDetailTable from '../Table/Product/ProductDetailTable.Order'
 
 interface ProductModalProps extends ModalProps {
-  isEdit?: boolean,
+  isEditing?: boolean,
+  setIsEditing: Function
 }
 
 const onPreview = async (file: UploadFile) => {
@@ -23,7 +24,7 @@ const onPreview = async (file: UploadFile) => {
   imgWindow?.document.write(image.outerHTML);
 };
 
-const ProductModal = ({ isOpen, setIsModalOpen, isEdit = true }: ProductModalProps) => {
+const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing, setIsEditing }) => {
 
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`);
@@ -43,8 +44,25 @@ const ProductModal = ({ isOpen, setIsModalOpen, isEdit = true }: ProductModalPro
   };
 
   return (
-    <Modal title={'Thông tin chi tiết sản phẩm'} open={isOpen} width={'70vw'} footer={null} onCancel={() => setIsModalOpen((prev: boolean) => !prev)} >
-      {isEdit ?
+    <Modal
+      title={'Thông tin chi tiết sản phẩm'}
+      open={isOpen} width={'70vw'} footer={setModalFooter(isEditing)}
+      onCancel={() => {
+        if (isEditing === true)
+          Modal.confirm({
+            title: 'Cảnh báo mất dữ liệu',
+            content: 'Chưa lưu chỉnh sửa, thoát sẽ bị mất hết thông tin, bạn có đồng ý?',
+            okText: 'Đồng ý',
+            cancelText: 'Quay lại',
+            onOk: () => {
+              setIsEditing((prev: boolean) => !prev)
+              setIsModalOpen((prev: boolean) => !prev)
+            }
+          })
+        else
+          setIsModalOpen((prev: boolean) => !prev)
+      }} >
+      {isEditing ?
         <Form>
           <Descriptions title="Thông tin sản phẩm" bordered>
             <Descriptions.Item label="ID" span={1}>1</Descriptions.Item>
@@ -125,12 +143,21 @@ const ProductModal = ({ isOpen, setIsModalOpen, isEdit = true }: ProductModalPro
               <Input.TextArea style={{ width: '100%', height: 150 }} />
             </Descriptions.Item>
             <Descriptions.Item label="Giảm giá (%)" span={3}>
-              <InputNumber
-                defaultValue={100}
-                min={0}
-                max={100}
-                controls={false}
-                style={{ width: "100px" }}
+              <Select
+                allowClear
+                style={{ width: '100%' }}
+                placeholder="Chọn mã giảm giá áp dụng cho sản phẩm"
+                options={[
+                  {
+                    value: 'jack',
+                    label: 'Jack (100)',
+                  },
+                  {
+                    value: 'lucy',
+                    label: 'Lucy (101)',
+                  },
+                ]}
+                onChange={handleChange}
               />
             </Descriptions.Item>
             <Descriptions.Item label="Tổng giá (đ)" span={3}>
@@ -184,13 +211,32 @@ const ProductModal = ({ isOpen, setIsModalOpen, isEdit = true }: ProductModalPro
           </Descriptions.Item>
           <Descriptions.Item label="Ghi chú" span={3}>
           </Descriptions.Item>
-          <Descriptions.Item label="Giảm giá" span={3}>$20.00</Descriptions.Item>
+          <Descriptions.Item label="Giảm giá" span={3}>20</Descriptions.Item>
           <Descriptions.Item label="Tổng giá" span={3}>$60.00</Descriptions.Item>
         </Descriptions>
       }
 
     </Modal>
   )
+
+  function setModalFooter(isEditing: boolean | undefined) {
+    return isEditing ? [
+      <Button key="back" onClick={() => {
+        setIsEditing(false)
+        setIsModalOpen(false)
+      }}>
+        Hủy bỏ
+      </Button>,
+      <Button key="submit" type="primary" onClick={() => {
+        setIsEditing(false)
+        setIsModalOpen(false)
+      }}>
+        Lưu
+      </Button>
+    ] : null
+  }
 }
+
+
 
 export default ProductModal

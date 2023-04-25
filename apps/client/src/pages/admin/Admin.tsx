@@ -22,13 +22,15 @@ const Admin = () => {
             {collapsed ? <MenuUnfoldOutlined style={{ fontSize: 20 }} onClick={() => setCollapsed(prev => !prev)} /> : <MenuFoldOutlined onClick={() => setCollapsed(prev => !prev)} style={{ fontSize: 20 }} />}
           </span>
         </Header>
-        <Content
-          style={{
-            padding: 20,
-          }}
-        >
-          <Outlet />
-        </Content>
+        <Scrollbars>
+          <Content
+            style={{
+              padding: 20,
+            }}
+          >
+            <Outlet />
+          </Content>
+        </Scrollbars>
       </Layout>
     </Layout>
   )

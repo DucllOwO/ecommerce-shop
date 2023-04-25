@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
+import React, { FC, useState } from 'react'
 
 import { Button, Image, Space, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
 import ProductModal from '../../Modal/ProductModal';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
-import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
-
-interface DataType {
+import { isClickOnAnImgTag, isClickOnAnSVGTag, isClickOnATableCell } from '../../../helper/checkEventClick';
+import { TableProps } from '../../../interface/TableProps';
+export interface ProductType {
   id: string;
   name: string;
   description: string;
@@ -16,75 +16,68 @@ interface DataType {
   sold: number;
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    render: (text) => <p>{text}</p>,
-  },
-  {
-    title: 'Sản phẩm',
-    key: 'name_image',
-    render: (text, record) => <Space direction='horizontal'>
-      <Image width={100} height={150} alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
-      <Typography.Text>{record.name}</Typography.Text>
-    </Space>,
-  },
-  {
-    title: 'Gía',
-    dataIndex: 'price',
-    key: 'price',
-    render: (text) => <p>{text}</p>,
+interface ProductTableProps extends TableProps {
+  data: ProductType[],
+  setIsEditing: Function,
+  setIsModalOpen: Function
+}
 
-  },
-  {
-    title: 'Lượt xem',
-    dataIndex: 'view',
-    key: 'view',
-    render: (text) => <p>{text}</p>,
+const ProductTable: FC<ProductTableProps> = ({ data, setData, setIsEditing, setIsModalOpen }) => {
 
-  },
-  {
-    title: 'Bán',
-    dataIndex: 'sold',
-    key: 'sold',
-    render: (text) => <p>{text}</p>,
+  const [editingKey, setEditingKey] = useState<string | undefined>('');
 
-  },
-  {
-    title: 'Thao tác',
-    key: 'action',
-    width: '10%',
-    render: (text) => <Space>
-      <Button shape="circle" icon={<EditFilled />} />
-      <Button shape="circle" icon={<DeleteFilled />} />
-    </Space>,
-  },
-];
-
-const data = [{
-  id: 'string',
-  name: 'number',
-  description: 'string',
-  image: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-  price: 100000000,
-  view: 1000,
-  sold: 9999,
-}]
-
-const ProductTable = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const columns = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Sản phẩm',
+      key: 'name_image',
+      render: (text: string, record: ProductType) => <Space direction='horizontal'>
+        <Image width={100} height={150} alt="example" src={record.image} />
+        <Typography.Text>{record.name}</Typography.Text>
+      </Space>,
+    },
+    {
+      title: 'Gía',
+      dataIndex: 'price',
+      key: 'price',
+    },
+    {
+      title: 'Lượt xem',
+      dataIndex: 'view',
+      key: 'view',
+    },
+    {
+      title: 'Bán',
+      dataIndex: 'sold',
+      key: 'sold',
+    },
+    {
+      title: 'Thao tác',
+      key: 'action',
+      width: '10%',
+      render: (_: any, record: ProductType) => <Space>
+        <Button shape="circle" icon={<EditFilled />} onClick={() => {
+          setIsEditing((prev: boolean) => !prev);
+          setIsModalOpen((prev: boolean) => !prev)
+        }} />
+        <Button shape="circle" icon={<DeleteFilled />} />
+      </Space>,
+    },
+  ];
 
   return (
     <>
-      <ProductModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} isEdit={true} />
+
       <Table columns={columns} dataSource={data} onRow={(record, rowIndex) => {
         return {
           onClick: (event) => {
-            if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event)))
-              setIsModalOpen(prev => !prev)
-          }, // click row
+            if (isClickOnATableCell(event))
+              setIsModalOpen((prev: boolean) => !prev)
+          },
         };
       }} />
     </>

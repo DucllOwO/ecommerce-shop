@@ -1,15 +1,42 @@
-import React from 'react'
-import ProductTable from '../../components/Table/Product/ProductTable'
+import { Form } from 'antd';
+import { useState } from 'react'
+import ProductModal from '../../components/Modal/ProductModal';
+import ProductTable from '../../components/Table/Product/ProductTable';
+import { ProductType } from '../../components/Table/Product/ProductTable'
 
-interface ProductManagementProps {
+const originData: ProductType[] = [];
+for (let i = 0; i < 15; i++) {
+  originData.push({
+    id: i.toString(),
+    name: `Product ${i}`,
+    description: `Description ${i}`,
+    image: 'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png',
+    sold: i + 100,
+    view: i + 200
+  });
 }
 
-const ProductManagement = ({ }: ProductManagementProps) => {
+const ProductManagement = () => {
+  const [data, setData] = useState(originData);
+  const [isEditing, setIsEditing] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   return (
-    <div style={{ height: 1000 }}>
-      <ProductTable />
-    </div>
+    <>
+      {renderModal(isModalOpen, setIsModalOpen, isEditing, setIsEditing)}
+      <ProductTable data={data} setData={setData} setIsEditing={setIsEditing} setIsModalOpen={setIsModalOpen} />
+    </>
   )
+}
+
+function renderModal(isOpen: boolean, setIsModalOpen: Function, isEditing: boolean, setIsEditing: Function) {
+  if (isOpen === false)
+    return null;
+
+  if (isEditing === true)
+    return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} isEditing={true} setIsEditing={setIsEditing} />
+  else
+    return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} isEditing={false} setIsEditing={setIsEditing} />
 }
 
 export default ProductManagement
