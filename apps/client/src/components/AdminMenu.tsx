@@ -8,6 +8,7 @@ import ReivewIcon from '../assets/menu/good_quality_96px.png'
 import ReceiptIcon from '../assets/menu/receipt_96px.png'
 import PolicyIcon from '../assets/menu/terms_and_conditions_96px.png'
 import DiscountIcon from '../assets/icon/loyalty_card_96px.png'
+import VoucherIcon from '../assets/icon/sale_96px.png'
 import type { MenuProps } from 'antd/es/menu'
 import { Image, Menu } from 'antd'
 import { useNavigate } from 'react-router-dom'
@@ -92,7 +93,11 @@ const menu: MenuProps['items'] = [
     label: 'Giảm giá',
     icon: generateImageIcon(DiscountIcon)
   },
-
+  {
+    key: 'voucher',
+    label: 'Voucher',
+    icon: generateImageIcon(VoucherIcon)
+  },
   {
     key: 'policy',
     label: 'Chính sách',

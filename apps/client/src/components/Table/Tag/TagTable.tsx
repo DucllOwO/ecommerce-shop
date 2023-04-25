@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
+import { INPUT, SELECT } from '../../../constant/constant';
 
 export interface TagType {
   id: string;
@@ -114,7 +115,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
       ...col,
       onCell: (record: TagType) => ({
         record,
-        inputType: col.dataIndex === 'discount' ? 'number' : 'text',
+        inputType: getType(col.dataIndex),
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -147,6 +148,15 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
       />
     </>
   )
+}
+
+function getType(dataIndex: string) {
+  switch (dataIndex) {
+    case 'discount':
+      return SELECT;
+    default:
+      return INPUT;
+  }
 }
 
 export default TagTable

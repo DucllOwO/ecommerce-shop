@@ -1,54 +1,72 @@
 import React, { FC, useState } from 'react'
-import { Button, Popconfirm, Space, Table, Typography } from 'antd';
+import { Table, Space, Button, Typography, Popconfirm } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
-import CollectionModal from '../Modal/CollectionModal';
-import { isClickOnATableCell } from '../../helper/checkEventClick';
 import { TableProps } from '../../interface/TableProps';
+import { isClickOnATableCell } from '../../helper/checkEventClick';
 import EditableCell from './EditableCell';
-import { INPUT, SELECT } from '../../constant/constant';
+import { DATE, INPUT, INPUT_NUMBER, TEXTAREA } from '../../constant/constant';
 
-export interface CollectionType {
-  id: string;
+export interface VoucherType {
+  code: string;
   name: string;
+  description: string,
+  due: string,
   discount: number;
 }
 
-interface CollectionTableProps extends TableProps {
-  data: CollectionType[],
+interface VoucherTableProps extends TableProps {
+  data: VoucherType[],
 }
 
-const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
+const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
-  const isEditing = (record: CollectionType) => record.id === editingKey;
+  const isEditing = (record: VoucherType) => record.code === editingKey;
 
   const columns = [
     {
-      title: 'ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: '15%',
+      title: 'Code',
+      dataIndex: 'code',
+      key: 'code',
     },
     {
-      title: 'Tên',
-      key: 'name',
+      title: 'Tên khuyến mãi',
       dataIndex: 'name',
+      key: 'name',
+      editable: true,
+    },
+    {
+      title: 'Giảm giá',
+      dataIndex: 'discount',
+      key: 'discount',
+      editable: true,
+    },
+    {
+      title: 'Ngày hết hạn',
+      dataIndex: 'due',
+      key: 'due',
+      editable: true,
+    },
+    {
+      title: 'Mô tả',
+      dataIndex: 'description',
+      key: 'description',
       editable: true,
     },
     {
       title: 'Thao tác',
       key: 'action',
       width: "10%",
-      render: (_: any, record: CollectionType) => {
+      render: (_: any, record: VoucherType) => {
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
-            <Typography.Link onClick={() => save(record.id)} style={{ marginRight: 8 }}>
+            <Typography.Link onClick={() => save(record.code)} style={{ marginRight: 8 }}>
               Lưu
             </Typography.Link>
-            <Popconfirm title="Bạn có chắc muốn hủy bỏ chỉnh sửa?" onConfirm={cancel}>
+            <Popconfirm title="Thông tin sẽ không được lưu bạn có chắc chắn muốn hủy?" onConfirm={cancel}>
               <a>Hủy</a>
             </Popconfirm>
           </> :
@@ -66,9 +84,9 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
     },
   ];
 
-  const edit = (record: Partial<CollectionType>) => {
-    form?.setFieldsValue({ name: '', discount: '', ...record });
-    setEditingKey(record.id);
+  const edit = (record: Partial<VoucherType>) => {
+    form?.setFieldsValue({ name: '', discount: '', due: '', description: '', ...record });
+    setEditingKey(record.code);
   };
 
   const cancel = () => {
@@ -77,10 +95,10 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
 
   const save = async (id: string) => {
     try {
-      const row = (await form?.validateFields()) as CollectionType;
+      const row = (await form?.validateFields()) as VoucherType;
 
       const newData = [...data];
-      const index = newData.findIndex((item) => id === item.id);
+      const index = newData.findIndex((item) => id === item.code);
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -105,7 +123,7 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
     }
     return {
       ...col,
-      onCell: (record: CollectionType) => ({
+      onCell: (record: VoucherType) => ({
         record,
         inputType: getType(col.dataIndex),
         dataIndex: col.dataIndex,
@@ -115,19 +133,11 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
     };
   });
 
-
   return (
     <>
-      <CollectionModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
         columns={mergedColumns}
         dataSource={data}
-        rowClassName="editable-row"
         onRow={(record, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
@@ -136,6 +146,12 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
             }, // click row
           };
         }}
+        components={{
+          body: {
+            cell: EditableCell,
+          },
+        }}
+        rowClassName="editable-row"
       />
     </>
   )
@@ -143,11 +159,15 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
 
 function getType(dataIndex: string) {
   switch (dataIndex) {
+    case 'due':
+      return DATE;
+    case 'description':
+      return TEXTAREA;
     case 'discount':
-      return SELECT;
+      return INPUT_NUMBER;
     default:
       return INPUT;
   }
 }
 
-export default CollectionTable
+export default VoucherTable

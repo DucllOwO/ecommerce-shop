@@ -19,6 +19,7 @@ import Discount from './pages/admin/Discount.js';
 import Policy from './pages/admin/Policy.js';
 import Information from './pages/admin/Information.js';
 import Feedback from './pages/admin/Feedback.js';
+import Voucher from './pages/admin/Voucher.js';
 
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
           <Route key={'delivery'} path='delivery' element={<Delivery />} />
           <Route key={'feedback'} path='feedback' element={<Feedback />} />
           <Route key={'discount'} path='discount' element={<Discount />} />
+          <Route key={'voucher'} path='voucher' element={<Voucher />} />
           <Route key={'policy'} path='policy' element={<Policy />} />
           <Route key={'information'} path='information' element={<Information />} />
         </Route>
