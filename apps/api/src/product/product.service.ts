@@ -11,6 +11,9 @@ export class ProductService {
   ): Promise<Product | null> {
     return this.prisma.product.findUnique({
       where: productWhereUniqueInput,
+      include: {
+        Product_item: true
+      }
     });
   }
 
@@ -21,7 +24,7 @@ export class ProductService {
     where?: Prisma.ProductWhereInput;
     orderBy?: Prisma.ProductOrderByWithRelationInput;
   }): Promise<Product[]> {
-    const { skip, take, cursor, where, orderBy } = params;
+    const { skip, take, orderBy } = params;
     return this.prisma.product.findMany({
       skip,
       take,

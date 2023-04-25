@@ -12,6 +12,9 @@ export class CollectionService {
   ): Promise<Collection | null> {
     return this.prisma.collection.findUnique({
       where: collectionWhereUniqueInput,
+      include: {
+        Product: true
+      }
     });
   }
 

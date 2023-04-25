@@ -9,7 +9,6 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 model Account {
   email    String  @id @db.VarChar(256)
   password String  @db.VarChar(100)
@@ -74,6 +73,7 @@ model Product {
   image         String[]
   view          Int             @default(0)
   sold          Int             @default(0)
+  isActive      Boolean         @default(true)
   discount      Discount?       @relation(fields: [discountID], references: [id], onDelete: SetNull)
   discountID    Int?
   tag           Tag             @relation(fields: [tagID], references: [id], onDelete: NoAction)
