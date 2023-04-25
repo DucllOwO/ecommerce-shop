@@ -23,42 +23,40 @@ import Feedback from './pages/admin/Feedback.js';
 
 function App() {
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <BrowserRouter>
-        <Routes>
-          <Route key={'admin'} path='/admin' element={<Admin />}>
-            <Route key={'dashboard'} path='dashboard' index element={<Dashboard />} />
-            <Route key={'order'} path='order'>
-              <Route key={'order_waiting'} path='waiting' element={<Order state={ORDER_WAITING_STATE} />} />
-              <Route key={'order_completed'} path='completed' element={<Order state={ORDER_COMPLETED_STATE} />} />
-            </Route>
-            <Route key={'product'} path='product'>
-              <Route key={'collection'} path='collection' element={<Collection />} />
-              <Route key={'product'} path='' element={<ProductManagement />} />
-              <Route key={'tag'} path='tag' element={<Tag />} />
-            </Route>
-            <Route key={'delivery'} path='delivery' element={<Delivery />} />
-            <Route key={'Receipt'} path='receipt'>
-              <Route key={'paid'} path='paid' element={<Receipt state={RECEIPT_PAID_STATE} />} />
-              <Route key={'unpaid'} path='unpaid' element={<Receipt state={RECEIPT_UNPAID_STATE} />} />
-            </Route>
-            <Route key={'delivery'} path='delivery' element={<Delivery />} />
-            <Route key={'feedback'} path='feedback' element={<Feedback />} />
-            <Route key={'discount'} path='discount' element={<Discount />} />
-            <Route key={'policy'} path='policy' element={<Policy />} />
-            <Route key={'information'} path='information' element={<Information />} />
+    <BrowserRouter>
+      <Routes>
+        <Route key={'admin'} path='/admin' element={<Admin />}>
+          <Route key={'dashboard'} path='dashboard' index element={<Dashboard />} />
+          <Route key={'order'} path='order'>
+            <Route key={'order_waiting'} path='waiting' element={<Order state={ORDER_WAITING_STATE} />} />
+            <Route key={'order_completed'} path='completed' element={<Order state={ORDER_COMPLETED_STATE} />} />
           </Route>
-          <Route key={'customer'} path='/' element={<Customer />}>
-            <Route key={'home'} index element={<Home />}></Route>
-            <Route key={'catalog'} path='catalog' element={<Catalog />}></Route>
-            <Route key={'product'} path='product/:title' element={<Product />}></Route>
-            <Route key={'cart'} path='cart' element={<Cart />}></Route>
-            <Route key={'login'} path='login' element={<Login />}></Route>
-            <Route key={'signup'} path='signup' element={<SignUp />}></Route>
+          <Route key={'product'} path='product'>
+            <Route key={'collection'} path='collection' element={<Collection />} />
+            <Route key={'product'} path='' element={<ProductManagement />} />
+            <Route key={'tag'} path='tag' element={<Tag />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+          <Route key={'delivery'} path='delivery' element={<Delivery />} />
+          <Route key={'Receipt'} path='receipt'>
+            <Route key={'paid'} path='paid' element={<Receipt state={RECEIPT_PAID_STATE} />} />
+            <Route key={'unpaid'} path='unpaid' element={<Receipt state={RECEIPT_UNPAID_STATE} />} />
+          </Route>
+          <Route key={'delivery'} path='delivery' element={<Delivery />} />
+          <Route key={'feedback'} path='feedback' element={<Feedback />} />
+          <Route key={'discount'} path='discount' element={<Discount />} />
+          <Route key={'policy'} path='policy' element={<Policy />} />
+          <Route key={'information'} path='information' element={<Information />} />
+        </Route>
+        <Route key={'customer'} path='/' element={<Customer />}>
+          <Route key={'home'} index element={<Home />}></Route>
+          <Route key={'catalog'} path='catalog' element={<Catalog />}></Route>
+          <Route key={'product'} path='product/:title' element={<Product />}></Route>
+          <Route key={'cart'} path='cart' element={<Cart />}></Route>
+          <Route key={'login'} path='login' element={<Login />}></Route>
+          <Route key={'signup'} path='signup' element={<SignUp />}></Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

@@ -1,14 +1,15 @@
 import Layout, { Content, Footer, Header } from 'antd/es/layout/layout'
-import React from 'react'
 import { Outlet } from 'react-router-dom'
-import heroSliderData from '../../assets/fake-data/hero-slider'
-import Home from './Home'
 import HeaderCustom from './components/Header'
 import FooterCustom from './components/Footer'
+import { Scrollbars } from 'react-custom-scrollbars'
 
 const Customer = () => {
   return (
-    <Layout>
+    <Layout style={{
+      width: "100%",
+      overflowX: 'hidden'
+    }}>
       <Header style={{ height: 'var(--header-height)' }}>
         <HeaderCustom />
       </Header>
