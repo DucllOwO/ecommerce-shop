@@ -46,11 +46,6 @@ const columns: ColumnsType<DataType> = [
     key: 'total_price',
     render: (text) => <p>{text}</p>,
   },
-  {
-    title: 'Thao tác',
-    key: 'action',
-    width: "10%"
-  },
 ];
 
 const ReceiptTable = () => {

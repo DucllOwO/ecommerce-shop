@@ -3,7 +3,6 @@ import AntdImgCrop from 'antd-img-crop'
 import { RcFile } from 'antd/es/upload'
 import { FC, useState } from 'react'
 import { ModalProps } from '../../interface/ModalProps'
-import ProductOrderDetailTable from '../Table/Product/ProductDetailTable.Order'
 
 interface ProductModalProps extends ModalProps {
   isEditing?: boolean,

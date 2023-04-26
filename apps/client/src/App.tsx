@@ -20,6 +20,7 @@ import Policy from './pages/admin/Policy.js';
 import Information from './pages/admin/Information.js';
 import Feedback from './pages/admin/Feedback.js';
 import Voucher from './pages/admin/Voucher.js';
+import CustomerManagement from './pages/admin/CustomerManagement.js';
 
 
 function App() {
@@ -47,7 +48,7 @@ function App() {
           <Route key={'discount'} path='discount' element={<Discount />} />
           <Route key={'voucher'} path='voucher' element={<Voucher />} />
           <Route key={'policy'} path='policy' element={<Policy />} />
-          <Route key={'information'} path='information' element={<Information />} />
+          <Route key={'customer-management'} path='customer-management' element={<CustomerManagement />}></Route>
         </Route>
         <Route key={'customer'} path='/' element={<Customer />}>
           <Route key={'home'} index element={<Home />}></Route>
@@ -56,6 +57,7 @@ function App() {
           <Route key={'cart'} path='cart' element={<Cart />}></Route>
           <Route key={'login'} path='login' element={<Login />}></Route>
           <Route key={'signup'} path='signup' element={<SignUp />}></Route>
+
         </Route>
       </Routes>
     </BrowserRouter>

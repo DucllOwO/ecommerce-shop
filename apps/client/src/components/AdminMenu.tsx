@@ -102,11 +102,10 @@ const menu: MenuProps['items'] = [
     key: 'policy',
     label: 'Chính sách',
     icon: generateImageIcon(PolicyIcon)
-  }
-  ,
+  },
   {
-    key: 'information',
-    label: 'Thông tin',
+    key: 'customer-management',
+    label: 'Khách hàng',
     icon: generateImageIcon(InformationIcon)
   }
 ]

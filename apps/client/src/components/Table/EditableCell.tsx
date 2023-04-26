@@ -11,6 +11,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   record: any;
   index: number;
   children: React.ReactNode;
+  rules: object;
 }
 
 const getComponentByType = (type: string) => {
@@ -37,9 +38,10 @@ const EditableCell: React.FC<EditableCellProps> = ({
   record,
   index,
   children,
+  rules,
   ...restProps
 }) => {
-  console.log(inputType)
+  console.log(rules)
   const inputNode = getComponentByType(inputType)
 
   return (
