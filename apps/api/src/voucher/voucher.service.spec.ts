@@ -16,9 +16,13 @@ describe('VoucherService', () => {
     expect(service).toBeDefined();
   });
 
-  it('get all method', () => {
+  it('get all voucher should have returned', () => {
     expect(service.vouchers({})).toHaveReturned();
-  })
+  });
+
+  it('get voucher should have returned', () => {
+    expect(service.voucher({code: "09301"})).toMatchObject({code: "09301"});
+  });
 
   // it('get one method', () => {
   //   expect(service.voucher("000001")).toHaveReturnedWith({})
