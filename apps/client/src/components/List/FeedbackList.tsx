@@ -6,10 +6,8 @@ const data = Array.from({ length: 23 }).map((_, i) => ({
   href: 'https://ant.design',
   title: `ant design part ${i}`,
   avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=${i}`,
-  description:
-    'Ant Design, a design language for background applications, is refined by Ant UED Team.',
   content:
-    'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
+    'We supply a series of design principles, practical patterns and high quality design resources.',
 }));
 
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
@@ -20,7 +18,11 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
 );
 
 
-const FeedbackList: React.FC = () => (
+interface FeedbackListProps {
+  pageSize: number
+}
+
+const FeedbackList: React.FC<FeedbackListProps> = ({ pageSize = 3 }) => (
   <List
     itemLayout="vertical"
     size="large"
@@ -36,7 +38,7 @@ const FeedbackList: React.FC = () => (
         key={item.title}
         extra={
           <img
-            width={272}
+            width={250}
             alt="logo"
             src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
           />
@@ -45,7 +47,6 @@ const FeedbackList: React.FC = () => (
         <List.Item.Meta
           avatar={<Avatar src={item.avatar} />}
           title={<a href={item.href}>{item.title}</a>}
-          description={item.description}
         />
         {item.content}
       </List.Item>
