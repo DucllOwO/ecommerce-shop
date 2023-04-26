@@ -15,4 +15,12 @@ describe('ReviewService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('get all review should have returned', () => {
+    expect(service.reviews({})).toHaveReturned();
+  });
+
+  it('get review should have returned', () => {
+    expect(service.review({id: 1})).toMatchObject({id: 1});
+  });
 });
