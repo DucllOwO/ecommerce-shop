@@ -15,4 +15,12 @@ describe('TagService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
+  it('get all tag should have returned', () => {
+    expect(service.tags({})).toHaveReturned();
+  });
+
+  it('get tag should have returned', () => {
+    expect(service.tag({id: 1})).toMatchObject({id: 1});
+  });
 });
