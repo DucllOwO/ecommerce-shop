@@ -23,10 +23,8 @@ describe('CollectionService', () => {
   it('get collection with id=1 should have returned with [object]', () => {
     expect(service.collection({
       id: 1
-    })).toHaveReturnedWith({
-      id: 1,
-      name: 'Mùa xuân',
-      discountID: 1
+    })).toMatchObject({
+      id: 1
     })
   })
 

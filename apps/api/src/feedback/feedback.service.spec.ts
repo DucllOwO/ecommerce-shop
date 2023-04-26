@@ -18,7 +18,7 @@ describe('FeedbackService', () => {
   });
 
   it('get feedback should have returned', () => {
-    expect(service.feedback({id: 1})).toHaveReturned();
+    expect(service.feedback({id: 1})).toMatchObject({id: 1});
   })
 
   it('get all feedback should have returned', () => {
