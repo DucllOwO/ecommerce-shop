@@ -9,6 +9,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model Account {
   email    String  @id @db.VarChar(256)
   password String  @db.VarChar(100)
@@ -26,6 +27,7 @@ model User {
   product_viewed String[]
   account        Account    @relation(fields: [email], references: [email])
   email          String     @db.VarChar(256)
+  logged_date    DateTime   @default(now()) @db.Timestamptz()
   Feedback       Feedback[]
   Review         Review[]
   Cart           Cart[]
