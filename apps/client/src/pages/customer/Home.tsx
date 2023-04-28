@@ -1,4 +1,4 @@
-import { Carousel, Col, Divider, Image, List, Row, Space } from 'antd'
+import { Carousel, Col, Image, Row, Space } from 'antd'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import policy from '../../assets/fake-data/policy'
@@ -17,6 +17,7 @@ import banner from '../../assets/images/banner.png'
 import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import { LeftArrow, RightArrow } from './components/Arrow'
 import Title from 'antd/es/typography/Title'
+import Scrollbars from 'react-custom-scrollbars'
 
 const Home = () => {
     return (
@@ -81,7 +82,7 @@ const Home = () => {
                 <Row>
                     <Col span={4}> <Image src={new_product_picture} preview={false} /></Col>
                     <Col span={20}>
-                        <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow} Footer={null}>
+                        <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow} Footer={null} >
                             {productData.getProducts(8).map((item, index) => (
                                 <ProductCard
                                     key={index}

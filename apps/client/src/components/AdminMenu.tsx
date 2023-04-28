@@ -7,8 +7,11 @@ import DeliveryIcon from '../assets/menu/in_transit_96px.png'
 import ReivewIcon from '../assets/menu/good_quality_96px.png'
 import ReceiptIcon from '../assets/menu/receipt_96px.png'
 import PolicyIcon from '../assets/menu/terms_and_conditions_96px.png'
+import DiscountIcon from '../assets/icon/loyalty_card_96px.png'
+import VoucherIcon from '../assets/icon/sale_96px.png'
 import type { MenuProps } from 'antd/es/menu'
 import { Image, Menu } from 'antd'
+import { useNavigate } from 'react-router-dom'
 
 const generateImageIcon = (path: string) => {
   return <div className='centerflex'>
@@ -28,12 +31,12 @@ const menu: MenuProps['items'] = [
     icon: generateImageIcon(OrderIcon),
     children: [
       {
-        key: 'waiting',
+        key: 'order/waiting',
         label: 'Đang chờ',
 
       },
       {
-        key: 'completed',
+        key: 'order/completed',
         label: 'Hoàn thành',
       }
     ]
@@ -45,15 +48,16 @@ const menu: MenuProps['items'] = [
     icon: generateImageIcon(ProductIcon),
     children: [
       {
-        key: 'category',
-        label: 'Loại sản phẩm',
+        key: 'product/tag',
+        label: 'Nhãn',
+        title: 'Nhãn để gắn cho sản phẩm: quần, áo, màu sắc,...'
       },
       {
-        key: 'collection',
+        key: 'product/collection',
         label: 'Bộ sưu tập'
       },
       {
-        key: 'product-child',
+        key: 'product/',
         label: 'Sản phẩm'
       }
     ]
@@ -70,11 +74,11 @@ const menu: MenuProps['items'] = [
     icon: generateImageIcon(ReceiptIcon),
     children: [
       {
-        key: 'paid',
+        key: 'receipt/paid',
         label: 'Đã thanh toán'
       },
       {
-        key: 'unpaid',
+        key: 'receipt/unpaid',
         label: 'Chưa thanh toán'
       }
     ]
@@ -83,28 +87,47 @@ const menu: MenuProps['items'] = [
     key: 'feedback',
     label: 'Đánh giá',
     icon: generateImageIcon(ReivewIcon)
-  }
-  ,
+  },
+  {
+    key: 'discount',
+    label: 'Giảm giá',
+    icon: generateImageIcon(DiscountIcon)
+  },
+  {
+    key: 'voucher',
+    label: 'Voucher',
+    icon: generateImageIcon(VoucherIcon)
+  },
   {
     key: 'policy',
     label: 'Chính sách',
     icon: generateImageIcon(PolicyIcon)
-  }
-  ,
+  },
   {
-    key: 'information',
-    label: 'Thông tin',
+    key: 'customer-management',
+    label: 'Khách hàng',
     icon: generateImageIcon(InformationIcon)
   }
 ]
 
 const AdminMenu = () => {
+  const navigate = useNavigate();
+
+  const onClickHandler: MenuProps['onClick'] = (e) => {
+    if (e.key === "/login") {
+      navigate("/");
+    } else {
+      navigate(e.key);
+    }
+  }
+
   return (
     <Menu
       theme="dark"
       mode="inline"
       defaultSelectedKeys={['1']}
       items={menu}
+      onClick={onClickHandler}
     />
   )
 }

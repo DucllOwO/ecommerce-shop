@@ -1,12 +1,8 @@
 import React from 'react'
 import OrderTable from '../../components/Table/Order/OrderTable'
 
-interface OrderProps {
-  state: string
-}
-
-const Order = ({ state }: OrderProps) => {
-  console.log(state)
+const Delivery = () => {
+  // different only status
   return (
     <div>
       <OrderTable />
@@ -14,4 +10,4 @@ const Order = ({ state }: OrderProps) => {
   )
 }
 
-export default Order
+export default Delivery

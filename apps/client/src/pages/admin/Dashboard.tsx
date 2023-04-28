@@ -8,6 +8,7 @@ import ShirtIcon from '../../assets/icon/t-shirt_96px.png'
 import LineChart from '../../components/Chart/LineChart'
 import UserIcon from '../../assets/icon/user_96px.png'
 import pic1 from '../../assets/images/products/product-01 (1).jpg'
+import FeedbackList from '../../components/List/FeedbackList'
 
 const { Meta } = Card;
 
@@ -55,17 +56,7 @@ const Dashboard = () => {
           </Card>
         </Col>
         <Col span={12}>
-          <Card bordered title={"Đánh giá của khách hàng"} style={{ height: '100%' }}>
-            <Meta avatar={<Avatar src={UserIcon} />}
-              title={'Khách A'}
-              description={'Mlem mlem'} />
-            <Meta avatar={<Avatar src={UserIcon} />}
-              title={'Khách A'}
-              description={'Mlem mlem'} />
-            <Meta avatar={<Avatar src={UserIcon} />}
-              title={'Khách A'}
-              description={'Mlem mlem'} />
-          </Card>
+          <FeedbackList pageSize={2} />
         </Col>
       </Row>
     </div>
