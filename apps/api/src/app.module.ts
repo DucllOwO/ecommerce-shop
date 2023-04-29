@@ -22,7 +22,7 @@ import { AccountModule } from './account/account.module';
 @Module({
   imports: [AuthModule, ConfigModule.forRoot({
     isGlobal: true,
-  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule],
+  }), UserModule, ProductModule , ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })

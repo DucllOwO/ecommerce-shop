@@ -12,9 +12,9 @@ const ProductCard = (props: ProductCardProps) => {
                 </div>
                 <h3 className="product-card__name">{props.name}</h3>
                 <div className="product-card__price">
-                    1000000
+                    {props.price}
                     <span className="product-card__price__old">
-                        <del>100000</del>
+                        <del>{props.price}</del>
                     </span>
                 </div>
             </Link>
