@@ -1,5 +1,5 @@
 import { publicRequest } from "./api";
-import { Product } from "../interface/Product";
+import { IProduct } from "../interface/Product";
 
 export function fetchAllProducts(){
   return publicRequest.get(`/product`);

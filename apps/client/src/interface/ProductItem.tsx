@@ -1,5 +1,5 @@
 
-export interface ProductItem{
+export interface IProductItem{
     id: number
     color: string
     size: string

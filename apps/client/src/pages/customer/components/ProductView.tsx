@@ -4,12 +4,12 @@ import productData from '../../../assets/fake-data/products'
 
 import img01 from '../../../assets/images/products/ao-polo-nam-apm5351-nav-2-yodyvn.jpg'
 import { fetchProduct } from '../../../api/CustomerAPI'
-import { Product } from '../../../interface/Product'
-import { ProductItem } from '../../../interface/ProductItem'
+import { IProduct } from '../../../interface/Product'
+import { IProductItem } from '../../../interface/ProductItem'
 
 const ProductView = (props: ProductViewProps) => {
 
-    const [product, setProduct] = useState<Product>();
+    const [product, setProduct] = useState<IProduct>();
 
     const [previewImg, setPreviewImg] = useState<string[]>();
 
@@ -26,10 +26,10 @@ const ProductView = (props: ProductViewProps) => {
             console.log(data.data)
             setProduct(data.data);
             setPreviewImg(data.data?.image);
-            setColor(Array.from(new Set(data.data.ProductItem?.map((data: ProductItem) => data.color))))
-            setColor(Array.from(new Set(data.data.ProductItem?.map((data: ProductItem) => data.size))))
+            setColor(Array.from(new Set(data.data.ProductItem?.map((data: IProductItem) => data.color))))
+            setColor(Array.from(new Set(data.data.ProductItem?.map((data: IProductItem) => data.size))))
         })
-    }, [product])
+    }, [props])
 
 
     return (
