@@ -1,6 +1,6 @@
 import { Space } from 'antd';
 import Title from 'antd/es/typography/Title';
-import React from 'react'
+import React, { useState } from 'react'
 import productData from '../../assets/fake-data/products'
 import Helmet from './components/Helmet';
 import ProductCard from './components/ProductCard';
@@ -10,8 +10,10 @@ const Product = () => {
 
   const product = productData.getProducts(1)[0];
 
-  const relatedProducts = productData.getProducts(8)
+  const [selectedProduct, setSelectedProduct] = useState<number>(Number(window.location.pathname.split('/')[2]))
 
+  const relatedProducts = productData.getProducts(8)
+  
   React.useEffect(() => {
     window.scrollTo(0, 0)
   }, [product])
@@ -20,7 +22,7 @@ const Product = () => {
     <Helmet title={product.title}>
       <Space>
 
-        <ProductView />
+        <ProductView id={selectedProduct}/>
       </Space>
       <Space direction='vertical'>
         <Title level={2} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>GỢI Ý CHO BẠN</Title>
@@ -43,7 +45,6 @@ const Product = () => {
       <Space direction='vertical'>
         <Title level={2} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>SẢN PHẨM LIÊN QUAN</Title>
         <Space>
-
           {
             relatedProducts.map((item, index) => (
               <ProductCard

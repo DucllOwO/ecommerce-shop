@@ -6,7 +6,7 @@ import productData from '../../assets/fake-data/products'
 import FilterTree from './components/FilterTree'
 import Helmet from './components/Helmet'
 import ProductCard from './components/ProductCard'
-import { fetchProduct } from '../../api/CatalogAPI'
+import { fetchAllProducts } from '../../api/CustomerAPI'
 import { Product } from '../../interface/Product'
 
 const treeColorData: DataNode[] = [
@@ -72,7 +72,7 @@ const treeSizeData: DataNode[] = [
 const Catalog = () => {
     
     useEffect(() => {
-        fetchProduct().then((data)=> {
+        fetchAllProducts().then((data)=> {
             console.log(data)
             setProducts(data.data)
         }).catch((error)=> {
@@ -122,6 +122,7 @@ const Catalog = () => {
                         {products?.map((item, index) => (
                             <ProductCard
                                 key={index}
+                                id={item?.id}
                                 img01={item?.image[0]}
                                 img02={item?.image[1]}
                                 name={item.name}
