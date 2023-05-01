@@ -1,20 +1,26 @@
 import { Button, Form, Space } from 'antd';
-import { useState } from 'react'
-import TagTable, { TagType } from '../../components/Table/Tag/TagTable'
+import { useEffect, useState } from 'react'
+import TagTable from '../../components/Table/Tag/TagTable'
+import { fetchAllTag } from '../../api/admin/ProductAPI';
+import { ITag } from '../../interface/Tag';
 
 
-const originData: TagType[] = [];
-for (let i = 0; i < 20; i++) {
-  originData.push({
-    id: i.toString(),
-    name: `Tag ${i}`,
-    discount: i,
-  });
-}
+// const originData: TagType[] = [];
+// for (let i = 0; i < 20; i++) {
+//   originData.push({
+//     id: i.toString(),
+//     name: `Tag ${i}`,
+//     discount: i,
+//   });
+// }
 
 const Tag = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState<ITag[]>();
+
+  useEffect(() => {
+    fetchAllTag().then(data => setData(data.data));
+  }, [])
 
   return (
     <Space direction='vertical' style={{ width: '100%' }}>

@@ -9,15 +9,16 @@ import {
 import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
 import { INPUT, SELECT } from '../../../constant/constant';
+import { ITag } from '../../../interface/Tag';
 
-export interface TagType {
-  id: string;
-  name: string;
-  discount: number;
-}
+// export interface TagType {
+//   id: string;
+//   name: string;
+//   discount: number;
+// }
 
 interface TagTableProps extends TableProps {
-  data: TagType[],
+  data?: ITag[],
 }
 
 const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
@@ -25,7 +26,9 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
 
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
-  const isEditing = (record: TagType) => record.id === editingKey;
+  const [selectedTag, setSelectedTag] = useState<ITag>();
+
+  const isEditing = (record: ITag) => record.id.toString() === editingKey;
 
   const columns = [
     {
@@ -49,11 +52,11 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
       title: 'Thao tác',
       key: 'action',
       width: "10%",
-      render: (_: any, record: TagType) => {
+      render: (_: any, record: ITag) => {
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
-            <Typography.Link onClick={() => save(record.id)} style={{ marginRight: 8 }}>
+            <Typography.Link onClick={() => save(record.id.toString())} style={{ marginRight: 8 }}>
               Lưu
             </Typography.Link>
             <Popconfirm title="Thông tin sẽ không được lưu bạn có chắc chắn muốn hủy?" onConfirm={cancel}>
@@ -74,9 +77,9 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
     },
   ];
 
-  const edit = (record: Partial<TagType>) => {
+  const edit = (record: Partial<ITag>) => {
     form?.setFieldsValue({ name: '', discount: '', ...record });
-    setEditingKey(record.id);
+    setEditingKey(record.id?.toString());
   };
 
   const cancel = () => {
@@ -85,10 +88,10 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
 
   const save = async (id: string) => {
     try {
-      const row = (await form?.validateFields()) as TagType;
+      const row = (await form?.validateFields()) as ITag;
 
-      const newData = [...data];
-      const index = newData.findIndex((item) => id === item.id);
+      const newData = data ? [...data] : [];
+      const index = newData.findIndex((item) => id === item.id.toString());
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -113,7 +116,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
     }
     return {
       ...col,
-      onCell: (record: TagType) => ({
+      onCell: (record: ITag) => ({
         record,
         inputType: getType(col.dataIndex),
         dataIndex: col.dataIndex,
@@ -126,7 +129,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
 
   return (
     <>
-      <TagModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <TagModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedTag={selectedTag} />
       <Table
         components={{
           body: {
@@ -136,11 +139,12 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
         columns={mergedColumns}
         dataSource={data}
         rowClassName="editable-row"
-        onRow={(record, rowIndex) => {
+        onRow={(record : ITag, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
               if (isClickOnATableCell(event))
                 setIsModalOpen(prev => !prev)
+              setSelectedTag(record)
             }, // click row
           };
         }}
