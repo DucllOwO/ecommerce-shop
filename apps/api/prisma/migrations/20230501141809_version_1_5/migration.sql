@@ -1,0 +1,11 @@
+-- AlterTable
+ALTER TABLE "Daily_report" ADD COLUMN     "outcome" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "profit" INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "Monthly_report" ADD COLUMN     "outcome" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "profit" INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "Yearly_report" ADD COLUMN     "outcome" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "profit" INTEGER NOT NULL DEFAULT 0;
