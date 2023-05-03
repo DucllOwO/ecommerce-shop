@@ -5,13 +5,15 @@ import { FC, useState } from 'react'
 import { ModalProps } from '../../interface/ModalProps'
 import CustomerTab from '../Tab/CustomerTab'
 import ProductOrderDetailTable from '../Table/Product/ProductDetailTable.Order'
+import { IUser } from '../../interface/User'
+import dayjs from 'dayjs'
 
 interface ProductModalProps extends ModalProps {
-
+  data?: IUser
 }
 
 
-const CustomerModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen }) => {
+const CustomerModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, data }) => {
 
 
   return (
@@ -23,17 +25,17 @@ const CustomerModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen }) => {
       }}
       footer={null}>
       <Descriptions bordered>
-        <Descriptions.Item label="ID" span={1}>08326224789</Descriptions.Item>
-        <Descriptions.Item label="Họ tên" span={2}>Nguyễn Trí Đức</Descriptions.Item>
-        <Descriptions.Item label="Địa chỉ" span={3}>Khu phố 6, P.Linh Trung, Tp.Thủ Đức, Tp.Hồ Chí Minh.</Descriptions.Item>
+        <Descriptions.Item label="ID" span={1}>{data?.id}</Descriptions.Item>
+        <Descriptions.Item label="Họ tên" span={2}>{`${data?.lastname} ${data?.firstname}`}</Descriptions.Item>
+        <Descriptions.Item label="Địa chỉ" span={3}>{data?.address}</Descriptions.Item>
         <Descriptions.Item label="Số điện thoại" span={2}>
-          0912412482
+          {data?.phone_number}
         </Descriptions.Item>
         <Descriptions.Item label="Email" span={2}>
-          email@gmail.com
+          {data?.email}
         </Descriptions.Item>
         <Descriptions.Item label="Lần đăng nhập gần nhất" span={3}>
-          1 ngày trước
+        {(dayjs(Date.now()).diff(dayjs(data?.logged_date), 'hour') <= 24) ? `${(dayjs(Date.now()).diff(dayjs(data?.logged_date), 'hour'))} giờ trước` : `${(dayjs(Date.now()).diff(dayjs(data?.logged_date), 'days'))} ngày trước`}
         </Descriptions.Item>
         <Descriptions.Item label="Lượt xem sản phẩm" span={2}>10000</Descriptions.Item>
         <Descriptions.Item label="Số đơn hàng" span={2}>

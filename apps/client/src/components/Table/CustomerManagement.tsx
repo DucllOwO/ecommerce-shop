@@ -4,6 +4,7 @@ import { TableProps } from '../../interface/TableProps';
 import { isClickOnATableCell } from '../../helper/checkEventClick';
 import CustomerModal from '../Modal/CustomerModal';
 import { IUser } from '../../interface/User';
+import dayjs from 'dayjs';
 
 // export interface CustomerType {
 //   id: string;
@@ -31,7 +32,7 @@ const columns = [
     title: 'Họ tên',
     key: 'name',
     render: (_: any, record: IUser) =>
-      <p>{`${record.firstname} ${record.lastname}`}</p>
+      <p>{`${record.lastname} ${record.firstname}`}</p>
   },
   {
     title: 'Số điện thoại',
@@ -51,26 +52,32 @@ const columns = [
   {
     title: 'Đăng nhập gần nhất',
     key: 'logged_date',
-    dataIndex: 'logged_date',
+    render: (_: any, record: IUser) =>
+      <p>{(dayjs(Date.now()).diff(dayjs(record.logged_date), 'hour') <= 24) ? `${(dayjs(Date.now()).diff(dayjs(record.logged_date), 'hour'))} giờ trước` : `${(dayjs(Date.now()).diff(dayjs(record.logged_date), 'days'))} ngày trước`}</p>
   },
 ];
 
 
 
 const CustomerManagementTable: FC<CustomerManagementTable> = ({ form, data, setData }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const [selectedItem, setSelectedItem] = useState<IUser>();
 
   return (
     <>
-      <CustomerModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <CustomerModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} data={selectedItem}/>
       <Table
         columns={columns}
         dataSource={data}
-        onRow={(record, rowIndex) => {
+        onRow={(record: IUser, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
               if (isClickOnATableCell(event))
+              {
                 setIsModalOpen(prev => !prev)
+                setSelectedItem(record)
+              }
             }, // click row
           };
         }}
