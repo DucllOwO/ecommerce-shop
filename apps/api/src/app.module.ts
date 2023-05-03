@@ -18,11 +18,12 @@ import { TagModule } from './tag/tag.module';
 import { ProductItemModule } from './product-item/product-item.module';
 import { CollectionModule } from './collection/collection.module';
 import { AccountModule } from './account/account.module';
+import { DiscountModule } from './discount/discount.module';
 
 @Module({
   imports: [AuthModule, ConfigModule.forRoot({
     isGlobal: true,
-  }), UserModule, ProductModule , ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule],
+  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule, DiscountModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
