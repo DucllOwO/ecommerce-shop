@@ -3,21 +3,22 @@ import { Table } from 'antd';
 import { TableProps } from '../../interface/TableProps';
 import { isClickOnATableCell } from '../../helper/checkEventClick';
 import CustomerModal from '../Modal/CustomerModal';
+import { IUser } from '../../interface/User';
 
-export interface CustomerType {
-  id: string;
-  email: string;
-  address: string;
-  avatar?: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string;
-  logged_date: string;
-  product_viewed?: string[];
-}
+// export interface CustomerType {
+//   id: string;
+//   email: string;
+//   address: string;
+//   avatar?: string;
+//   firstName: string;
+//   lastName: string;
+//   phoneNumber: string;
+//   logged_date: string;
+//   product_viewed?: string[];
+// }
 
 interface CustomerManagementTable extends TableProps {
-  data: CustomerType[],
+  data?: IUser[],
 }
 
 const columns = [
@@ -29,12 +30,12 @@ const columns = [
   {
     title: 'Họ tên',
     key: 'name',
-    render: (_: any, record: CustomerType) =>
-      <p>{`${record.firstName} ${record.lastName}`}</p>
+    render: (_: any, record: IUser) =>
+      <p>{`${record.firstname} ${record.lastname}`}</p>
   },
   {
     title: 'Số điện thoại',
-    dataIndex: 'phoneNumber',
+    dataIndex: 'phone_number',
     key: 'phonenumber',
   },
   {
