@@ -6,30 +6,31 @@ import DiscountModal from '../../Modal/DiscountModal';
 import { isClickOnAnSVGTag, isClickOnATableCell } from '../../../helper/checkEventClick';
 import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
+import { IDiscount } from '../../../interface/Discount';
 
-export interface DiscountType {
-  id: string;
-  name: string;
-  discount: number;
-}
+// export interface IDiscount {
+//   id: string;
+//   name: string;
+//   discount: number;
+// }
 
 interface DiscountTableProps extends TableProps {
-  data: DiscountType[],
+  data: IDiscount[],
 }
 
-const data = [
-  {
-    id: '1',
-    name: 'Ban e',
-    discount: 50
-  }
-]
+// const data = [
+//   {
+//     id: '1',
+//     name: 'Ban e',
+//     discount: 50
+//   }
+// ]
 
 const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
-  const isEditing = (record: DiscountType) => record.id === editingKey;
+  const isEditing = (record: IDiscount) => record.id.toString() === editingKey;
 
   const columns = [
     {
@@ -53,11 +54,11 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
       title: 'Thao tác',
       key: 'action',
       width: "10%",
-      render: (_: any, record: DiscountType) => {
+      render: (_: any, record: IDiscount) => {
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
-            <Typography.Link onClick={() => save(record.id)} style={{ marginRight: 8 }}>
+            <Typography.Link onClick={() => save(record.id.toString())} style={{ marginRight: 8 }}>
               Lưu
             </Typography.Link>
             <Popconfirm title="Thông tin sẽ không được lưu bạn có chắc chắn muốn hủy?" onConfirm={cancel}>
@@ -78,9 +79,9 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
     },
   ];
 
-  const edit = (record: Partial<DiscountType>) => {
+  const edit = (record: Partial<IDiscount>) => {
     form?.setFieldsValue({ name: '', discount: '', ...record });
-    setEditingKey(record.id);
+    setEditingKey(record.id?.toString());
   };
 
   const cancel = () => {
@@ -89,10 +90,10 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
 
   const save = async (id: string) => {
     try {
-      const row = (await form?.validateFields()) as DiscountType;
+      const row = (await form?.validateFields()) as IDiscount;
 
       const newData = [...data];
-      const index = newData.findIndex((item) => id === item.id);
+      const index = newData.findIndex((item) => id === item.id.toString());
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -117,7 +118,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
     }
     return {
       ...col,
-      onCell: (record: DiscountType) => ({
+      onCell: (record: IDiscount) => ({
         record,
         inputType: col.dataIndex === 'discount' ? 'number' : 'text',
         dataIndex: col.dataIndex,
