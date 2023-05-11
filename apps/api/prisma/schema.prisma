@@ -51,6 +51,7 @@ model Feedback {
 
 model Discount {
   id         Int          @id @default(autoincrement())
+  name       String       @default("")
   discount   Float        @default(0)
   Tag        Tag[]
   Collection Collection[]
@@ -64,9 +65,19 @@ model Tag {
   name       String    @db.VarChar(150)
   discount   Discount? @relation(fields: [discountID], references: [id], onDelete: SetNull)
   discountID Int?
-  Product    Product[]
+  HaveTag    HaveTag[]
 
   @@map("tag")
+}
+
+model HaveTag {
+  id        Int     @id @default(autoincrement())
+  tag       Tag     @relation(fields: [tagID], references: [id], onDelete: Cascade)
+  tagID     Int
+  product   Product @relation(fields: [productID], references: [id], onDelete: Cascade)
+  productID Int
+
+  @@map("have_tag")
 }
 
 model Collection {
@@ -90,13 +101,12 @@ model Product {
   isActive      Boolean          @default(true)
   discount      Discount?        @relation(fields: [discountID], references: [id], onDelete: SetNull)
   discountID    Int?
-  tag           Tag              @relation(fields: [tagID], references: [id], onDelete: NoAction)
-  tagID         Int
   collection    Collection?      @relation(fields: [collectionID], references: [id], onDelete: SetNull)
   collectionID  Int?
   ReceiptDetail Receipt_detail[]
   Review        Review[]
   Product_item  Product_item[]
+  HaveTag       HaveTag[]
 
   @@map("product")
 }
