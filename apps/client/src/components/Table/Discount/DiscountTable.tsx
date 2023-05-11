@@ -12,18 +12,9 @@ export interface DiscountType {
   name: string;
   discount: number;
 }
-
 interface DiscountTableProps extends TableProps {
   data: DiscountType[],
 }
-
-const data = [
-  {
-    id: '1',
-    name: 'Ban e',
-    discount: 50
-  }
-]
 
 const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
