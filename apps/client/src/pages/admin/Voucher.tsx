@@ -1,0 +1,30 @@
+import { Button, DatePicker, Form, Space } from 'antd';
+import { useState } from 'react'
+import VoucherTable, { VoucherType } from '../../components/Table/VoucherTable'
+
+const originData: VoucherType[] = [];
+for (let i = 0; i < 10; i++) {
+  originData.push({
+    code: i + '_COOL',
+    name: `Discount ${i}`,
+    due: '12/05/2023',
+    discount: i + 10,
+    description: 'description ' + i
+  });
+}
+
+const Voucher = () => {
+  const [form] = Form.useForm();
+  const [data, setData] = useState(originData);
+
+  return (
+    <Space direction='vertical' style={{ width: '100%' }}>
+      <Button type="primary">Thêm mới</Button>
+      <Form form={form} component={false}>
+        <VoucherTable form={form} data={data} setData={setData} />
+      </Form>
+    </Space>
+  )
+}
+
+export default Voucher

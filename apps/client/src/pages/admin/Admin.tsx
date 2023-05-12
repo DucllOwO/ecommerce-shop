@@ -1,5 +1,5 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined, DashboardOutlined, AuditOutlined } from '@ant-design/icons/lib/icons'
-import { Layout, Image } from 'antd'
+import { Layout } from 'antd'
 import { Content, Header } from 'antd/es/layout/layout'
 import Sider from 'antd/es/layout/Sider'
 import { useState } from 'react'
