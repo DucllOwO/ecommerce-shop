@@ -35,7 +35,11 @@ const initialValues = {
   }))
 };
 
-const ProductInventoryForm: React.FC = () => {
+interface ProductInventoryFormProps {
+  isReadOnly?: boolean;
+}
+
+const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly = false }) => {
   const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
@@ -50,6 +54,7 @@ const ProductInventoryForm: React.FC = () => {
       autoComplete="off"
       style={{ width: '100%' }}
       initialValues={initialValues}
+      disabled={isReadOnly}
     >
       <Space direction='vertical' style={{ width: '100%' }}>
         <Row>

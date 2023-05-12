@@ -1,5 +1,6 @@
 import { Button, Space } from 'antd';
 import { useState } from 'react'
+import ImportingModal from '../../components/Modal/ImportingModal';
 import ImportingTable, { ImportingType } from '../../components/Table/ImportingTable'
 
 const originData: ImportingType[] = [];
@@ -14,12 +15,13 @@ for (let i = 0; i < 10; i++) {
 
 
 const Importing = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
   return (
     <Space direction='vertical' style={{ width: '100%' }}>
-      <Button type="primary">Nhập hàng</Button>
-      <ImportingTable data={originData} setIsModalOpen={setIsModalOpen} />
+      <Button type="primary" onClick={() => setIsImportModalOpen(prev => !prev)}>Nhập hàng</Button>
+      <ImportingTable data={originData} setIsModalOpen={setIsImportModalOpen} />
+      <ImportingModal isOpen={isImportModalOpen} setIsModalOpen={setIsImportModalOpen} />
     </Space>
   )
 }
