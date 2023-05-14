@@ -20,7 +20,7 @@ model Account {
 }
 
 model User {
-  id             String     @id @db.Char(12)
+  id             Int        @id @default(autoincrement())
   firstname      String     @db.VarChar(50)
   lastname       String?    @db.VarChar(50)
   phone_number   String?    @db.Char(10)
@@ -44,7 +44,7 @@ model Feedback {
   content  String?
   rate     Float
   author   User?   @relation(fields: [authorID], references: [id], onDelete: NoAction)
-  authorID String? @db.Char(12)
+  authorID Int?
 
   @@map("feedback")
 }
@@ -130,7 +130,7 @@ model Receipt {
   voucher       Voucher?         @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
   voucherCode   String?          @db.Char(6)
   buyer         User             @relation(fields: [userID], references: [id], onDelete: NoAction)
-  userID        String           @db.Char(12)
+  userID        Int
   ReceiptDetail Receipt_detail[]
 
   @@map("receipt")
@@ -151,7 +151,7 @@ model Review {
   comment   String?
   rate      Float
   author    User    @relation(fields: [authorID], references: [id], onDelete: NoAction)
-  authorID  String  @db.Char(12)
+  authorID  Int
   product   Product @relation(fields: [productID], references: [id], onDelete: NoAction)
   productID Int
 
@@ -176,7 +176,7 @@ model Product_item {
 model Cart {
   id          Int           @id @default(autoincrement())
   owner       User          @relation(fields: [userID], references: [id], onDelete: NoAction)
-  userID      String        @db.Char(12)
+  userID      Int
   Cart_detail Cart_detail[]
 
   @@map("cart")
@@ -199,7 +199,7 @@ model Order {
   total_cost   Int            @default(0)
   status       String         @default("0") @db.Char(1)
   buyer        User           @relation(fields: [userID], references: [id], onDelete: NoAction)
-  userID       String         @db.Char(12)
+  userID       Int
   Order_detail Order_detail[]
 
   @@map("order")
