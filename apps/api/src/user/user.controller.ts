@@ -9,7 +9,6 @@ export class UserController {
 
   @Post()
   create(@Body() createUserDto: Prisma.UserCreateInput) {
-    this.logger.log('create');
     return this.userService.createUser(createUserDto);
   }
 
@@ -19,7 +18,7 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.userService.user({id: id});
   }
 
