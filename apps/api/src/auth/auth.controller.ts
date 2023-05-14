@@ -11,7 +11,6 @@ export class AuthController {
 
   @Post('login')
   login(@Body() loginUser: LoginUserDto) {
-    console.log(loginUser)
     if (!loginUser.email || !loginUser.password)
       throw new BadRequestException();
 

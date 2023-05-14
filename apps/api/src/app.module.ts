@@ -18,12 +18,18 @@ import { TagModule } from './tag/tag.module';
 import { ProductItemModule } from './product-item/product-item.module';
 import { CollectionModule } from './collection/collection.module';
 import { AccountModule } from './account/account.module';
+import { MiddlewareConsumer } from '@nestjs/common/interfaces';
+import * as cors from 'cors';
 
 @Module({
   imports: [AuthModule, ConfigModule.forRoot({
     isGlobal: true,
-  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule],
+  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule, AccountModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
-export class AppModule { }
+export class AppModule { 
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(cors()).forRoutes('*');
+  }
+}

@@ -12,7 +12,6 @@ export class AuthService {
   private readonly salt = 12;
   constructor(private accountService: AccountService, private userService: UserService, private jwtService: JwtService) { }
 
-
   async validateUser(loginUserDto: LoginUserDto) {
     const account = await this.accountService.findOne({ email: loginUserDto.email })
 
@@ -33,6 +32,5 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(userData),
     };
-
   }
 }

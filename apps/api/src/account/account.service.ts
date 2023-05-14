@@ -13,7 +13,6 @@ export class AccountService {
   async create(createAccountDto: Prisma.AccountCreateInput) {
     console.log(createAccountDto.password)
     const hashPassword = await bcrypt.hash(createAccountDto.password, this.salt)
-
     return this.prisma.account.create({ data: { ...createAccountDto, password: hashPassword } });
   }
 

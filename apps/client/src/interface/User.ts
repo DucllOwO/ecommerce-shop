@@ -6,7 +6,7 @@ import Receipt from "./Receipt";
 import Review from "./Review";
 
 export default interface User {
-  id: string;
+  id: number;
   firstname: string;
   lastname?: string;
   phone_number?: string;

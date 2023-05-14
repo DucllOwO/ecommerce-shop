@@ -59,8 +59,8 @@ function App() {
           <Route key={'cart'} path='cart' element={<Cart />}></Route>
           <Route key={'login'} path='login' element={<Login />}></Route>
           <Route key={'signup'} path='signup' element={<SignUp />}></Route>
-
         </Route>
+
       </Routes>
     </BrowserRouter>
   )
