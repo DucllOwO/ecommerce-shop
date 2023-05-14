@@ -6,10 +6,10 @@ interface OrderProps {
 }
 
 const Order = ({ state }: OrderProps) => {
-  console.log(state)
+  // console.log(state)
   return (
     <div>
-      <OrderTable />
+      <OrderTable state={state}/>
     </div>
   )
 }

@@ -7,10 +7,10 @@ export class OrderService {
   constructor(private prisma: PrismaService) { }
 
   async order(
-    receiptWhereUniqueInput: Prisma.ReceiptWhereUniqueInput,
+    orderWhereUniqueInput: Prisma.OrderWhereUniqueInput,
   ): Promise<Order | null> {
     return this.prisma.order.findUnique({
-      where: receiptWhereUniqueInput,
+      where: orderWhereUniqueInput,
     });
   }
 
@@ -21,11 +21,15 @@ export class OrderService {
     where?: Prisma.OrderWhereInput;
     orderBy?: Prisma.OrderOrderByWithRelationInput;
   }): Promise<Order[]> {
-    const { skip, take, orderBy } = params;
+    const { skip, take, orderBy, where } = params;
     return this.prisma.order.findMany({
+      where,
       skip,
       take,
       orderBy,
+      include:{
+        buyer: true
+      }
     });
   }
   async createOrder(data: Prisma.OrderCreateInput): Promise<Order> {
