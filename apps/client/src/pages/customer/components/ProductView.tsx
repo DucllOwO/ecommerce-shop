@@ -3,27 +3,33 @@ import React, { useState, useEffect } from 'react'
 import productData from '../../../assets/fake-data/products'
 
 import img01 from '../../../assets/images/products/ao-polo-nam-apm5351-nav-2-yodyvn.jpg'
+import { fetchProduct } from '../../../api/CustomerAPI'
+import { IProduct } from '../../../interface/Product'
+import { IProductItem } from '../../../interface/ProductItem'
 
-const ProductView = () => {
+const ProductView = (props: ProductViewProps) => {
 
-    let product = productData.getProducts(1)[0]
+    const [product, setProduct] = useState<IProduct>();
 
-    const [previewImg, setPreviewImg] = useState(product.image01)
+    const [previewImg, setPreviewImg] = useState<string[]>();
 
     const [descriptionExpand, setDescriptionExpand] = useState(true)
 
-    const [color, setColor] = useState(undefined)
+    const [color, setColor] = useState<string[]>()
 
     const [size, setSize] = useState(undefined)
 
     const [quantity, setQuantity] = useState(1)
 
     useEffect(() => {
-        setPreviewImg(product.image01)
-        setQuantity(1)
-        setColor(undefined)
-        setSize(undefined)
-    }, [product])
+        fetchProduct(props.id).then((data) => {
+            console.log(data.data)
+            setProduct(data.data);
+            setPreviewImg(data.data?.image);
+            setColor(Array.from(new Set(data.data.ProductItem?.map((data: IProductItem) => data.color))))
+            setColor(Array.from(new Set(data.data.ProductItem?.map((data: IProductItem) => data.size))))
+        })
+    }, [props])
 
 
     return (
@@ -33,21 +39,21 @@ const ProductView = () => {
                 <div className="product__images__main">
                     <Row>
                         <Col span={11}>
-                            <Image src={img01} />
+                            <Image src={previewImg? previewImg[0] : undefined} />
                         </Col>
                         <Col offset={1} span={11}>
-                            <Image src={img01} />
+                            <Image src={previewImg? previewImg[1] : undefined} />
 
                         </Col>
 
                     </Row>
                     <Row style={{ margin: '20px 0' }}>
                         <Col span={11}>
-                            <Image src={img01} />
+                            <Image src={previewImg? previewImg[2] : undefined} />
                         </Col>
                         <Col span={11} offset={1}>
 
-                            <Image src={img01} />
+                            <Image src={previewImg? previewImg[3] : undefined} />
                         </Col>
                     </Row>
                 </div>
@@ -55,7 +61,7 @@ const ProductView = () => {
                     <div className="product-description__title">
                         Chi tiết sản phẩm
                     </div>
-                    <div className="product-description__content">{product.description}</div>
+                    <div className="product-description__content">{product?.description}</div>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
                     <Button onClick={(e) => {
@@ -72,7 +78,7 @@ const ProductView = () => {
             </div>
 
             <div className="product__info">
-                <h1 className="product__info__title">{product.title}</h1>
+                <h1 className="product__info__title">{product?.name}</h1>
                 <div className="product__info__item">
                     <span className="product__info__item__price">
                         {1000000}
@@ -83,13 +89,13 @@ const ProductView = () => {
                         Màu sắc
                     </div>
                     <div className="product__info__item__list">
-                        {
-                            product.colors.map((item, index) => (
+                        {/* {
+                            color.map((item, index) => (
                                 <div key={index} className={`product__info__item__list__item ${color === item ? 'active' : ''}`}>
                                     <div className={`circle bg-${item}`}></div>
                                 </div>
                             ))
-                        }
+                        } */}
                     </div>
                 </div>
                 <div className="product__info__item">
@@ -97,7 +103,7 @@ const ProductView = () => {
                         Kích cỡ
                     </div>
                     <div className="product__info__item__list">
-                        {
+                        {/* {
                             product.size.map((item, index) => (
                                 <div key={index} className={`product__info__item__list__item ${size === item ? 'active' : ''}`}>
                                     <span className="product__info__item__list__item__size">
@@ -105,7 +111,7 @@ const ProductView = () => {
                                     </span>
                                 </div>
                             ))
-                        }
+                        } */}
                     </div>
                 </div>
                 <div className="product__info__item">
@@ -113,7 +119,7 @@ const ProductView = () => {
                         Số lượng
                     </div>
                     <div>
-                        <InputNumber defaultValue={100} />
+                        <InputNumber defaultValue={1} />
                     </div>
                 </div>
                 <div className="product__info__item">
@@ -125,7 +131,7 @@ const ProductView = () => {
                 <div className="product-description__title">
                     Chi tiết sản phẩm
                 </div>
-                <div className="product-description__content">{product.description}</div>
+                <div className="product-description__content">{product?.description}</div>
                 <div className="product-description__toggle">
                     <Button onClick={(e) => {
                         setDescriptionExpand(prev => !prev)
@@ -139,5 +145,7 @@ const ProductView = () => {
         </div>
     )
 }
-
+type ProductViewProps = {
+    id: number
+}
 export default ProductView

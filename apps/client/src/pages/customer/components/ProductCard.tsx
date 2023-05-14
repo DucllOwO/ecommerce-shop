@@ -5,16 +5,16 @@ const ProductCard = (props: ProductCardProps) => {
 
     return (
         <div className="product-card">
-            <Link to={`/product/${props.slug}`}>
+            <Link to={`/product/${props.id}`}>
                 <div className="product-card__image">
                     <img src={props.img01} alt="" style={{ borderRadius: 10 }} />
                     <img src={props.img02} alt="" />
                 </div>
                 <h3 className="product-card__name">{props.name}</h3>
                 <div className="product-card__price">
-                    1000000
+                    {props.price}
                     <span className="product-card__price__old">
-                        <del>100000</del>
+                        <del>{props.price}</del>
                     </span>
                 </div>
             </Link>
@@ -30,6 +30,7 @@ const ProductCard = (props: ProductCardProps) => {
 }
 
 type ProductCardProps = {
+    id: number
     img01: string,
     img02: string,
     name: string,

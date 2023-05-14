@@ -55,7 +55,7 @@ function App() {
         <Route key={'customer'} path='/' element={<Customer />}>
           <Route key={'home'} index element={<Home />}></Route>
           <Route key={'catalog'} path='catalog' element={<Catalog />}></Route>
-          <Route key={'product'} path='product/:title' element={<Product />}></Route>
+          <Route key={'product'} path='product/:id' element={<Product />}></Route>
           <Route key={'cart'} path='cart' element={<Cart />}></Route>
           <Route key={'login'} path='login' element={<Login />}></Route>
           <Route key={'signup'} path='signup' element={<SignUp />}></Route>

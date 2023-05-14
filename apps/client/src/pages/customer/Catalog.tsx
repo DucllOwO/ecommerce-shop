@@ -1,11 +1,13 @@
 import { Button, List, Spin } from 'antd'
 import { DataNode } from 'antd/es/tree'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import productData from '../../assets/fake-data/products'
 import FilterTree from './components/FilterTree'
 import Helmet from './components/Helmet'
 import ProductCard from './components/ProductCard'
+import { fetchAllProducts } from '../../api/CustomerAPI'
+import { IProduct } from '../../interface/Product'
 
 const treeColorData: DataNode[] = [
     {
@@ -68,10 +70,17 @@ const treeSizeData: DataNode[] = [
 ];
 
 const Catalog = () => {
+    
+    useEffect(() => {
+        fetchAllProducts().then((data)=> {
+            console.log(data)
+            setProducts(data.data)
+        }).catch((error)=> {
+            console.log(error)
+        })
+    },[])
 
-    const productList = productData.getAllProducts()
-
-    const [products, setProducts] = useState(productList);
+    const [products, setProducts] = useState<IProduct[]>();
     const [numOfItem, setNumOfItem] = useState(10)
 
     return (
@@ -110,14 +119,15 @@ const Catalog = () => {
                         }}
                         style={{ display: 'flex', flexWrap: "wrap" }}
                     >
-                        {productData.getProducts(numOfItem).map((item, index) => (
+                        {products?.map((item, index) => (
                             <ProductCard
                                 key={index}
-                                img01={item.image01}
-                                img02={item.image02}
-                                name={item.title}
-                                price={Number(item.price)}
-                                slug={item.slug}
+                                id={item?.id}
+                                img01={item?.image[0]}
+                                img02={item?.image[1]}
+                                name={item.name}
+                                price={item.price}
+                                slug="quan-somi"
                             />
                         ))}
                     </InfiniteScroll>

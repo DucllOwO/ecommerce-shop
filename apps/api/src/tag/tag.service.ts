@@ -10,6 +10,9 @@ export class TagService {
   ): Promise<Tag | null> {
     return this.prisma.tag.findUnique({
       where: tagWhereUniqueInput,
+      // include: {
+      //   Product: true
+      // }
     });
   }
 

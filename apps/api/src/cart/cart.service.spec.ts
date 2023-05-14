@@ -19,7 +19,7 @@ describe('CartService', () => {
   it('get cart should have returned', () => {
     expect(service.cart({
       id: 1
-    })).toHaveReturned();
+    })).toMatchObject({id : 1});
   })
 
   it('post cart should have returned', () => {

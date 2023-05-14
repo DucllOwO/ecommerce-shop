@@ -1,8 +1,10 @@
 import { Button, Form, Space } from 'antd';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ProductModal from '../../components/Modal/ProductModal';
 import ProductTable from '../../components/Table/Product/ProductTable';
 import { ProductType } from '../../components/Table/Product/ProductTable'
+import { IProduct } from '../../interface/Product';
+import { fetchAllProducts } from '../../api/admin/ProductAPI';
 
 const originData: ProductType[] = [];
 for (let i = 0; i < 15; i++) {
@@ -17,9 +19,13 @@ for (let i = 0; i < 15; i++) {
 }
 
 const ProductManagement = () => {
-  const [data, setData] = useState(originData);
+  const [data, setData] = useState<IProduct[]>();
   const [isEditing, setIsEditing] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(()=> {
+    fetchAllProducts().then(data => setData(data.data));
+  }, [])
 
   return (
     <>

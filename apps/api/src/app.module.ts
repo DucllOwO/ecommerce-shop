@@ -18,15 +18,16 @@ import { TagModule } from './tag/tag.module';
 import { ProductItemModule } from './product-item/product-item.module';
 import { CollectionModule } from './collection/collection.module';
 import { AccountModule } from './account/account.module';
+import { DiscountModule } from './discount/discount.module';
 import { MiddlewareConsumer } from '@nestjs/common/interfaces';
 import * as cors from 'cors';
 
 @Module({
   imports: [AuthModule, ConfigModule.forRoot({
     isGlobal: true,
-  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule, AccountModule],
+  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule, AccountModule, DiscountModule],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService]
 })
 export class AppModule { 
   configure(consumer: MiddlewareConsumer) {

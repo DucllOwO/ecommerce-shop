@@ -6,15 +6,16 @@ import { isClickOnATableCell } from '../../helper/checkEventClick';
 import { TableProps } from '../../interface/TableProps';
 import EditableCell from './EditableCell';
 import { INPUT, SELECT } from '../../constant/constant';
+import { ICollection } from '../../interface/Collection';
 
-export interface CollectionType {
-  id: string;
-  name: string;
-  discount: number;
-}
+// export interface CollectionType {
+//   id: string;
+//   name: string;
+//   discount: number;
+// }
 
 interface CollectionTableProps extends TableProps {
-  data: CollectionType[],
+  data?: ICollection[],
 }
 
 const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
@@ -22,7 +23,9 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
 
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
-  const isEditing = (record: CollectionType) => record.id === editingKey;
+  const [selectedItem, setSelectedItem] = useState<ICollection>();
+
+  const isEditing = (record: ICollection) => record.id.toString() === editingKey;
 
   const columns = [
     {
@@ -41,11 +44,11 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
       title: 'Thao tác',
       key: 'action',
       width: "10%",
-      render: (_: any, record: CollectionType) => {
+      render: (_: any, record: ICollection) => {
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
-            <Typography.Link onClick={() => save(record.id)} style={{ marginRight: 8 }}>
+            <Typography.Link onClick={() => save(record.id.toString())} style={{ marginRight: 8 }}>
               Lưu
             </Typography.Link>
             <Popconfirm title="Bạn có chắc muốn hủy bỏ chỉnh sửa?" onConfirm={cancel}>
@@ -66,9 +69,9 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
     },
   ];
 
-  const edit = (record: Partial<CollectionType>) => {
+  const edit = (record: Partial<ICollection>) => {
     form?.setFieldsValue({ name: '', discount: '', ...record });
-    setEditingKey(record.id);
+    setEditingKey(record.id?.toString());
   };
 
   const cancel = () => {
@@ -77,10 +80,10 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
 
   const save = async (id: string) => {
     try {
-      const row = (await form?.validateFields()) as CollectionType;
+      const row = (await form?.validateFields()) as ICollection;
 
-      const newData = [...data];
-      const index = newData.findIndex((item) => id === item.id);
+      const newData = data ? [...data] : [];
+      const index = newData.findIndex((item) => id === item.id.toString());
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
@@ -105,7 +108,7 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
     }
     return {
       ...col,
-      onCell: (record: CollectionType) => ({
+      onCell: (record: ICollection) => ({
         record,
         inputType: getType(col.dataIndex),
         dataIndex: col.dataIndex,
@@ -118,7 +121,7 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
 
   return (
     <>
-      <CollectionModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <CollectionModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedItem={selectedItem} />
       <Table
         components={{
           body: {
@@ -128,11 +131,14 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
         columns={mergedColumns}
         dataSource={data}
         rowClassName="editable-row"
-        onRow={(record, rowIndex) => {
+        onRow={(record : ICollection, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
               if (isClickOnATableCell(event))
+              {
                 setIsModalOpen(prev => !prev)
+                setSelectedItem(record)
+              }
             }, // click row
           };
         }}

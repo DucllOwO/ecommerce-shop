@@ -15,10 +15,12 @@ model Account {
   password String  @db.VarChar(100)
   is_admin Boolean @default(false)
   User     User[]
+
+  @@map("account")
 }
 
 model User {
-  id             String     @id @db.Char(12)
+  id             Int        @id @default(autoincrement())
   firstname      String     @db.VarChar(50)
   lastname       String?    @db.VarChar(50)
   phone_number   String?    @db.Char(10)
@@ -27,11 +29,14 @@ model User {
   product_viewed String[]
   account        Account    @relation(fields: [email], references: [email])
   email          String     @db.VarChar(256)
+  logged_date    DateTime   @default(now()) @db.Timestamptz()
   Feedback       Feedback[]
   Review         Review[]
   Cart           Cart[]
   Order          Order[]
   Receipt        Receipt[]
+
+  @@map("user")
 }
 
 model Feedback {
@@ -39,15 +44,20 @@ model Feedback {
   content  String?
   rate     Float
   author   User?   @relation(fields: [authorID], references: [id], onDelete: NoAction)
-  authorID String? @db.Char(12)
+  authorID Int?
+
+  @@map("feedback")
 }
 
 model Discount {
   id         Int          @id @default(autoincrement())
+  name       String       @default("")
   discount   Float        @default(0)
   Tag        Tag[]
   Collection Collection[]
   Product    Product[]
+
+  @@map("discount")
 }
 
 model Tag {
@@ -55,7 +65,19 @@ model Tag {
   name       String    @db.VarChar(150)
   discount   Discount? @relation(fields: [discountID], references: [id], onDelete: SetNull)
   discountID Int?
-  Product    Product[]
+  HaveTag    HaveTag[]
+
+  @@map("tag")
+}
+
+model HaveTag {
+  id        Int     @id @default(autoincrement())
+  tag       Tag     @relation(fields: [tagID], references: [id], onDelete: Cascade)
+  tagID     Int
+  product   Product @relation(fields: [productID], references: [id], onDelete: Cascade)
+  productID Int
+
+  @@map("have_tag")
 }
 
 model Collection {
@@ -64,25 +86,29 @@ model Collection {
   discount   Discount? @relation(fields: [discountID], references: [id], onDelete: SetNull)
   discountID Int?
   Product    Product[]
+
+  @@map("collection")
 }
 
 model Product {
-  id            Int             @id @default(autoincrement())
-  name          String          @db.VarChar(256)
+  id            Int              @id @default(autoincrement())
+  name          String           @db.VarChar(256)
   price         Int
   description   String?
   image         String[]
-  view          Int             @default(0)
-  sold          Int             @default(0)
-  discount      Discount?       @relation(fields: [discountID], references: [id], onDelete: SetNull)
+  view          Int              @default(0)
+  sold          Int              @default(0)
+  isActive      Boolean          @default(true)
+  discount      Discount?        @relation(fields: [discountID], references: [id], onDelete: SetNull)
   discountID    Int?
-  tag           Tag             @relation(fields: [tagID], references: [id], onDelete: NoAction)
-  tagID         Int
-  collection    Collection?     @relation(fields: [collectionID], references: [id], onDelete: SetNull)
+  collection    Collection?      @relation(fields: [collectionID], references: [id], onDelete: SetNull)
   collectionID  Int?
-  ReceiptDetail ReceiptDetail[]
+  ReceiptDetail Receipt_detail[]
   Review        Review[]
   Product_item  Product_item[]
+  HaveTag       HaveTag[]
+
+  @@map("product")
 }
 
 model Voucher {
@@ -92,26 +118,32 @@ model Voucher {
   description String?
   due         DateTime  @db.Date
   Receipt     Receipt[]
+
+  @@map("voucher")
 }
 
 model Receipt {
-  id            Int             @id @default(autoincrement())
-  date          DateTime        @default(now()) @db.Timestamptz()
-  cost          Int             @default(0)
-  status        String          @default("0") @db.Char(1)
-  voucher       Voucher?        @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
-  voucherCode   String?         @db.Char(6)
-  buyer         User            @relation(fields: [userID], references: [id], onDelete: NoAction)
-  userID        String          @db.Char(12)
-  ReceiptDetail ReceiptDetail[]
+  id            Int              @id @default(autoincrement())
+  date          DateTime         @default(now()) @db.Timestamptz()
+  cost          Int              @default(0)
+  status        String           @default("0") @db.Char(1)
+  voucher       Voucher?         @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
+  voucherCode   String?          @db.Char(6)
+  buyer         User             @relation(fields: [userID], references: [id], onDelete: NoAction)
+  userID        Int
+  ReceiptDetail Receipt_detail[]
+
+  @@map("receipt")
 }
 
-model ReceiptDetail {
+model Receipt_detail {
   id        Int     @id @default(autoincrement())
   receipt   Receipt @relation(fields: [receiptID], references: [id], onDelete: NoAction)
   receiptID Int
   product   Product @relation(fields: [productID], references: [id], onDelete: NoAction)
   productID Int
+
+  @@map("receipt_detail")
 }
 
 model Review {
@@ -119,28 +151,35 @@ model Review {
   comment   String?
   rate      Float
   author    User    @relation(fields: [authorID], references: [id], onDelete: NoAction)
-  authorID  String  @db.Char(12)
+  authorID  Int
   product   Product @relation(fields: [productID], references: [id], onDelete: NoAction)
   productID Int
+
+  @@map("review")
 }
 
 model Product_item {
-  id           Int            @id @default(autoincrement())
-  color        String         @db.VarChar(100)
-  size         String         @db.Char(4)
+  id           Int             @id @default(autoincrement())
+  color        String          @db.VarChar(100)
+  size         String          @db.Char(4)
   quantity     Int
   image        String[]
-  product      Product        @relation(fields: [productID], references: [id], onDelete: NoAction)
+  product      Product         @relation(fields: [productID], references: [id], onDelete: NoAction)
   productID    Int
   Cart_detail  Cart_detail[]
   Order_detail Order_detail[]
+  ImportDetail Import_detail[]
+
+  @@map("product_item")
 }
 
 model Cart {
   id          Int           @id @default(autoincrement())
   owner       User          @relation(fields: [userID], references: [id], onDelete: NoAction)
-  userID      String        @db.Char(12)
+  userID      Int
   Cart_detail Cart_detail[]
+
+  @@map("cart")
 }
 
 model Cart_detail {
@@ -150,6 +189,8 @@ model Cart_detail {
   cartID       Int
   product_item Product_item @relation(fields: [itemID], references: [id], onDelete: NoAction)
   itemID       Int
+
+  @@map("cart_detail")
 }
 
 model Order {
@@ -158,8 +199,10 @@ model Order {
   total_cost   Int            @default(0)
   status       String         @default("0") @db.Char(1)
   buyer        User           @relation(fields: [userID], references: [id], onDelete: NoAction)
-  userID       String         @db.Char(12)
+  userID       Int
   Order_detail Order_detail[]
+
+  @@map("order")
 }
 
 model Order_detail {
@@ -168,28 +211,63 @@ model Order_detail {
   itemID       Int
   order        Order        @relation(fields: [orderID], references: [id], onDelete: NoAction)
   orderID      Int
+
+  @@map("order_detail")
 }
 
 model Yearly_report {
   year           DateTime         @id @db.Date
   income         Int              @default(0)
+  outcome        Int              @default(0)
+  profit         Int              @default(0)
   sold_quantity  Int              @default(0)
   Monthly_report Monthly_report[]
+
+  @@map("yearly_report")
 }
 
 model Monthly_report {
   month         DateTime       @id @db.Date
   income        Int            @default(0)
+  outcome       Int            @default(0)
+  profit        Int            @default(0)
   sold_quantity Int            @default(0)
   yearly_report Yearly_report  @relation(fields: [year], references: [year], onDelete: NoAction)
   year          DateTime       @db.Date
   Daily_report  Daily_report[]
+
+  @@map("monthly_report")
 }
 
 model Daily_report {
   date           DateTime       @id @default(now()) @db.Date
   income         Int            @default(0)
+  outcome        Int            @default(0)
+  profit         Int            @default(0)
   sold_quantity  Int            @default(0)
   monthly_report Monthly_report @relation(fields: [month], references: [month], onDelete: NoAction)
   month          DateTime       @db.Date
+
+  @@map("daily_report")
+}
+
+model Importing {
+  id           Int             @id @default(autoincrement())
+  date         DateTime        @default(now()) @db.Timestamptz()
+  ImportDetail Import_detail[]
+
+  @@map("importing")
+}
+
+model Import_detail {
+  id           Int          @id @default(autoincrement())
+  Product_item Product_item @relation(fields: [item], references: [id], onDelete: NoAction)
+  item         Int
+  quantity     Int          @default(0)
+  price        Int          @default(0)
+  import       Importing    @relation(fields: [importID], references: [id], onDelete: NoAction)
+  importID     Int
+  total_cost   Int          @default(0)
+
+  @@map("import_detail")
 }

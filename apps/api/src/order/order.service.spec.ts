@@ -19,7 +19,7 @@ describe('OrderService', () => {
   });
 
   it('get order with {id: 1} should have returned with', () => {
-    expect(service.order({id: 1})).toHaveReturned();
+    expect(service.order({id: 1})).toMatchObject({id: 1});
   })
 
   it('get all order should have returned', () => {
