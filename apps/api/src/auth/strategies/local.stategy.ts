@@ -34,7 +34,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
 
     return {
       access_token: this.jwtService.sign(accountRemaining),
-      user: User
+      user: {...User[0], ...accountRemaining}
     };
   }
 }

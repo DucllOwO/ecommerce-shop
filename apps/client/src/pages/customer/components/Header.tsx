@@ -71,7 +71,7 @@ const HeaderCustom = () => {
             key: '3',
             label: (
                 <Link to={''} onClick={() => {
-                    appCtx?.setUser(null)
+                    appCtx?.setUser(null);
                     LocalStorage.deleteItem('access_token');
                     LocalStorage.deleteItem('user');
                 }}>

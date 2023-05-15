@@ -19,9 +19,13 @@ const Login = () => {
     try {
       const data = await login(values.email, values.password);
       LocalStorage.setItem('access_token', data.data.access_token)
-      LocalStorage.setItem('user', data.data.user[0])
-      appCtx?.setUser(data.data.user[0])
-      nav('/');
+      LocalStorage.setItem('user', data.data.user)
+      appCtx?.setUser(data.data.user)
+      if (data.data.user.is_admin) {
+        nav('/admin/dashboard');
+      } else
+        nav('/')
+
     } catch (error) {
       console.log(error)
     } finally {
