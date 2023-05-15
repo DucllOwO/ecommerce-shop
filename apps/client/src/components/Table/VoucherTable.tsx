@@ -6,7 +6,7 @@ import { TableProps } from '../../interface/TableProps';
 import { isClickOnATableCell } from '../../helper/checkEventClick';
 import EditableCell from './EditableCell';
 import { DATE, INPUT, INPUT_NUMBER, TEXTAREA } from '../../constant/constant';
-import { IVoucher } from '../../interface/Voucher';
+import IVoucher from '../../interface/Voucher';
 import dayjs from 'dayjs';
 
 // export interface VoucherType {
@@ -18,7 +18,7 @@ import dayjs from 'dayjs';
 // }
 
 interface VoucherTableProps extends TableProps {
-  data: IVoucher[],
+  data?: IVoucher[],
 }
 
 const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
@@ -105,7 +105,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
     try {
       const row = (await form?.validateFields()) as IVoucher;
 
-      const newData = [...data];
+      const newData = data ? [...data] : [];
       const index = newData.findIndex((item) => id === item.code);
       if (index > -1) {
         const item = newData[index];

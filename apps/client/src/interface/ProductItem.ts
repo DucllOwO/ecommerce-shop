@@ -1,15 +1,15 @@
-import Cart_detail from "./CartDetail";
-import Order_detail from "./OrderDetail";
-import Product from "./Product";
+import ICart_detail from "./CartDetail";
+import IOrder_detail from "./OrderDetail";
+import IProduct from "./Product";
 
-export default interface Product_item {
+export default interface IProduct_item {
   id: number;
   color: string;
   size: string;
   quantity: number;
   image: string[];
-  product: Product;
+  product: IProduct;
   productID: number;
-  Cart_detail: Cart_detail[];
-  Order_detail: Order_detail[];
+  Cart_detail: ICart_detail[];
+  Order_detail: IOrder_detail[];
 }

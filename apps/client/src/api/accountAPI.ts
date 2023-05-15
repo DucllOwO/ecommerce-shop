@@ -1,8 +1,8 @@
-import Account from '../interface/Account';
-import User from '../interface/User';
+import IAccount from '../interface/Account';
+import IUser from '../interface/User';
 import { http } from './index';
 
-export const createAccount = async (email: string, password: string, user: User) => {
+export const createAccount = async (email: string, password: string, user: IUser) => {
   console.log(user)
   const response = await http.post('/accounts', {
     email, password,

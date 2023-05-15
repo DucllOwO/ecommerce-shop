@@ -1,12 +1,12 @@
-import Order_detail from "./OrderDetail";
-import User from "./User";
+import IOrder_detail from "./OrderDetail";
+import IUser from "./User";
 
-export default interface Order {
+export default interface IOrder {
   id: number;
   date: Date;
   total_cost: number;
   status: string;
-  buyer: User;
+  buyer: IUser;
   userID: string;
-  Order_detail: Order_detail[];
+  Order_detail: IOrder_detail[];
 }

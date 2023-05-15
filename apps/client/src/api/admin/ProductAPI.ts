@@ -1,21 +1,21 @@
-import { publicRequest, userRequest } from "../api";
+import { http } from "..";
 
 export function fetchAllProducts(){
-  return userRequest.get(`/product`);
+  return http.get(`/product`);
 };
 
 export function fetchAllTag(){
-  return userRequest.get(`/tag`);
+  return http.get(`/tag`);
 }
 
 export function fetchTag(id: number){
-  return userRequest.get(`/tag/${id}`);
+  return http.get(`/tag/${id}`);
 }
 
 export function fetchAllCollection(){
-  return userRequest.get(`/collection`);
+  return http.get(`/collection`);
 }
 
 export function fetchCollection(id: number){
-  return userRequest.get(`/collection/${id}`);
+  return http.get(`/collection/${id}`);
 }

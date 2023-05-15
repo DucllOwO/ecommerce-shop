@@ -1,7 +1,7 @@
 import { Button, DatePicker, Form, Space } from 'antd';
 import { useEffect, useState } from 'react'
-import VoucherTable, { VoucherType } from '../../components/Table/VoucherTable'
-import { IVoucher } from '../../interface/Voucher';
+import VoucherTable from '../../components/Table/VoucherTable'
+import IVoucher from '../../interface/Voucher';
 import { fetchAllVouchers } from '../../api/admin/VoucherAPI';
 
 // const originData: VoucherType[] = [];

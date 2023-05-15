@@ -1,10 +1,10 @@
-import Order from "./Order";
-import Product_item from "./ProductItem";
+import IOrder from "./Order";
+import IProduct_item from "./ProductItem";
 
-export default interface Order_detail {
+export default interface IOrder_detail {
   id: number;
-  product_item: Product_item;
+  product_item: IProduct_item;
   itemID: number;
-  order: Order;
+  order: IOrder;
   orderID: number;
 }

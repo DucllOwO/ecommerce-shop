@@ -6,7 +6,7 @@ import DiscountModal from '../../Modal/DiscountModal';
 import { isClickOnAnSVGTag, isClickOnATableCell } from '../../../helper/checkEventClick';
 import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
-import { IDiscount } from '../../../interface/Discount';
+import IDiscount from '../../../interface/Discount';
 
 // export interface IDiscount {
 //   id: string;
@@ -15,7 +15,7 @@ import { IDiscount } from '../../../interface/Discount';
 // }
 
 interface DiscountTableProps extends TableProps {
-  data: IDiscount[],
+  data?: IDiscount[],
 }
 
 const data = [
@@ -92,7 +92,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
     try {
       const row = (await form?.validateFields()) as IDiscount;
 
-      const newData = [...data];
+      const newData = data ? [...data] : [];
       const index = newData.findIndex((item) => id === item.id.toString());
       if (index > -1) {
         const item = newData[index];

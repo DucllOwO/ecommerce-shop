@@ -1,12 +1,12 @@
-import Product from "./Product";
-import User from "./User";
+import IProduct from "./Product";
+import IUser from "./User";
 
-export default interface Review {
+export default interface IReview {
   id: number;
   comment?: string | null;
   rate: number;
-  author: User;
+  author: IUser;
   authorID: string;
-  product: Product;
+  product: IProduct;
   productID: number;
 }

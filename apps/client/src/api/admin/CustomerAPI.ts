@@ -1,5 +1,5 @@
-import { publicRequest, userRequest } from "../api";
+import { http } from "..";
 
 export function fetchAllCustomers(){
-  return userRequest.get(`/user`);
+  return http.get(`/user`);
 };

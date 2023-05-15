@@ -10,9 +10,25 @@ export class OrderController {
     return this.orderService.createOrder(createOrderDto);
   }
 
-  @Get()
-  findAll() {
-    return this.orderService.orders({});
+  @Get('/waiting')
+  findAllWaiting() {
+    return this.orderService.orders({
+      where: {
+        status: {
+          equals: '0',
+        }
+      }
+    });
+  }
+  @Get('/completed')
+  findAllCompleted() {
+    return this.orderService.orders({
+      where: {
+        status: {
+          equals: '1'
+        }
+      }
+    });
   }
 
   @Get(':id')

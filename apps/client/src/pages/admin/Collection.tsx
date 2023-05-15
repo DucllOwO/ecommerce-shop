@@ -1,7 +1,7 @@
 import { Button, Form, Space } from 'antd';
 import React, { useEffect, useState } from 'react'
 import CollectionTable from '../../components/Table/CollectionTable'
-import { ICollection } from '../../interface/Collection';
+import ICollection from '../../interface/Collection';
 import { fetchAllCollection } from '../../api/admin/ProductAPI';
 
 // const originData: CollectionType[] = [];

@@ -1,5 +1,5 @@
-import { publicRequest, userRequest } from "../api";
+import { http } from "..";
 
 export function fetchAllDiscounts(){
-  return userRequest.get(`/discount`);
+  return http.get(`/discount`);
 };

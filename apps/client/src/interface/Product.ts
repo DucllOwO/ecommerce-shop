@@ -1,11 +1,11 @@
-import Collection from "./Collection";
-import Discount from "./Discount";
-import Product_item from "./ProductItem";
-import ReceiptDetail from "./ReceiptDetail";
-import Review from "./Review";
-import Tag from "./Tag";
+import ICollection from "./Collection";
+import IDiscount from "./Discount";
+import IProduct_item from "./ProductItem";
+import IReceiptDetail from "./ReceiptDetail";
+import IReview from "./Review";
+import ITag from "./Tag";
 
-export default interface Product {
+export default interface IProduct {
   id: number;
   name: string;
   price: number;
@@ -13,13 +13,13 @@ export default interface Product {
   image: string[];
   view: number;
   sold: number;
-  discount?: Discount | null;
+  discount?: IDiscount | null;
   discountID?: number | null;
-  tag: Tag;
+  tag: ITag;
   tagID: number;
-  collection?: Collection | null;
+  collection?: ICollection | null;
   collectionID?: number | null;
-  ReceiptDetail: ReceiptDetail[];
-  Review: Review[];
-  Product_item: Product_item[];
+  ReceiptDetail: IReceiptDetail[];
+  Review: IReview[];
+  Product_item: IProduct_item[];
 }

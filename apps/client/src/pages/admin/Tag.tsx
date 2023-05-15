@@ -2,7 +2,7 @@ import { Button, Form, Space } from 'antd';
 import { useEffect, useState } from 'react'
 import TagTable from '../../components/Table/Tag/TagTable'
 import { fetchAllTag } from '../../api/admin/ProductAPI';
-import { ITag } from '../../interface/Tag';
+import ITag from '../../interface/Tag';
 
 
 // const originData: TagType[] = [];

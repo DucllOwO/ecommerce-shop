@@ -1,6 +1,5 @@
-import { publicRequest, userRequest } from "../api";
-import { IUser } from "../../interface/User";
+import { http } from "..";
 
 export function fetchAllVouchers(){
-  return userRequest.get(`/voucher`);
+  return http.get(`/voucher`);
 };

@@ -7,7 +7,7 @@ import ProductModal from '../../Modal/ProductModal';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
 import { isClickOnAnImgTag, isClickOnAnSVGTag, isClickOnATableCell } from '../../../helper/checkEventClick';
 import { TableProps } from '../../../interface/TableProps';
-import { IProduct } from '../../../interface/Product';
+import IProduct from '../../../interface/Product';
 // export interface ProductType {
 //   id: string;
 //   name: string;
@@ -18,7 +18,7 @@ import { IProduct } from '../../../interface/Product';
 // }
 
 interface ProductTableProps extends TableProps {
-  data: IProduct[],
+  data?: IProduct[],
   setIsEditing: Function,
   setIsModalOpen: Function
 }

@@ -1,10 +1,8 @@
-import { publicRequest } from "./api";
-import { IProduct } from "../interface/Product";
-
+import { http } from ".";
 export function fetchAllProducts(){
-  return publicRequest.get(`/product`);
+  return http.get(`/product`);
 };
 
 export function fetchProduct(id: number){
-  return publicRequest.get(`/product/${id}`)
+  return http.get(`/product/${id}`)
 }

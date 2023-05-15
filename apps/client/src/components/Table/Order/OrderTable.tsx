@@ -1,28 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
 import OrderModal from '../../Modal/OrderModal';
 import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
+import { fetchWaitingOrders, fetchCompletedOrders } from '../../../api/admin/OrderAPI';
+import IOrder from '../../../interface/Order';
 
-interface DataType {
-  key?: string;
-  id: number;
-  date: string;
-  customer_name: string;
-  total_amount: number;
-}
+// interface DataType {
+//   key?: string;
+//   id: number;
+//   date: string;
+//   customer_name: string;
+//   total_amount: number;
+// }
 
-const data = [
-  {
-    id: 1,
-    date: '2018-04-24 18:00:00',
-    customer_name: 'Nguyen tri Duck',
-    total_amount: 1000000000,
-  },
-]
+// const data = [
+//   {
+//     id: 1,
+//     date: '2018-04-24 18:00:00',
+//     customer_name: 'Nguyen tri Duck',
+//     total_amount: 1000000000,
+//   },
+// ]
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<IOrder> = [
   {
     title: 'ID',
     dataIndex: 'id',
@@ -38,33 +40,50 @@ const columns: ColumnsType<DataType> = [
     title: 'Khách hàng',
     dataIndex: 'customer_name',
     key: 'customer_name',
+    render: (_, record) => <p>{`${record.buyer.lastname} ${record.buyer.firstname}`}</p>
   },
   {
     title: 'Tổng tiền',
-    key: 'total_amount',
-    dataIndex: 'total_amount',
+    key: 'total_cost',
+    dataIndex: 'total_cost',
     render: (text) => (
       text
     ),
   },
 ];
 
-const OrderTable = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+const OrderTable = (props: OrderProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<IOrder>();
+  const [data, setData] = useState<IOrder[]>();
+
+  useEffect(()=> {
+    console.log(data)
+    if(props.state === 'waiting')
+      fetchWaitingOrders().then(data => setData(data.data)); 
+    else
+      fetchCompletedOrders().then(data => setData(data.data));
+  },[props.state])
 
   return (
     <>
       <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-      <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record, rowIndex) => {
+      <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record : IOrder, rowIndex) => {
         return {
           onClick: (event) => {
-            if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event)))
+            if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event))){
               setIsModalOpen(prev => !prev)
+              setSelectedItem(record)
+            }
           }, // click row
         };
       }} />
     </>
   )
+}
+
+interface OrderProps{
+  state: string
 }
 
 export default OrderTable

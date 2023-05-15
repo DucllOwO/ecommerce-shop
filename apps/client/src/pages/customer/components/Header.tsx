@@ -6,6 +6,7 @@ import { Link, useLocation } from 'react-router-dom'
 
 import logo from '../../../assets/images/Logo-2.png'
 import { AppContext } from '../../../context/AppContext'
+import LocalStorage from '../../../helper/localStorage'
 
 const mainNav = [
     {
@@ -37,32 +38,7 @@ const items: MenuProps['items'] = [
     }
 ]
 
-const itemsLogined: MenuProps['items'] = [
-    {
-        key: '1',
-        label: (
-            <Link to='profile'>
-                Thông tin
-            </Link>
-        ),
-    },
-    {
-        key: '2',
-        label: (
-            <Link to={'orders'}>
-                Danh sách đơn hàng
-            </Link>
-        ),
-    },
-    {
-        key: '3',
-        label: (
-            <Link to={''} onClick={() => { }}>
-                Đăng xuất
-            </Link>
-        ),
-    }
-]
+
 
 const HeaderCustom = () => {
     const { pathname } = useLocation()
@@ -73,6 +49,37 @@ const HeaderCustom = () => {
     const menuLeft = useRef(null)
 
     const appCtx = useContext(AppContext);
+
+    const itemsLogined: MenuProps['items'] = [
+        {
+            key: '1',
+            label: (
+                <Link to='profile'>
+                    Thông tin
+                </Link>
+            ),
+        },
+        {
+            key: '2',
+            label: (
+                <Link to={'orders'}>
+                    Danh sách đơn hàng
+                </Link>
+            ),
+        },
+        {
+            key: '3',
+            label: (
+                <Link to={''} onClick={() => {
+                    appCtx?.setUser(null)
+                    LocalStorage.deleteItem('access_token');
+                    LocalStorage.deleteItem('user');
+                }}>
+                    Đăng xuất
+                </Link>
+            ),
+        }
+    ]
 
     return (
         <div className="header" ref={headerRef}>

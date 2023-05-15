@@ -1,9 +1,9 @@
-import User from "./User";
+import IUser from "./User";
 
 
-export default interface Account {
+export default interface IAccount {
   email: string;
   password: string;
   is_admin?: boolean;
-  User?: User[];
+  User?: IUser[];
 }

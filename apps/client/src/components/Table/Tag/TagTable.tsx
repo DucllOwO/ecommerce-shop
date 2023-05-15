@@ -9,7 +9,7 @@ import {
 import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
 import { INPUT, SELECT } from '../../../constant/constant';
-import { ITag } from '../../../interface/Tag';
+import ITag from '../../../interface/Tag';
 
 // export interface TagType {
 //   id: string;

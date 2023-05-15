@@ -1,9 +1,9 @@
-import Cart_detail from "./CartDetail";
-import User from "./User";
+import ICart_detail from "./CartDetail";
+import IUser from "./User";
 
-export default interface Cart {
+export default interface ICart {
   id: number;
-  owner: User;
+  owner: IUser;
   userID: string;
-  Cart_detail: Cart_detail[];
+  Cart_detail: ICart_detail[];
 }
