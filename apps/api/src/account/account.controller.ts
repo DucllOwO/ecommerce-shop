@@ -1,13 +1,15 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { AccountService } from './account.service';
 
-@Controller('account')
+@Controller('accounts')
 export class AccountController {
   constructor(private readonly accountService: AccountService) { }
 
   @Post()
-  create(@Body() createAccountDto: Prisma.AccountCreateInput) {
+  async create(@Body() createAccountDto: Prisma.AccountCreateInput) {
+    console.log(JSON.stringify(createAccountDto))
     return this.accountService.create(createAccountDto);
   }
 

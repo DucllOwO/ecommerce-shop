@@ -41,7 +41,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
   rules,
   ...restProps
 }) => {
-  console.log(rules)
   const inputNode = getComponentByType(inputType)
 
   return (

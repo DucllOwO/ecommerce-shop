@@ -10,3 +10,5 @@ export const INPUT_NUMBER: string = 'INPUT_NUMBER'
 export const INPUT: string = 'INPUT'
 export const SELECT: string = 'SELECT'
 
+export const SIZES : string[] = ['S', 'M', 'L', 'XL', 'XXL']
+

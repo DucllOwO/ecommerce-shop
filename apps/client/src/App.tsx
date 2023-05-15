@@ -21,6 +21,7 @@ import Information from './pages/admin/Information.js';
 import Feedback from './pages/admin/Feedback.js';
 import Voucher from './pages/admin/Voucher.js';
 import CustomerManagement from './pages/admin/CustomerManagement.js';
+import Importing from './pages/admin/Importing.js';
 
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
           <Route key={'voucher'} path='voucher' element={<Voucher />} />
           <Route key={'policy'} path='policy' element={<Policy />} />
           <Route key={'customer-management'} path='customer-management' element={<CustomerManagement />}></Route>
+          <Route key={'importing'} path='importing' element={<Importing />}></Route>
         </Route>
         <Route key={'customer'} path='/' element={<Customer />}>
           <Route key={'home'} index element={<Home />}></Route>
@@ -57,8 +59,8 @@ function App() {
           <Route key={'cart'} path='cart' element={<Cart />}></Route>
           <Route key={'login'} path='login' element={<Login />}></Route>
           <Route key={'signup'} path='signup' element={<SignUp />}></Route>
-
         </Route>
+
       </Routes>
     </BrowserRouter>
   )

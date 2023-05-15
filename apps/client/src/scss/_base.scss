@@ -18,6 +18,12 @@ html {
     }
 }
 
+.custom-table-no-hover {
+    .ant-table-tbody>tr:hover>td {
+        background-color: transparent !important;
+    }
+}
+
 body {
     font-family: "Roboto", sans-serif;
 }

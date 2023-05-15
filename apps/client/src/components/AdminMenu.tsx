@@ -9,6 +9,7 @@ import ReceiptIcon from '../assets/menu/receipt_96px.png'
 import PolicyIcon from '../assets/menu/terms_and_conditions_96px.png'
 import DiscountIcon from '../assets/icon/loyalty_card_96px.png'
 import VoucherIcon from '../assets/icon/sale_96px.png'
+import InventoryIcon from '../assets/menu/warehouse_96px.png'
 import type { MenuProps } from 'antd/es/menu'
 import { Image, Menu } from 'antd'
 import { useNavigate } from 'react-router-dom'
@@ -107,6 +108,11 @@ const menu: MenuProps['items'] = [
     key: 'customer-management',
     label: 'Khách hàng',
     icon: generateImageIcon(InformationIcon)
+  },
+  {
+    key: 'importing',
+    label: 'Nhập hàng',
+    icon: generateImageIcon(InventoryIcon)
   }
 ]
 

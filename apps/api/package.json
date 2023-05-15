@@ -23,7 +23,7 @@
     "test:int": "dotenv -e ./config/.env.test -- jest -i --no-cache --watch --config ./test/jest-int.json"
   },
   "dependencies": {
-    "@nestjs/common": "^9.0.0",
+    "@nestjs/common": "^9.4.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.0.2",
@@ -35,6 +35,7 @@
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "cors": "^2.8.5",
     "dayjs": "^1.11.7",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",

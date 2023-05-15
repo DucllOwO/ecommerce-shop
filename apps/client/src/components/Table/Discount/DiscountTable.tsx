@@ -18,13 +18,13 @@ interface DiscountTableProps extends TableProps {
   data: IDiscount[],
 }
 
-// const data = [
-//   {
-//     id: '1',
-//     name: 'Ban e',
-//     discount: 50
-//   }
-// ]
+const data = [
+  {
+    id: '1',
+    name: 'Ban e',
+    discount: 50
+  }
+]
 
 const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
