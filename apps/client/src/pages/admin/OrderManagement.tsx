@@ -5,7 +5,7 @@ interface OrderProps {
   state: string
 }
 
-const Order = ({ state }: OrderProps) => {
+const OrderManagement = ({ state }: OrderProps) => {
   console.log(state)
   return (
     <div>
@@ -14,4 +14,4 @@ const Order = ({ state }: OrderProps) => {
   )
 }
 
-export default Order
+export default OrderManagement

@@ -10,7 +10,7 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
   private readonly salt = 12;
-  constructor(private accountService: AccountService, private userService: UserService, private jwtService: JwtService) { }
+  constructor(private accountService: AccountService, private jwtService: JwtService) { }
 
   async validateUser(loginUserDto: LoginUserDto) {
     const account = await this.accountService.findOne({ email: loginUserDto.email })

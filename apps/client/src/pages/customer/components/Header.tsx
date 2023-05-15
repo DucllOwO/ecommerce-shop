@@ -1,10 +1,11 @@
 import { ShoppingCartOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons'
 import { Dropdown, MenuProps } from 'antd'
 import Search from 'antd/es/input/Search'
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useContext } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 
 import logo from '../../../assets/images/Logo-2.png'
+import { AppContext } from '../../../context/AppContext'
 
 const mainNav = [
     {
@@ -36,29 +37,42 @@ const items: MenuProps['items'] = [
     }
 ]
 
-const HeaderCustom = () => {
+const itemsLogined: MenuProps['items'] = [
+    {
+        key: '1',
+        label: (
+            <Link to='profile'>
+                Thông tin
+            </Link>
+        ),
+    },
+    {
+        key: '2',
+        label: (
+            <Link to={'orders'}>
+                Danh sách đơn hàng
+            </Link>
+        ),
+    },
+    {
+        key: '3',
+        label: (
+            <Link to={''} onClick={() => { }}>
+                Đăng xuất
+            </Link>
+        ),
+    }
+]
 
+const HeaderCustom = () => {
     const { pathname } = useLocation()
     const activeNav = mainNav.findIndex(e => e.path === pathname)
 
     const headerRef = useRef(null)
 
-    // useEffect(() => {
-    //     window.addEventListener("scroll", () => {
-    //         if (document.body.scrollTop > 80 || document.documentElement.scrollTop > 80) {
-    //             headerRef.current.classList.add('shrink')
-    //         } else {
-    //             headerRef.current.classList.remove('shrink')
-    //         }
-    //     })
-    //     return () => {
-    //         window.removeEventListener("scroll")
-    //     };
-    // }, []);
-
     const menuLeft = useRef(null)
 
-    // const menuToggle = () => menuLeft.current.classList.toggle('active')
+    const appCtx = useContext(AppContext);
 
     return (
         <div className="header" ref={headerRef}>
@@ -73,9 +87,6 @@ const HeaderCustom = () => {
                         <i className='bx bx-menu-alt-left'></i>
                     </div>
                     <div className="header__menu__left" ref={menuLeft}>
-                        {/* <div className="header__menu__left__close" onClick={menuToggle}>
-                            <i className='bx bx-chevron-left'></i>
-                        </div> */}
                         {
                             mainNav.map((item, index) => (
                                 <div
@@ -91,7 +102,6 @@ const HeaderCustom = () => {
                     </div>
                     <div className="header__menu__right">
                         <div className="header__menu__item header__menu__right__item">
-
                             <Search
                                 placeholder="input search text"
                                 allowClear
@@ -105,7 +115,7 @@ const HeaderCustom = () => {
                             </Link>
                         </div>
                         <div className="header__menu__item header__menu__right__item">
-                            <Dropdown menu={{ items }} placement='bottom'><UserOutlined /></Dropdown>
+                            <Dropdown menu={appCtx?.user ? { items: itemsLogined } : { items }} placement='bottom'><UserOutlined /></Dropdown>
                         </div>
                     </div>
                 </div>

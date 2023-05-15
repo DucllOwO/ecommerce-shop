@@ -1,3 +1,4 @@
+import { AuthGuard } from '@nestjs/passport';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { Controller, Body, BadRequestException } from '@nestjs/common';
 import { Post, Request, UseGuards } from '@nestjs/common/decorators';
@@ -9,12 +10,13 @@ export class AuthController {
 
   constructor(private authService: AuthService) { }
 
+  @UseGuards(AuthGuard('local'))
   @Post('login')
-  login(@Body() loginUser: LoginUserDto) {
+  login(@Body() loginUser: LoginUserDto, @Request() req) {
     if (!loginUser.email || !loginUser.password)
       throw new BadRequestException();
 
-    return this.authService.validateUser(loginUser);
+    return req.user;
   }
 }
 

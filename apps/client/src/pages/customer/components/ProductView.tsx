@@ -1,15 +1,10 @@
-import { Button, Col, Image, InputNumber, Row, Space } from 'antd'
-import React, { useState, useEffect } from 'react'
-import productData from '../../../assets/fake-data/products'
-
-import img01 from '../../../assets/images/products/ao-polo-nam-apm5351-nav-2-yodyvn.jpg'
+import { Button, Col, Image, InputNumber, Radio, Row, Space } from 'antd'
+import { useState, useEffect } from 'react'
 import { fetchProduct } from '../../../api/CustomerAPI'
-import { IProduct } from '../../../interface/Product'
-import { IProductItem } from '../../../interface/ProductItem'
 
 const ProductView = (props: ProductViewProps) => {
 
-    const [product, setProduct] = useState<IProduct>();
+    const [product, setProduct] = useState<any>();
 
     const [previewImg, setPreviewImg] = useState<string[]>();
 
@@ -17,7 +12,7 @@ const ProductView = (props: ProductViewProps) => {
 
     const [color, setColor] = useState<string[]>()
 
-    const [size, setSize] = useState(undefined)
+    const [size, setSize] = useState<string[]>()
 
     const [quantity, setQuantity] = useState(1)
 
@@ -26,8 +21,8 @@ const ProductView = (props: ProductViewProps) => {
             console.log(data.data)
             setProduct(data.data);
             setPreviewImg(data.data?.image);
-            setColor(Array.from(new Set(data.data.ProductItem?.map((data: IProductItem) => data.color))))
-            setColor(Array.from(new Set(data.data.ProductItem?.map((data: IProductItem) => data.size))))
+            setColor(Array.from(new Set(data.data.Product_item?.map((data: any) => data.color))))
+            setSize(Array.from(new Set(data.data.Product_item?.map((data: any) => data.size))))
         })
     }, [props])
 
@@ -39,21 +34,21 @@ const ProductView = (props: ProductViewProps) => {
                 <div className="product__images__main">
                     <Row>
                         <Col span={11}>
-                            <Image src={previewImg? previewImg[0] : undefined} />
+                            <Image src={previewImg ? previewImg[0] : undefined} />
                         </Col>
                         <Col offset={1} span={11}>
-                            <Image src={previewImg? previewImg[1] : undefined} />
+                            <Image src={previewImg ? previewImg[1] : undefined} />
 
                         </Col>
 
                     </Row>
                     <Row style={{ margin: '20px 0' }}>
                         <Col span={11}>
-                            <Image src={previewImg? previewImg[2] : undefined} />
+                            <Image src={previewImg ? previewImg[2] : undefined} />
                         </Col>
                         <Col span={11} offset={1}>
 
-                            <Image src={previewImg? previewImg[3] : undefined} />
+                            <Image src={previewImg ? previewImg[3] : undefined} />
                         </Col>
                     </Row>
                 </div>
@@ -72,9 +67,6 @@ const ProductView = (props: ProductViewProps) => {
                         }
                     </Button>
                 </div>
-                <Space>
-
-                </Space>
             </div>
 
             <div className="product__info">
@@ -89,13 +81,13 @@ const ProductView = (props: ProductViewProps) => {
                         Màu sắc
                     </div>
                     <div className="product__info__item__list">
-                        {/* {
-                            color.map((item, index) => (
-                                <div key={index} className={`product__info__item__list__item ${color === item ? 'active' : ''}`}>
-                                    <div className={`circle bg-${item}`}></div>
-                                </div>
-                            ))
-                        } */}
+                        <Radio.Group buttonStyle="solid">
+                            {
+                                color?.map((item, index) => (
+                                    <Radio.Button value="item">{item}</Radio.Button>
+                                ))
+                            }
+                        </Radio.Group>
                     </div>
                 </div>
                 <div className="product__info__item">
@@ -103,15 +95,13 @@ const ProductView = (props: ProductViewProps) => {
                         Kích cỡ
                     </div>
                     <div className="product__info__item__list">
-                        {/* {
-                            product.size.map((item, index) => (
-                                <div key={index} className={`product__info__item__list__item ${size === item ? 'active' : ''}`}>
-                                    <span className="product__info__item__list__item__size">
-                                        {item}
-                                    </span>
-                                </div>
-                            ))
-                        } */}
+                        <Radio.Group buttonStyle="solid">
+                            {
+                                size?.map((item, index) => (
+                                    <Radio.Button value="item">{item}</Radio.Button>
+                                ))
+                            }
+                        </Radio.Group>
                     </div>
                 </div>
                 <div className="product__info__item">

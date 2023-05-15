@@ -1,5 +1,5 @@
 import { Carousel, Col, Image, Row, Space } from 'antd'
-import React from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import policy from '../../assets/fake-data/policy'
 import productData from '../../assets/fake-data/products'
@@ -18,8 +18,12 @@ import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import { LeftArrow, RightArrow } from './components/Arrow'
 import Title from 'antd/es/typography/Title'
 import Scrollbars from 'react-custom-scrollbars'
+import { AppContext } from '../../context/AppContext'
 
 const Home = () => {
+    const appContext = useContext(AppContext);
+
+
     return (
         <Helmet title="Trang chủ">
             {/* hero slider */}
@@ -64,6 +68,7 @@ const Home = () => {
                         <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow} Footer={null}>
                             {productData.getProducts(8).map((item, index) => (
                                 <ProductCard
+                                    id={index}
                                     key={index}
                                     img01={item.image01}
                                     img02={item.image02}
@@ -85,6 +90,7 @@ const Home = () => {
                         <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow} Footer={null} >
                             {productData.getProducts(8).map((item, index) => (
                                 <ProductCard
+                                    id={index}
                                     key={index}
                                     img01={item.image01}
                                     img02={item.image02}

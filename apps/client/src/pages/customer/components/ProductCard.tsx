@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { Button } from 'antd'
 
 const ProductCard = (props: ProductCardProps) => {
-
     return (
         <div className="product-card">
             <Link to={`/product/${props.id}`}>
@@ -35,7 +34,6 @@ type ProductCardProps = {
     img02: string,
     name: string,
     price: number,
-    slug: string
 }
 
 export default ProductCard

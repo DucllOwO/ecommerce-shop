@@ -7,7 +7,7 @@ import Review from "./Review";
 
 export default interface User {
   id: number;
-  firstname: string;
+  firstname?: string;
   lastname?: string;
   phone_number?: string;
   address?: string;

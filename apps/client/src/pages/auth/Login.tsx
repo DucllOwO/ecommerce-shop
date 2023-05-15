@@ -1,26 +1,31 @@
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Divider, Form, Image, Input, Spin } from 'antd'
 import Title from 'antd/es/typography/Title'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { login } from '../../api/authAPI'
 import { REQUIRED_RULE } from '../../constant/formRules'
+import { AppContext } from '../../context/AppContext'
 import LocalStorage from '../../helper/localStorage'
 
 const Login = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false)
+  const nav = useNavigate();
+  const appCtx = useContext(AppContext);
 
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
       const data = await login(values.email, values.password);
-      console.log(data)
-      LocalStorage.setItem('access_token', data)
+      LocalStorage.setItem('access_token', data.data.access_token)
+      LocalStorage.setItem('user', data.data.user[0])
+      appCtx?.setUser(data.data.user[0])
+      nav('/');
     } catch (error) {
       console.log(error)
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 

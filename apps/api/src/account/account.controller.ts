@@ -1,6 +1,5 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Controller, Get, Post, Body, Patch, Param, Delete  } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { AccountService } from './account.service';
 
 @Controller('accounts')
@@ -9,7 +8,6 @@ export class AccountController {
 
   @Post()
   async create(@Body() createAccountDto: Prisma.AccountCreateInput) {
-    console.log(JSON.stringify(createAccountDto))
     return this.accountService.create(createAccountDto);
   }
 

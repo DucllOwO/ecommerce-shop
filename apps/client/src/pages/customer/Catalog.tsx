@@ -7,7 +7,7 @@ import FilterTree from './components/FilterTree'
 import Helmet from './components/Helmet'
 import ProductCard from './components/ProductCard'
 import { fetchAllProducts } from '../../api/CustomerAPI'
-import { IProduct } from '../../interface/Product'
+import Product from '../../interface/Product'
 
 const treeColorData: DataNode[] = [
     {
@@ -70,17 +70,17 @@ const treeSizeData: DataNode[] = [
 ];
 
 const Catalog = () => {
-    
+
     useEffect(() => {
-        fetchAllProducts().then((data)=> {
+        fetchAllProducts().then((data) => {
             console.log(data)
             setProducts(data.data)
-        }).catch((error)=> {
+        }).catch((error) => {
             console.log(error)
         })
-    },[])
+    }, [])
 
-    const [products, setProducts] = useState<IProduct[]>();
+    const [products, setProducts] = useState<Product[]>();
     const [numOfItem, setNumOfItem] = useState(10)
 
     return (
@@ -107,30 +107,22 @@ const Catalog = () => {
                     </div>
                 </div>
                 <div className="catalog__content">
-                    <InfiniteScroll
-                        dataLength={numOfItem}
-                        hasMore={true}
-                        loader={<div style={{ textAlign: 'center', display: 'block' }}>
-                            <Spin />
-                        </div>}
-                        next={() => {
-                            setTimeout(() => { setNumOfItem(prev => prev + 4) }, 3000)
-
-                        }}
-                        style={{ display: 'flex', flexWrap: "wrap" }}
-                    >
-                        {products?.map((item, index) => (
-                            <ProductCard
-                                key={index}
-                                id={item?.id}
-                                img01={item?.image[0]}
-                                img02={item?.image[1]}
-                                name={item.name}
-                                price={item.price}
-                                slug="quan-somi"
-                            />
-                        ))}
-                    </InfiniteScroll>
+                    <List
+                        grid={{ gutter: 16, column: 3 }}
+                        dataSource={products}
+                        renderItem={(item, index) => (
+                            <List.Item>
+                                <ProductCard
+                                    key={index}
+                                    id={item?.id}
+                                    img01={item?.image[0]}
+                                    img02={item?.image[1]}
+                                    name={item.name}
+                                    price={item.price}
+                                />
+                            </List.Item>
+                        )}
+                    />
                 </div>
             </div>
         </Helmet>

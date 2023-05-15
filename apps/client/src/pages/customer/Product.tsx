@@ -15,7 +15,7 @@ const Product = () => {
   const [selectedProduct, setSelectedProduct] = useState<number>(Number(window.location.pathname.split('/')[2]))
 
   const relatedProducts = productData.getProducts(8)
-  
+
   React.useEffect(() => {
     fetchProduct(selectedProduct).then((data) => {
       setProduct(data.data);
@@ -24,24 +24,22 @@ const Product = () => {
   }, [selectedProduct])
 
   return (
-    <Helmet title={product? product.name : ""}>
+    <Helmet title={product ? product.name : ""}>
       <Space>
-
-        <ProductView id={selectedProduct}/>
+        <ProductView id={selectedProduct} />
       </Space>
       <Space direction='vertical'>
         <Title level={2} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>GỢI Ý CHO BẠN</Title>
         <Space>
-
           {
             relatedProducts.map((item, index) => (
               <ProductCard
+                id={index}
                 key={index}
                 img01={item.image01}
                 img02={item.image02}
                 name={item.title}
                 price={Number(item.price)}
-                slug={item.slug}
               />
             ))
           }
@@ -53,12 +51,12 @@ const Product = () => {
           {
             relatedProducts.map((item, index) => (
               <ProductCard
+                id={index}
                 key={index}
                 img01={item.image01}
                 img02={item.image02}
                 name={item.title}
                 price={Number(item.price)}
-                slug={item.slug}
               />
             ))
           }

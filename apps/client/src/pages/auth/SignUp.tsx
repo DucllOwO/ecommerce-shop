@@ -1,23 +1,28 @@
 import { UserOutlined, LockOutlined, PhoneOutlined, MailOutlined } from '@ant-design/icons'
 import { Form, Input, Button, Divider, Image, Space, Spin } from 'antd'
 import Title from 'antd/es/typography/Title'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { createAccount } from '../../api/accountAPI'
 import ErrorAlert from '../../components/Alert/ErrorAlert'
+import SuccessAlert from '../../components/Alert/SuccessAlert'
 import { EMAIL_FORMAT_RULE, PHONENUMBER_FORMAT_RULE, REQUIRED_RULE } from '../../constant/formRules'
+import { AppContext } from '../../context/AppContext'
+import LocalStorage from '../../helper/localStorage'
 
 
 const SignUp = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const nav = useNavigate();
 
   const onFinish = async (values: any) => {
     setLoading(true);
     try {
       const { email, password, ...userData } = values;
       const data = await createAccount(email, password, userData);
-      console.log(data)
+      SuccessAlert('Tạo tài khoản thành công hãy đăng nhập!');
+      nav('/login')
     } catch (error) {
       console.log(error)
     } finally {
