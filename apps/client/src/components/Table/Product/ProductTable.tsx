@@ -19,11 +19,12 @@ import IProduct from '../../../interface/Product';
 
 interface ProductTableProps extends TableProps {
   data?: IProduct[],
+  setSelectedItem: Function,
   setIsEditing: Function,
   setIsModalOpen: Function
 }
 
-const ProductTable: FC<ProductTableProps> = ({ data, setData, setIsEditing, setIsModalOpen }) => {
+const ProductTable: FC<ProductTableProps> = ({ data, setSelectedItem, setIsEditing, setIsModalOpen }) => {
 
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
@@ -63,7 +64,8 @@ const ProductTable: FC<ProductTableProps> = ({ data, setData, setIsEditing, setI
       render: (_: any, record: IProduct) => <Space>
         <Button shape="circle" icon={<EditFilled />} onClick={() => {
           setIsEditing((prev: boolean) => !prev);
-          setIsModalOpen((prev: boolean) => !prev)
+          setIsModalOpen((prev: boolean) => !prev);
+          setSelectedItem(record);
         }} />
         <Button shape="circle" icon={<DeleteFilled />} />
       </Space>,

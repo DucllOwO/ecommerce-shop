@@ -2,21 +2,49 @@ import { Tag, Descriptions, Modal, Image as AntdImage, Select, Form, InputNumber
 import AntdImgCrop from 'antd-img-crop'
 import { useForm } from 'antd/es/form/Form'
 import { RcFile } from 'antd/es/upload'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { REQUIRED_RULE } from '../../constant/formRules'
 import { FORM_NO_BOTTOM_MARGIN } from '../../constant/styles'
 import { onPreview } from '../../helper/uploadFileAntd'
 import { ModalProps } from '../../interface/ModalProps'
 import ProductInventoryForm from '../Form/ProductInventoryForm'
 import ProductInventoryTable from '../Table/Product/ProductInventoryTable'
+import ITag from '../../interface/Tag'
+import { fetchAllCollection, fetchAllTag } from '../../api/admin/ProductAPI'
+import ICollection from '../../interface/Collection'
+import { fetchAllDiscounts } from '../../api/admin/DiscountAPI'
+import IDiscount from '../../interface/Discount'
+import IProduct from '../../interface/Product'
+import { IHaveTag } from '../../interface/HaveTag'
 
 interface ProductModalProps extends ModalProps {
   isEditing?: boolean,
-  setIsEditing: Function
+  setIsEditing: Function,
+  selectedItem?: IProduct
 }
 
-const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing, setIsEditing }) => {
+const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing, setIsEditing, selectedItem }) => {
   const [form] = useForm();
+  const [tag, setTag] = useState([]);
+  const [collection, setCollection] = useState([]);
+  const [discount, setDiscount] = useState([]);
+
+
+  useEffect(()=> {
+    console.log(selectedItem)
+    fetchAllTag().then((data) => {
+      setTag(data.data.map((item: ITag) =>{ 
+        return {value: item.id, label: item.name}
+      }))});
+    fetchAllCollection().then((data) => {
+      setCollection(data.data.map((item: ICollection) =>{ 
+        return {value: item.id, label: item.name}
+      }))});
+    fetchAllDiscounts().then((data) => {
+      setDiscount(data.data.map((item: IDiscount) =>{ 
+        return {value: item.id, label: item.name}
+      }))});
+  },[])
 
   const handleChange = (value: string[]) => {
     console.log(`selected ${value}`);
@@ -62,7 +90,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing
         else
           setIsModalOpen((prev: boolean) => !prev)
       }} >
-      {isEditing ?
+      {!isEditing ?
         <Form form={form}>
           <Space direction='vertical' style={{ width: '100%' }}>
             <Descriptions title="Thông tin sản phẩm" bordered>
@@ -71,8 +99,10 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing
                 <Form.Item name={'collection'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <Select
                     allowClear
-                    style={{ width: '100%' }}
+                    style={{ width: '100%', color: 'black'}}
                     placeholder="Chọn nhãn cho sản phẩm"
+                    options={collection}
+                    
                   />
                 </Form.Item>
               </Descriptions.Item>
@@ -88,10 +118,11 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing
                     allowClear
                     style={{ width: '100%' }}
                     placeholder="Chọn nhãn cho sản phẩm"
+                    options={tag}
                   />
                 </Form.Item>
               </Descriptions.Item>
-              <Descriptions.Item label="Gía bán (đ)" span={1}>
+              <Descriptions.Item label="Giá bán (đ)" span={1}>
                 <Form.Item name={'price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <InputNumber
                     min={0}
@@ -140,6 +171,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing
                     allowClear
                     style={{ width: '100%' }}
                     placeholder="Chọn mã giảm giá áp dụng cho sản phẩm"
+                    options={discount}
                   />
                 </Form.Item>
               </Descriptions.Item>
@@ -173,23 +205,24 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing
         :
         <Space direction='vertical' style={{ width: '100%' }}>
           <Descriptions title="Thông tin sản phẩm" bordered>
-            <Descriptions.Item label="ID" span={1}>1</Descriptions.Item>
-            <Descriptions.Item label="Bộ siêu tập" span={2}>Quần dài test</Descriptions.Item>
-            <Descriptions.Item label="Tên sản phẩm" span={3}>Quần dài thồng lòng</Descriptions.Item>
+            <Descriptions.Item label="ID" span={1}>{selectedItem?.id}</Descriptions.Item>
+            <Descriptions.Item label="Bộ siêu tập" span={2}>{selectedItem?.collection?.name}</Descriptions.Item>
+            <Descriptions.Item label="Tên sản phẩm" span={3}>{selectedItem?.name}</Descriptions.Item>
             <Descriptions.Item label="Nhãn" span={3}>
+              {selectedItem?.HaveTag?.map((item: IHaveTag) => <Tag>{item.tag.name}</Tag>)}
+              {/* <Tag>Tag 1</Tag>
               <Tag>Tag 1</Tag>
               <Tag>Tag 1</Tag>
               <Tag>Tag 1</Tag>
               <Tag>Tag 1</Tag>
-              <Tag>Tag 1</Tag>
-              <Tag>Tag 1</Tag>
+              <Tag>Tag 1</Tag> */}
             </Descriptions.Item>
-            <Descriptions.Item label="Gía bán (đ)" span={1}>
-              100000
+            <Descriptions.Item label="Giá bán (đ)" span={1}>
+              {selectedItem?.price}
             </Descriptions.Item>
-            <Descriptions.Item label="Lượt xem" span={1}>10000</Descriptions.Item>
+            <Descriptions.Item label="Lượt xem" span={1}>{selectedItem?.view}</Descriptions.Item>
             <Descriptions.Item label="Lượt mua" span={1}>
-              999999
+              {selectedItem?.sold}
             </Descriptions.Item>
             <Descriptions.Item label="Trạng thái" span={3}>
               <Tag color={'green'} title={'Hoàn thành'} />
@@ -202,16 +235,15 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing
                   },
                 }}
               >
-                <AntdImage width={200} src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
-                <AntdImage
-                  width={200}
-                  src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-                />
-              </AntdImage.PreviewGroup>
+                {selectedItem?.image.map((source) => 
+                  <AntdImage width={200} src={source} />
+                )}
+                  </AntdImage.PreviewGroup>
             </Descriptions.Item>
             <Descriptions.Item label="Ghi chú" span={3}>
+              {selectedItem?.description}
             </Descriptions.Item>
-            <Descriptions.Item label="Giảm giá" span={3}>20</Descriptions.Item>
+            <Descriptions.Item label="Giảm giá" span={3}>{selectedItem?.discount?.name}</Descriptions.Item>
             <Descriptions.Item label="Giá nhập (đ)" span={3}>
               <InputNumber
                 defaultValue={100}
@@ -224,7 +256,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing
             <Descriptions.Item label="Tổng giá" span={3}>$60.00</Descriptions.Item>
           </Descriptions>
           <Divider />
-          <ProductInventoryTable />
+          <ProductInventoryTable data={selectedItem?.Product_item} />
         </Space>
       }
 

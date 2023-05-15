@@ -22,11 +22,15 @@ export class ReceiptService {
     where?: Prisma.ReceiptWhereInput;
     orderBy?: Prisma.ReceiptOrderByWithRelationInput;
   }): Promise<Receipt[]> {
-    const { skip, take, orderBy } = params;
+    const { skip, take, orderBy, where } = params;
     return this.prisma.receipt.findMany({
+      where,
       skip,
       take,
       orderBy,
+      include:{
+        buyer: true
+      }
     });
   }
 

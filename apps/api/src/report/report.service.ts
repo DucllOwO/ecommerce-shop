@@ -70,6 +70,9 @@ export class ReportService {
       skip,
       take,
       orderBy,
+      include: {
+        Monthly_report: true
+      }
     });
   }
 }

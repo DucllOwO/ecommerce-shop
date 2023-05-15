@@ -1,5 +1,6 @@
 import ICollection from "./Collection";
 import IDiscount from "./Discount";
+import { IHaveTag } from "./HaveTag";
 import IProduct_item from "./ProductItem";
 import IReceiptDetail from "./ReceiptDetail";
 import IReview from "./Review";
@@ -15,11 +16,10 @@ export default interface IProduct {
   sold: number;
   discount?: IDiscount | null;
   discountID?: number | null;
-  tag: ITag;
-  tagID: number;
   collection?: ICollection | null;
   collectionID?: number | null;
   ReceiptDetail: IReceiptDetail[];
   Review: IReview[];
+  HaveTag: IHaveTag[];
   Product_item: IProduct_item[];
 }

@@ -10,6 +10,7 @@ const ProductManagement = () => {
   const [data, setData] = useState<IProduct[]>();
   const [isEditing, setIsEditing] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<IProduct>();
 
   useEffect(()=> {
     fetchAllProducts().then(data => setData(data.data));
@@ -18,20 +19,25 @@ const ProductManagement = () => {
   return (
     <>
       <Space direction='vertical' style={{ width: '100%' }}>
-        <Button type="primary">Thêm mới</Button>
-        {renderModal(isModalOpen, setIsModalOpen, isEditing, setIsEditing)}
-        <ProductTable data={data} setData={setData} setIsEditing={setIsEditing} setIsModalOpen={setIsModalOpen} />
+        <Button 
+          type="primary" 
+          onClick={() => {
+            setIsModalOpen(true);
+            setIsEditing(false);
+          }}>Thêm mới</Button>
+        {renderModal(isModalOpen, setIsModalOpen, isEditing, setIsEditing, selectedItem)}
+        <ProductTable data={data} setSelectedItem={setSelectedItem} setIsEditing={setIsEditing} setIsModalOpen={setIsModalOpen} />
       </Space>
     </>
   )
 }
 
-function renderModal(isOpen: boolean, setIsModalOpen: Function, isEditing: boolean, setIsEditing: Function) {
+function renderModal(isOpen: boolean, setIsModalOpen: Function, isEditing: boolean, setIsEditing: Function, selectedItem?: IProduct)  {
   if (isOpen === false)
     return null;
 
   if (isEditing === true)
-    return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} isEditing={true} setIsEditing={setIsEditing} />
+    return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} isEditing={true} setIsEditing={setIsEditing} selectedItem={selectedItem}/>
   else
     return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} isEditing={false} setIsEditing={setIsEditing} />
 }

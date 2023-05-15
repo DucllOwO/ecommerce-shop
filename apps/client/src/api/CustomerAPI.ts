@@ -1,4 +1,5 @@
 import { http } from ".";
+
 export function fetchAllProducts(){
   return http.get(`/product`);
 };

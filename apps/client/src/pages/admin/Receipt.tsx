@@ -7,7 +7,7 @@ interface ReceiptProps {
 
 const Receipt = ({ state }: ReceiptProps) => {
   return (
-    <ReceiptTable />
+    <ReceiptTable state={state}/>
   )
 }
 
