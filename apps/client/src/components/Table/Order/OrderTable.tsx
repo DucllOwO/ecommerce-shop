@@ -4,8 +4,8 @@ import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
 import OrderModal from '../../Modal/OrderModal';
 import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
-import { IOrder } from '../../../interface/Order';
 import { fetchWaitingOrders, fetchCompletedOrders } from '../../../api/admin/OrderAPI';
+import Order from '../../../interface/Order';
 
 // interface DataType {
 //   key?: string;
@@ -24,7 +24,7 @@ import { fetchWaitingOrders, fetchCompletedOrders } from '../../../api/admin/Ord
 //   },
 // ]
 
-const columns: ColumnsType<IOrder> = [
+const columns: ColumnsType<Order> = [
   {
     title: 'ID',
     dataIndex: 'id',
@@ -54,7 +54,8 @@ const columns: ColumnsType<IOrder> = [
 
 const OrderTable = (props: OrderProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [data, setData] = useState<IOrder[]>();
+  const [selectedItem, setSelectedItem] = useState<Order>();
+  const [data, setData] = useState<Order[]>();
 
   useEffect(()=> {
     console.log(data)
@@ -67,11 +68,13 @@ const OrderTable = (props: OrderProps) => {
   return (
     <>
       <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-      <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record, rowIndex) => {
+      <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record : Order, rowIndex) => {
         return {
           onClick: (event) => {
-            if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event)))
+            if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event))){
               setIsModalOpen(prev => !prev)
+              setSelectedItem(record)
+            }
           }, // click row
         };
       }} />

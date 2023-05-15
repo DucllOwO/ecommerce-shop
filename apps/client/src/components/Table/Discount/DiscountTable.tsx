@@ -6,7 +6,7 @@ import DiscountModal from '../../Modal/DiscountModal';
 import { isClickOnAnSVGTag, isClickOnATableCell } from '../../../helper/checkEventClick';
 import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
-import { IDiscount } from '../../../interface/Discount';
+import Discount from '../../../interface/Discount';
 
 // export interface IDiscount {
 //   id: string;
@@ -15,7 +15,7 @@ import { IDiscount } from '../../../interface/Discount';
 // }
 
 interface DiscountTableProps extends TableProps {
-  data: IDiscount[],
+  data?: Discount[],
 }
 
 const data = [
@@ -30,7 +30,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
-  const isEditing = (record: IDiscount) => record.id.toString() === editingKey;
+  const isEditing = (record: Discount) => record.id.toString() === editingKey;
 
   const columns = [
     {
@@ -54,7 +54,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
       title: 'Thao tác',
       key: 'action',
       width: "10%",
-      render: (_: any, record: IDiscount) => {
+      render: (_: any, record: Discount) => {
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
@@ -79,7 +79,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
     },
   ];
 
-  const edit = (record: Partial<IDiscount>) => {
+  const edit = (record: Partial<Discount>) => {
     form?.setFieldsValue({ name: '', discount: '', ...record });
     setEditingKey(record.id?.toString());
   };
@@ -90,9 +90,9 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
 
   const save = async (id: string) => {
     try {
-      const row = (await form?.validateFields()) as IDiscount;
+      const row = (await form?.validateFields()) as Discount;
 
-      const newData = [...data];
+      const newData = data ? [...data] : [];
       const index = newData.findIndex((item) => id === item.id.toString());
       if (index > -1) {
         const item = newData[index];
@@ -118,7 +118,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
     }
     return {
       ...col,
-      onCell: (record: IDiscount) => ({
+      onCell: (record: Discount) => ({
         record,
         inputType: col.dataIndex === 'discount' ? 'number' : 'text',
         dataIndex: col.dataIndex,

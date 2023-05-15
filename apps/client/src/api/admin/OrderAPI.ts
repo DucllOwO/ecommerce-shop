@@ -1,10 +1,9 @@
-import { userRequest } from "../api";
-import { IProduct } from "../../interface/Product";
+import { http } from "..";
 
 export function fetchWaitingOrders(){
-  return userRequest.get(`/order/waiting`);
+  return http.get(`/order/waiting`);
 };
 
 export function fetchCompletedOrders(){
-  return userRequest.get(`/order/completed`);
+  return http.get(`/order/completed`);
 };

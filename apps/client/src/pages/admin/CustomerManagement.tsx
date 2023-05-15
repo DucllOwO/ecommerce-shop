@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import CustomerManagementTable from '../../components/Table/CustomerManagement';
-import { IUser } from '../../interface/User';
+import User from '../../interface/User';
 import { fetchAllCustomers } from '../../api/admin/CustomerAPI';
 
 // const originData: CustomerType[] = [];
@@ -18,7 +18,7 @@ import { fetchAllCustomers } from '../../api/admin/CustomerAPI';
 // }
 
 const CustomerManagement = () => {
-  const [data, setData] = useState<IUser[]>();
+  const [data, setData] = useState<User[]>();
 
   useEffect(() => {
     fetchAllCustomers().then(data => {

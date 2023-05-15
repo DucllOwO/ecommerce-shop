@@ -9,7 +9,7 @@ import {
 import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
 import { INPUT, SELECT } from '../../../constant/constant';
-import { ITag } from '../../../interface/Tag';
+import Tag from '../../../interface/Tag';
 
 // export interface TagType {
 //   id: string;
@@ -18,7 +18,7 @@ import { ITag } from '../../../interface/Tag';
 // }
 
 interface TagTableProps extends TableProps {
-  data?: ITag[],
+  data?: Tag[],
 }
 
 const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
@@ -26,9 +26,9 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
 
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
-  const [selectedTag, setSelectedTag] = useState<ITag>();
+  const [selectedTag, setSelectedTag] = useState<Tag>();
 
-  const isEditing = (record: ITag) => record.id.toString() === editingKey;
+  const isEditing = (record: Tag) => record.id.toString() === editingKey;
 
   const columns = [
     {
@@ -52,7 +52,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
       title: 'Thao tác',
       key: 'action',
       width: "10%",
-      render: (_: any, record: ITag) => {
+      render: (_: any, record: Tag) => {
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
@@ -77,7 +77,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
     },
   ];
 
-  const edit = (record: Partial<ITag>) => {
+  const edit = (record: Partial<Tag>) => {
     form?.setFieldsValue({ name: '', discount: '', ...record });
     setEditingKey(record.id?.toString());
   };
@@ -88,7 +88,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
 
   const save = async (id: string) => {
     try {
-      const row = (await form?.validateFields()) as ITag;
+      const row = (await form?.validateFields()) as Tag;
 
       const newData = data ? [...data] : [];
       const index = newData.findIndex((item) => id === item.id.toString());
@@ -116,7 +116,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
     }
     return {
       ...col,
-      onCell: (record: ITag) => ({
+      onCell: (record: Tag) => ({
         record,
         inputType: getType(col.dataIndex),
         dataIndex: col.dataIndex,
@@ -139,7 +139,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
         columns={mergedColumns}
         dataSource={data}
         rowClassName="editable-row"
-        onRow={(record : ITag, rowIndex) => {
+        onRow={(record : Tag, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
               if (isClickOnATableCell(event))

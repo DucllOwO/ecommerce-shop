@@ -6,7 +6,7 @@ import { TableProps } from '../../interface/TableProps';
 import { isClickOnATableCell } from '../../helper/checkEventClick';
 import EditableCell from './EditableCell';
 import { DATE, INPUT, INPUT_NUMBER, TEXTAREA } from '../../constant/constant';
-import { IVoucher } from '../../interface/Voucher';
+import Voucher from '../../interface/Voucher';
 import dayjs from 'dayjs';
 
 // export interface VoucherType {
@@ -18,14 +18,14 @@ import dayjs from 'dayjs';
 // }
 
 interface VoucherTableProps extends TableProps {
-  data: IVoucher[],
+  data?: Voucher[],
 }
 
 const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
-  const isEditing = (record: IVoucher) => record.code === editingKey;
+  const isEditing = (record: Voucher) => record.code === editingKey;
 
   const columns = [
     {
@@ -44,7 +44,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
       dataIndex: 'discount',
       key: 'discount',
       editable: true,
-      render: (_: any, record: IVoucher) => {
+      render: (_: any, record: Voucher) => {
         return <p>{`${record.discount*100}%`}</p>
       }
     },
@@ -53,7 +53,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
       dataIndex: 'due',
       key: 'due',
       editable: true,
-      render: (_: any, record: IVoucher) => {
+      render: (_: any, record: Voucher) => {
         return <p>{dayjs(record?.due).format("DD/MM/YYYY")}</p>
       }
     },
@@ -67,7 +67,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
       title: 'Thao tác',
       key: 'action',
       width: "10%",
-      render: (_: any, record: IVoucher) => {
+      render: (_: any, record: Voucher) => {
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
@@ -92,7 +92,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
     },
   ];
 
-  const edit = (record: Partial<IVoucher>) => {
+  const edit = (record: Partial<Voucher>) => {
     form?.setFieldsValue({ name: '', discount: '', due: '', description: '', ...record });
     setEditingKey(record.code);
   };
@@ -103,9 +103,9 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
 
   const save = async (id: string) => {
     try {
-      const row = (await form?.validateFields()) as IVoucher;
+      const row = (await form?.validateFields()) as Voucher;
 
-      const newData = [...data];
+      const newData = data ? [...data] : [];
       const index = newData.findIndex((item) => id === item.code);
       if (index > -1) {
         const item = newData[index];
@@ -131,7 +131,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
     }
     return {
       ...col,
-      onCell: (record: IVoucher) => ({
+      onCell: (record: Voucher) => ({
         record,
         inputType: getType(col.dataIndex),
         dataIndex: col.dataIndex,
