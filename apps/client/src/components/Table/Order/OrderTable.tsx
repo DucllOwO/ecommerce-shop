@@ -5,7 +5,7 @@ import { TABLE_HEIGHT } from '../../../constant/styles';
 import OrderModal from '../../Modal/OrderModal';
 import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
 import { fetchWaitingOrders, fetchCompletedOrders } from '../../../api/admin/OrderAPI';
-import Order from '../../../interface/Order';
+import IOrder from '../../../interface/Order';
 
 // interface DataType {
 //   key?: string;
@@ -24,7 +24,7 @@ import Order from '../../../interface/Order';
 //   },
 // ]
 
-const columns: ColumnsType<Order> = [
+const columns: ColumnsType<IOrder> = [
   {
     title: 'ID',
     dataIndex: 'id',
@@ -54,8 +54,8 @@ const columns: ColumnsType<Order> = [
 
 const OrderTable = (props: OrderProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Order>();
-  const [data, setData] = useState<Order[]>();
+  const [selectedItem, setSelectedItem] = useState<IOrder>();
+  const [data, setData] = useState<IOrder[]>();
 
   useEffect(()=> {
     console.log(data)
@@ -68,7 +68,7 @@ const OrderTable = (props: OrderProps) => {
   return (
     <>
       <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-      <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record : Order, rowIndex) => {
+      <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record : IOrder, rowIndex) => {
         return {
           onClick: (event) => {
             if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event))){

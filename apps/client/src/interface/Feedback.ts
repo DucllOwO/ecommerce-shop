@@ -1,9 +1,9 @@
-import User from "./User";
+import IUser from "./User";
 
-export interface Feedback {
+export interface IFeedback {
   id: number;
   content?: string;
   rate: number;
-  author?: User;
+  author?: IUser;
   authorID?: string;
 }

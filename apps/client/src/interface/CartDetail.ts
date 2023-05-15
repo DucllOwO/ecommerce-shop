@@ -1,11 +1,11 @@
-import Cart from "./Cart";
-import Product_item from "./ProductItem";
+import ICart from "./Cart";
+import IProduct_item from "./ProductItem";
 
-export default interface Cart_detail {
+export default interface ICart_detail {
   id: number;
   quantity: number;
-  cart: Cart;
+  cart: ICart;
   cartID: number;
-  product_item: Product_item;
+  product_item: IProduct_item;
   itemID: number;
 }

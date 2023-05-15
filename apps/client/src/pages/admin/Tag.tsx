@@ -2,7 +2,7 @@ import { Button, Form, Space } from 'antd';
 import { useEffect, useState } from 'react'
 import TagTable from '../../components/Table/Tag/TagTable'
 import { fetchAllTag } from '../../api/admin/ProductAPI';
-import Tag from '../../interface/Tag';
+import ITag from '../../interface/Tag';
 
 
 // const originData: TagType[] = [];
@@ -16,7 +16,7 @@ import Tag from '../../interface/Tag';
 
 const Tag = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState<Tag[]>();
+  const [data, setData] = useState<ITag[]>();
 
   useEffect(() => {
     fetchAllTag().then(data => setData(data.data));

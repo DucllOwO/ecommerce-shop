@@ -1,12 +1,12 @@
-import Discount from "./Discount";
-import Product from "./Product";
+import IDiscount from "./Discount";
+import IProduct from "./Product";
 
-export default interface Collection {
+export default interface ICollection {
   id: number;
   name: string;
-  discount?: Discount;
+  discount?: IDiscount;
   discountID?: number;
-  Product: Product[];
+  Product: IProduct[];
 }
 
 

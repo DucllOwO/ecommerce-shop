@@ -1,9 +1,9 @@
-import Monthly_report from "./MonthlyReport";
+import IMonthly_report from "./MonthlyReport";
 
-export default interface Daily_report {
+export default interface IDaily_report {
   date: Date;
   income: number;
   sold_quantity: number;
-  monthly_report: Monthly_report;
+  monthly_report: IMonthly_report;
   month: Date;
 }

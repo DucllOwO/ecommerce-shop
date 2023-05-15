@@ -7,7 +7,7 @@ import ProductModal from '../../Modal/ProductModal';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
 import { isClickOnAnImgTag, isClickOnAnSVGTag, isClickOnATableCell } from '../../../helper/checkEventClick';
 import { TableProps } from '../../../interface/TableProps';
-import Product from '../../../interface/Product';
+import IProduct from '../../../interface/Product';
 // export interface ProductType {
 //   id: string;
 //   name: string;
@@ -18,7 +18,7 @@ import Product from '../../../interface/Product';
 // }
 
 interface ProductTableProps extends TableProps {
-  data?: Product[],
+  data?: IProduct[],
   setIsEditing: Function,
   setIsModalOpen: Function
 }
@@ -36,7 +36,7 @@ const ProductTable: FC<ProductTableProps> = ({ data, setData, setIsEditing, setI
     {
       title: 'Sản phẩm',
       key: 'name_image',
-      render: (text: string, record: Product) => <Space direction='horizontal'>
+      render: (text: string, record: IProduct) => <Space direction='horizontal'>
         <Image width={100} height={150} alt="example" src={record?.image[0]} />
         <Typography.Text>{record.name}</Typography.Text>
       </Space>,
@@ -60,7 +60,7 @@ const ProductTable: FC<ProductTableProps> = ({ data, setData, setIsEditing, setI
       title: 'Thao tác',
       key: 'action',
       width: '10%',
-      render: (_: any, record: Product) => <Space>
+      render: (_: any, record: IProduct) => <Space>
         <Button shape="circle" icon={<EditFilled />} onClick={() => {
           setIsEditing((prev: boolean) => !prev);
           setIsModalOpen((prev: boolean) => !prev)

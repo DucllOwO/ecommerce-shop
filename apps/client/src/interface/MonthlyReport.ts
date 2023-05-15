@@ -1,11 +1,11 @@
-import Daily_report from "./DailyReport";
-import Yearly_report from "./YearlyReport";
+import IDaily_report from "./DailyReport";
+import IYearly_report from "./YearlyReport";
 
-export default interface Monthly_report {
+export default interface IMonthly_report {
   month: Date;
   income: number;
   sold_quantity: number;
-  yearly_report: Yearly_report;
+  yearly_report: IYearly_report;
   year: Date;
-  Daily_report: Daily_report[];
+  Daily_report: IDaily_report[];
 }

@@ -1,11 +1,11 @@
-import Account from "./Account";
-import Cart from "./Cart";
-import { Feedback } from "./Feedback";
-import Order from "./Order";
-import Receipt from "./Receipt";
-import Review from "./Review";
+import IAccount from "./Account";
+import ICart from "./Cart";
+import { IFeedback } from "./Feedback";
+import IOrder from "./Order";
+import IReceipt from "./Receipt";
+import IReview from "./Review";
 
-export default interface User {
+export default interface IUser {
   id: number;
   firstname: string;
   lastname?: string;
@@ -13,11 +13,11 @@ export default interface User {
   address?: string;
   avatar?: string;
   product_viewed?: string[];
-  account?: Account;
+  account?: IAccount;
   email: string;
-  Feedback?: Feedback[];
-  Review?: Review[];
-  Cart?: Cart[];
-  Order?: Order[];
-  Receipt?: Receipt[];
+  Feedback?: IFeedback[];
+  Review?: IReview[];
+  Cart?: ICart[];
+  Order?: IOrder[];
+  Receipt?: IReceipt[];
 }

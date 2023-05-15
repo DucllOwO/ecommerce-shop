@@ -1,10 +1,10 @@
-import Receipt from "./Receipt";
+import IReceipt from "./Receipt";
 
-export default interface Voucher {
+export default interface IVoucher {
   code: string;
   name: string;
   discount: number;
   description?: string | null;
   due: Date;
-  Receipt: Receipt[];
+  Receipt: IReceipt[];
 }

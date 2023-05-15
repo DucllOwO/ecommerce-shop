@@ -1,15 +1,15 @@
-import ReceiptDetail from "./ReceiptDetail";
-import User from "./User";
-import Voucher from "./Voucher";
+import IReceiptDetail from "./ReceiptDetail";
+import IUser from "./User";
+import IVoucher from "./Voucher";
 
-export default interface Receipt {
+export default interface IReceipt {
   id: number;
   date: Date;
   cost: number;
   status: string;
-  voucher?: Voucher | null;
+  voucher?: IVoucher | null;
   voucherCode?: string | null;
-  buyer: User;
+  buyer: IUser;
   userID: string;
-  ReceiptDetail: ReceiptDetail[];
+  ReceiptDetail: IReceiptDetail[];
 }

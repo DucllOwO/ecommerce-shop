@@ -2,12 +2,12 @@ import { Button, Form, Space } from 'antd';
 import { useEffect, useState } from 'react'
 import ProductModal from '../../components/Modal/ProductModal';
 import ProductTable from '../../components/Table/Product/ProductTable';
-import Product from '../../interface/Product';
+import IProduct from '../../interface/Product';
 import { fetchAllProducts } from '../../api/admin/ProductAPI';
 
 
 const ProductManagement = () => {
-  const [data, setData] = useState<Product[]>();
+  const [data, setData] = useState<IProduct[]>();
   const [isEditing, setIsEditing] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false);
 

@@ -1,7 +1,7 @@
 import { Button, Form, Space } from 'antd'
 import React, { useEffect, useState } from 'react'
 import DiscountTable from '../../components/Table/Discount/DiscountTable'
-import Discount from '../../interface/Discount';
+import IDiscount from '../../interface/Discount';
 import { fetchAllDiscounts } from '../../api/admin/DiscountAPI';
 
 // const originData: DiscountType[] = [];
@@ -15,7 +15,7 @@ import { fetchAllDiscounts } from '../../api/admin/DiscountAPI';
 
 const Discount = () => {
   const [form] = Form.useForm();
-  const [data, setData] = useState<Discount[]>();
+  const [data, setData] = useState<IDiscount[]>();
 
   useEffect(() => {
     fetchAllDiscounts().then((data) => {

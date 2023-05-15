@@ -1,10 +1,10 @@
-import Product from "./Product";
-import Receipt from "./Receipt";
+import IProduct from "./Product";
+import IReceipt from "./Receipt";
 
-export default interface ReceiptDetail {
+export default interface IReceiptDetail {
   id: number;
-  receipt: Receipt;
+  receipt: IReceipt;
   receiptID: number;
-  product: Product;
+  product: IProduct;
   productID: number;
 }
