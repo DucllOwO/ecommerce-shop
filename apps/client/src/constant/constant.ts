@@ -12,3 +12,8 @@ export const SELECT: string = 'SELECT'
 
 export const SIZES : string[] = ['S', 'M', 'L', 'XL', 'XXL']
 
+export const ACTION_READ = 'ACTION_READ'
+export const ACTION_CREATE = 'ACTION_CREATE'
+export const ACTION_EDIT = 'ACTION_EDIT'
+export const SET_ACTION = 'SET_ACTION'
+
