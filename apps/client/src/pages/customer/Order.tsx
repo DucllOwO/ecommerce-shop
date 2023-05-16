@@ -1,7 +1,8 @@
 import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
-import { Space, List, Avatar, Row } from 'antd';
+import { Space, List, Avatar, Row, Button } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const data = Array.from({ length: 5 }).map((_, i) => ({
   title: `Tên quần áo ${i}`,
@@ -20,12 +21,16 @@ const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
 );
 
 const Order = () => {
+  const navigate = useNavigate();
   return (
     <Space className='svgBg' style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
       <Space direction='vertical' style={{ gap: 20, margin: '20px 0px' }}>
-        <List
+        {Array.from({ length: 5 }).map((_, i) => <List
           bordered
-          header={<Title level={2}>Đơn hàng 1</Title>}
+          header={<Space style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            <Title level={2}>Đơn hàng {i}</Title>
+            <Button type='primary' onClick={() => navigate(`/orders/${i}`)}>Xem chi tiết</Button>
+          </Space>}
           footer={<Title level={4} style={{ textAlign: 'end' }}> Tổng giá trị: 900000000</Title>}
           style={{ width: '60vw', background: 'white' }}
           itemLayout="vertical"
@@ -46,103 +51,14 @@ const Order = () => {
                 title={item.title}
               />
               <Row>
-                x 1
+                x {i}
               </Row>
               <Row>Đen / XL</Row>
               <Row>99.000 đ</Row>
             </List.Item>
           )}
-        />
-        <List
-          bordered
-          header={<Title level={2}>Đơn hàng 1</Title>}
-          footer={<Title level={4} style={{ textAlign: 'end' }}> Tổng giá trị: 900000000</Title>}
-          style={{ width: '60vw', background: 'white' }}
-          itemLayout="vertical"
-          size="default"
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item
-              key={item.title}
-              extra={
-                <img
-                  width={272}
-                  alt="logo"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                />
-              }
-            >
-              <List.Item.Meta
-                title={item.title}
-              />
-              <Row>
-                x 1
-              </Row>
-              <Row>Đen / XL</Row>
-              <Row>99.000 đ</Row>
-            </List.Item>
-          )}
-        />
-        <List
-          bordered
-          header={<Title level={2}>Đơn hàng 1</Title>}
-          footer={<Title level={4} style={{ textAlign: 'end' }}> Tổng giá trị: 900000000</Title>}
-          style={{ width: '60vw', background: 'white' }}
-          itemLayout="vertical"
-          size="default"
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item
-              key={item.title}
-              extra={
-                <img
-                  width={272}
-                  alt="logo"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                />
-              }
-            >
-              <List.Item.Meta
-                title={item.title}
-              />
-              <Row>
-                x 1
-              </Row>
-              <Row>Đen / XL</Row>
-              <Row>99.000 đ</Row>
-            </List.Item>
-          )}
-        />
-        <List
-          bordered
-          header={<Title level={2}>Đơn hàng 1</Title>}
-          footer={<Title level={4} style={{ textAlign: 'end' }}> Tổng giá trị: 900000000</Title>}
-          style={{ width: '60vw', background: 'white' }}
-          itemLayout="vertical"
-          size="default"
-          dataSource={data}
-          renderItem={(item) => (
-            <List.Item
-              key={item.title}
-              extra={
-                <img
-                  width={272}
-                  alt="logo"
-                  src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-                />
-              }
-            >
-              <List.Item.Meta
-                title={item.title}
-              />
-              <Row>
-                x 1
-              </Row>
-              <Row>Đen / XL</Row>
-              <Row>99.000 đ</Row>
-            </List.Item>
-          )}
-        />
+        />)}
+
       </Space>
     </Space>
   )

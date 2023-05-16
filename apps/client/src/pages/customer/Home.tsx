@@ -17,7 +17,6 @@ import banner from '../../assets/images/banner.png'
 import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import { LeftArrow, RightArrow } from './components/Arrow'
 import Title from 'antd/es/typography/Title'
-import Scrollbars from 'react-custom-scrollbars'
 import { AppContext } from '../../context/AppContext'
 
 const Home = () => {
@@ -74,7 +73,6 @@ const Home = () => {
                                     img02={item.image02}
                                     name={item.title}
                                     price={Number(item.price)}
-                                    slug={item.slug}
                                 />
                             ))}
                         </ScrollMenu>
@@ -96,7 +94,6 @@ const Home = () => {
                                     img02={item.image02}
                                     name={item.title}
                                     price={Number(item.price)}
-                                    slug={item.slug}
                                 />
                             ))}
                         </ScrollMenu>

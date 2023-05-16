@@ -21,7 +21,7 @@ const ProductCard = (props: ProductCardProps) => {
                 <Button
                     type='primary'
                 >
-                    chọn mua
+                    Xem chi tiết
                 </Button>
             </div>
         </div>

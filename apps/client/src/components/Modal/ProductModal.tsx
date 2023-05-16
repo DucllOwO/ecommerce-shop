@@ -196,15 +196,11 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, isEditing
             </Descriptions.Item>
             <Descriptions.Item label="Hỉnh ảnh" span={3}>
               <AntdImage.PreviewGroup
-                preview={{
-                  onVisibleChange(value, prevValue) {
-
-                  },
-                }}
               >
-                <AntdImage width={200} src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
+                <AntdImage width={200} height={250} src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg" />
                 <AntdImage
                   width={200}
+                  height={250}
                   src="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
                 />
               </AntdImage.PreviewGroup>

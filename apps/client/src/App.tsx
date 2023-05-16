@@ -24,6 +24,7 @@ import CustomerManagement from './pages/admin/CustomerManagement.js';
 import Importing from './pages/admin/Importing.js';
 import UserProfileSetting from './pages/customer/UserProfileSetting.js';
 import Order from './pages/customer/Order.js';
+import OrderDetail from './pages/customer/OrderDetail.js';
 
 
 function App() {
@@ -62,7 +63,9 @@ function App() {
           <Route key={'login'} path='login' element={<Login />}></Route>
           <Route key={'signup'} path='signup' element={<SignUp />}></Route>
           <Route key={'user-profile-setting'} path='profile' element={<UserProfileSetting />}></Route>
-          <Route key={'order'} path='orders' element={<Order />}></Route>
+          <Route key={'order'} path='orders' element={<Order />}>
+          </Route>
+          <Route key={'order-detail'} path='orders/:id' element={<OrderDetail />} />
         </Route>
 
       </Routes>
