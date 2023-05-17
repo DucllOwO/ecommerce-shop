@@ -25,7 +25,7 @@ const Voucher = () => {
           <VoucherTable form={form} data={data} setData={setData} />
         </Form>
       </Space>
-      <VoucherCreateModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <VoucherCreateModal setDataState={setData} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </Spin>
   )
 }

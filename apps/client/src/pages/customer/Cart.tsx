@@ -23,15 +23,19 @@ const Cart = () => {
 
     const [totalPrice, setTotalPrice] = useState(0)
 
+    const onFinish = (values: any) => {
+        console.log(values)
+    }
+
     return (
         <Helmet title="Giỏ hàng">
             <Row style={{ marginTop: 20 }}>
-                <Col span={12} offset={1}>
+                <Col span={14} offset={1}>
                     <CartTable />
                 </Col>
-                <Col span={10} offset={1}>
+                <Col span={8} offset={1}>
                     <Space direction='vertical' style={{ width: '90%' }}>
-                        <Form layout='vertical' style={{ paddingTop: 20 }}>
+                        <Form onFinish={onFinish} layout='vertical' style={{ paddingTop: 20 }}>
                             <Form.Item
                                 label='email'
                                 name="email"
@@ -78,23 +82,23 @@ const Cart = () => {
                                 name="paymentMethod">
                                 <Select placeholder='Chọn phương thức thanh toán' options={paymentMethods} />
                             </Form.Item>
-                        </Form>
-                        <div className="cart__info">
-                            <div className="cart__info__txt">
-                                <p>
-                                    Bạn đang có {totalProducts} sản phẩm trong giỏ hàng
-                                </p>
-                                <div
-                                    className="cart__info__txt__price">
-                                    <span>Thành tiền:</span> <span>{100000000}</span>
+                            <div className="cart__info">
+                                <div className="cart__info__txt">
+                                    <p>
+                                        Bạn đang có {totalProducts} sản phẩm trong giỏ hàng
+                                    </p>
+                                    <div
+                                        className="cart__info__txt__price">
+                                        <span>Thành tiền:</span> <span>{100000000}</span>
+                                    </div>
+                                </div>
+                                <div className="cart__info__btn">
+                                    <Button type='primary' htmlType="submit" style={{ width: '100%' }}>
+                                        Đặt hàng
+                                    </Button>
                                 </div>
                             </div>
-                            <div className="cart__info__btn">
-                                <Button type='primary' style={{ width: '100%' }}>
-                                    Đặt hàng
-                                </Button>
-                            </div>
-                        </div>
+                        </Form>
                     </Space>
                 </Col>
             </Row>

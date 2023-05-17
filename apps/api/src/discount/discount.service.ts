@@ -43,4 +43,10 @@ export class DiscountService {
       data,
     });
   }
+
+  async removeDiscount(where: Prisma.DiscountWhereUniqueInput) : Promise<Discount> {
+    return this.prisma.discount.delete({
+      where
+    });
+  }
 }

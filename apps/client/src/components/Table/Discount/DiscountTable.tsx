@@ -6,6 +6,8 @@ import { isClickOnATableCell } from '../../../helper/checkEventClick';
 import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
 import IDiscount from '../../../interface/Discount';
+import { deleteDiscount } from '../../../api/admin/DiscountAPI';
+import SuccessAlert from '../../Alert/SuccessAlert';
 
 interface DiscountTableProps extends TableProps {
   data?: IDiscount[],
@@ -16,6 +18,13 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
   const isEditing = (record: IDiscount) => record.id.toString() === editingKey;
+
+  async function confirmDelete(id: number) {
+    deleteDiscount(id).then(({ data }) => {
+      setData && setData((prev: IDiscount[]) => prev.filter((value) => value.id != id))
+      SuccessAlert('Xoá khuyến mãi thành công.')
+    }).catch((err) => console.log(err))
+  };
 
   const columns = [
     {
@@ -55,10 +64,17 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
                 disabled={editingKey !== ''}
                 onClick={() => edit(record)}
                 shape="circle" icon={<EditFilled />} />
-              <Button disabled={editingKey !== ''} shape="circle" icon={<DeleteFilled />} />
+              <Popconfirm
+                title="Xoá chương trình khuyến mãi?"
+                description="Bạn có chắc chắn muốn xoá, khi xoá sẽ không thể phục hồi?"
+                onConfirm={() => confirmDelete(record.id)}
+                okText="Xoá"
+                cancelText="Không"
+              >
+                <Button disabled={editingKey !== ''} shape="circle" icon={<DeleteFilled />} />
+              </Popconfirm>
             </>
           }
-
         </Space>
       }
     },
@@ -117,6 +133,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
     <>
       <DiscountModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       <Table
+        rowKey={record => record.id}
         columns={mergedColumns}
         dataSource={data}
         onRow={(record, rowIndex) => {

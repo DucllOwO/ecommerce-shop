@@ -25,7 +25,7 @@ const Discount = () => {
           <DiscountTable form={form} data={data} setData={setData} />
         </Form>
       </Space>
-      <DiscountCreateModal isOpen={isModalOpen} setIsModalOpen={setisModalOpen} />
+      <DiscountCreateModal setDataState={setData} isOpen={isModalOpen} setIsModalOpen={setisModalOpen} />
     </Spin>
   )
 }

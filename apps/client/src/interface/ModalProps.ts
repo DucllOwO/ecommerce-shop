@@ -1,4 +1,5 @@
 export interface ModalProps {
   isOpen: boolean,
-  setIsModalOpen: Function
+  setIsModalOpen: Function,
+  setDataState?: Function,
 }

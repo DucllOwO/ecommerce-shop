@@ -22,10 +22,15 @@ export class DiscountController {
   }
 
   @Patch(':id')
-  update(@Param('code') id: string, @Body() updateDiscountDto: Prisma.DiscountCreateInput) {
+  update(@Param('id') id: string, @Body() updateDiscountDto: Prisma.DiscountCreateInput) {
     return this.discountService.updateDiscount({
       where: {id: Number(id)},
       data: updateDiscountDto,
     });
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: number) {
+    return this.discountService.removeDiscount({ id: Number(id) })
   }
 }
