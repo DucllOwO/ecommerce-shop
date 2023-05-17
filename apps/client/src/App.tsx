@@ -25,13 +25,16 @@ import Importing from './pages/admin/Importing.js';
 import UserProfileSetting from './pages/customer/UserProfileSetting.js';
 import Order from './pages/customer/Order.js';
 import OrderDetail from './pages/customer/OrderDetail.js';
+import { useContext } from 'react';
+import { AppContext } from './context/AppContext.js';
 
 
 function App() {
+  const appCtx = useContext(AppContext);
   return (
     <BrowserRouter>
       <Routes>
-        <Route key={'admin'} path='/admin' element={<Admin />}>
+        {appCtx?.user?.is_admin ? <Route key={'admin'} path='/admin' element={<Admin />}>
           <Route key={'dashboard'} path='dashboard' index element={<Dashboard />} />
           <Route key={'order'} path='order'>
             <Route key={'order_waiting'} path='waiting' element={<OrderManagement state={ORDER_WAITING_STATE} />} />
@@ -54,7 +57,8 @@ function App() {
           <Route key={'policy'} path='policy' element={<Policy />} />
           <Route key={'customer-management'} path='customer-management' element={<CustomerManagement />}></Route>
           <Route key={'importing'} path='importing' element={<Importing />}></Route>
-        </Route>
+        </Route> : null}
+
         <Route key={'customer'} path='/' element={<Customer />}>
           <Route key={'home'} index element={<Home />}></Route>
           <Route key={'catalog'} path='catalog' element={<Catalog />}></Route>

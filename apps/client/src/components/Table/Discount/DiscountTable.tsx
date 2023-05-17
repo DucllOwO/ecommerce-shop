@@ -1,30 +1,15 @@
 import React, { FC, useState } from 'react'
 import { Table, Space, Button, Typography, Popconfirm } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
 import DiscountModal from '../../Modal/DiscountModal';
-import { isClickOnAnSVGTag, isClickOnATableCell } from '../../../helper/checkEventClick';
+import { isClickOnATableCell } from '../../../helper/checkEventClick';
 import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
 import IDiscount from '../../../interface/Discount';
 
-// export interface IDiscount {
-//   id: string;
-//   name: string;
-//   discount: number;
-// }
-
 interface DiscountTableProps extends TableProps {
   data?: IDiscount[],
 }
-
-const data = [
-  {
-    id: '1',
-    name: 'Ban e',
-    discount: 50
-  }
-]
 
 const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)

@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import LocalStorage from "../helper/localStorage";
-import IUser from "../interface/User";
+import IUserLocalStorage from "../interface/UserLocalStorage";
 
 export const AppContext = createContext<AppContextProps | null>(null);
 
@@ -10,12 +10,12 @@ interface AppProviderProps {
 }
 
 interface AppContextProps {
-  user: IUser | null;
-  setUser: React.Dispatch<React.SetStateAction<IUser | null>>;
+  user: IUserLocalStorage | null;
+  setUser: React.Dispatch<React.SetStateAction<IUserLocalStorage | null>>;
 }
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-  const [user, setUser] = useState<IUser | null>(LocalStorage.getItem("user"));
+  const [user, setUser] = useState<IUserLocalStorage | null>(LocalStorage.getItem("user"));
 
   return (
     <AppContext.Provider
