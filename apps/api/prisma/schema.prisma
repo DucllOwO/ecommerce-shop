@@ -96,6 +96,7 @@ model Product {
   price         Int
   description   String?
   image         String[]
+  slug          String
   view          Int              @default(0)
   sold          Int              @default(0)
   isActive      Boolean          @default(true)

@@ -85,6 +85,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
                 id: form.getFieldValue('discount')
               }
             },
+            image: form.getFieldValue('upload'),
             HaveTag:{
               createMany:{
                 data: form.getFieldValue('tags').map((item: number) => {
