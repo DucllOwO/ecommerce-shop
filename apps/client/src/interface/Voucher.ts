@@ -7,4 +7,5 @@ export default interface IVoucher {
   description?: string | null;
   due: Date;
   Receipt: IReceipt[];
+  isActive: boolean
 }

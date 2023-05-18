@@ -22,6 +22,7 @@ export class VoucherController {
 
   @Post()
   create(@Body() createVoucherDto: Prisma.VoucherCreateInput) {
+    console.log(createVoucherDto);
     return this.voucherService.createVoucher(createVoucherDto);
   }
 
@@ -38,13 +39,27 @@ export class VoucherController {
   @Patch(':code')
   update(
     @Param('code') code: string,
-    @Body() updateVoucherDto: Prisma.VoucherCreateInput,
+    @Body() updateVoucherDto: Prisma.VoucherUpdateInput,
   ) {
     if (this.helper.isNullorUndefined(code)) throw new BadRequestException();
 
     return this.voucherService.updateVoucher({
       where: { code },
-      data: { ...updateVoucherDto, due: new Date(updateVoucherDto.due) },
+      data: {
+        ...updateVoucherDto,
+        due: new Date(updateVoucherDto.due as string),
+        isActive: true,
+      },
+    });
+  }
+
+  @Patch('shutdown/:code')
+  shutdownVoucher(@Param('code') code: string) {
+    if (this.helper.isNullorUndefined(code)) throw new BadRequestException();
+
+    return this.voucherService.updateVoucher({
+      where: { code },
+      data: { isActive: false },
     });
   }
 }

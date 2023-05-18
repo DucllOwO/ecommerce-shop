@@ -8,6 +8,8 @@ import EditableCell from '../EditableCell';
 import IDiscount from '../../../interface/Discount';
 import { deleteDiscount, updateDiscount } from '../../../api/admin/DiscountAPI';
 import SuccessAlert from '../../Alert/SuccessAlert';
+import { REQUIRED_RULE, VALUE_MUST_BETWEEN_0_100 } from '../../../constant/formRules';
+import { DATE, INPUT, INPUT_NUMBER, TEXTAREA } from '../../../constant/constant';
 
 interface DiscountTableProps extends TableProps {
   data?: IDiscount[],
@@ -32,7 +34,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ data, setData }) => {
 
   const columns = [
     {
-      title: 'Code',
+      title: 'ID',
       dataIndex: 'id',
       key: 'id',
     },
@@ -41,12 +43,14 @@ const DiscountTable: FC<DiscountTableProps> = ({ data, setData }) => {
       dataIndex: 'name',
       key: 'name',
       editable: true,
+      rules: [REQUIRED_RULE]
     },
     {
       title: 'Giảm giá (%)',
       dataIndex: 'discount',
       key: 'discount',
       editable: true,
+      rules: [REQUIRED_RULE, VALUE_MUST_BETWEEN_0_100]
     },
     {
       title: 'Thao tác',
@@ -119,10 +123,11 @@ const DiscountTable: FC<DiscountTableProps> = ({ data, setData }) => {
       ...col,
       onCell: (record: IDiscount) => ({
         record,
-        inputType: col.dataIndex === 'discount' ? 'number' : 'text',
+        inputType: getType(col.dataIndex),
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
+        rules: col.rules
       }),
     };
   });
@@ -159,6 +164,15 @@ const DiscountTable: FC<DiscountTableProps> = ({ data, setData }) => {
   function cancel() {
     setEditingKey('');
   };
+}
+
+function getType(dataIndex: string) {
+  switch (dataIndex) {
+    case 'discount':
+      return INPUT_NUMBER;
+    default:
+      return INPUT;
+  }
 }
 
 export default DiscountTable

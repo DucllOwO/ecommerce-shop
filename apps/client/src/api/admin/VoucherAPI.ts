@@ -1,3 +1,4 @@
+import * as dayjs from 'dayjs';
 import { http } from "..";
 import IVoucher from "../../interface/Voucher";
 
@@ -10,9 +11,10 @@ export function createVoucher({ code, name, discount, due, description} : IVouch
 }
 
 export function updateVoucher({ code, name, discount, due, description }: IVoucher) {
+  console.log({ name, discount, due, description })
   return http.patch(`/voucher/${code}`, { name, discount, due, description })
 }
 
 export function shutDownVoucher(code: string) {
-  return http.patch(`/voucher/${code}`)
+  return http.patch(`/voucher/shutdown/${code}`)
 }

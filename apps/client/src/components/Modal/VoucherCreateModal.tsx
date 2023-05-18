@@ -3,7 +3,7 @@ import TextArea from 'antd/es/input/TextArea'
 import { FC, useState } from 'react'
 import { createVoucher } from '../../api/admin/VoucherAPI'
 import { DATE_FORMAT } from '../../constant/constant'
-import { DATE_GREATER_THAN_CURRENT_DATE_RULE, REQUIRED_RULE } from '../../constant/formRules'
+import { DATE_GREATER_THAN_CURRENT_DATE_RULE, REQUIRED_RULE, STRING_LENGTH_RULE } from '../../constant/formRules'
 import { ModalProps } from '../../interface/ModalProps'
 import IVoucher from '../../interface/Voucher'
 import SuccessAlert from '../Alert/SuccessAlert'
@@ -43,7 +43,7 @@ const VoucherCreateModal: FC<ModalProps> = ({ setDataState, isOpen, setIsModalOp
       }}
       confirmLoading={isLoading}>
       <Form form={createForm} onFinish={onFinish} layout='vertical'>
-        <Form.Item name={'code'} label={'Mã khuyến mãi'} rules={[REQUIRED_RULE]}>
+        <Form.Item name={'code'} label={'Mã khuyến mãi'} rules={[REQUIRED_RULE, STRING_LENGTH_RULE(6)]}>
           <Input />
         </Form.Item>
         <Form.Item name={'name'} label={'Tên khuyến mãi'} rules={[REQUIRED_RULE]}>
@@ -55,7 +55,7 @@ const VoucherCreateModal: FC<ModalProps> = ({ setDataState, isOpen, setIsModalOp
         <Form.Item name={'due'} label={'Ngày hết hạn'} rules={[REQUIRED_RULE, DATE_GREATER_THAN_CURRENT_DATE_RULE]}>
           <DatePicker format={DATE_FORMAT} />
         </Form.Item>
-        <Form.Item name={'description'} label={'Mô tả'} rules={[REQUIRED_RULE]}>
+        <Form.Item name={'description'} label={'Mô tả'}>
           <TextArea />
         </Form.Item>
       </Form>

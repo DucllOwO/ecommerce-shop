@@ -25,5 +25,15 @@ export const DATE_GREATER_THAN_CURRENT_DATE_RULE = {
       validator: validateDateGreaterThanCurrentDate
 }
     
+export const STRING_LENGTH_RULE = (len: number) => ({
+      len: len,
+      message: 'Phải bao gồm 6 ký tự',
+    })
 
+export const VALUE_MUST_BETWEEN_0_100 = {
+      type: 'number',
+      min: 0,
+      max: 100,
+      message: 'Giá trị phải từ 0 đên 100'
+    }
 

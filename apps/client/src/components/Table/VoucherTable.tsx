@@ -8,15 +8,9 @@ import EditableCell from './EditableCell';
 import { DATE, INPUT, INPUT_NUMBER, TEXTAREA } from '../../constant/constant';
 import IVoucher from '../../interface/Voucher';
 import dayjs from 'dayjs';
-import { updateVoucher } from '../../api/admin/VoucherAPI';
-
-// export interface VoucherType {
-//   code: string;
-//   name: string;
-//   description: string,
-//   due: string,
-//   discount: number;
-// }
+import { shutDownVoucher, updateVoucher } from '../../api/admin/VoucherAPI';
+import SuccessAlert from '../Alert/SuccessAlert';
+import { REQUIRED_RULE, STRING_LENGTH_RULE } from '../../constant/formRules';
 
 interface VoucherTableProps extends TableProps {
   data?: IVoucher[],
@@ -35,27 +29,31 @@ const VoucherTable: FC<VoucherTableProps> = ({ data, setData }) => {
       title: 'Code',
       dataIndex: 'code',
       key: 'code',
+      rules: [REQUIRED_RULE, STRING_LENGTH_RULE(6)]
     },
     {
       title: 'Tên khuyến mãi',
       dataIndex: 'name',
       key: 'name',
       editable: true,
+      rules: [REQUIRED_RULE]
     },
     {
       title: 'Giảm giá',
       dataIndex: 'discount',
       key: 'discount',
       editable: true,
+      rules: [REQUIRED_RULE],
       render: (_: any, record: IVoucher) => {
         return <p>{`${record.discount}%`}</p>
       }
     },
     {
       title: 'Ngày hết hạn',
-      dataIndex: 'due',
-      key: 'due',
+      dataIndex: 'due_to',
+      key: 'due-to',
       editable: true,
+      rules: [REQUIRED_RULE],
       render: (_: any, record: IVoucher) => {
         return <p>{dayjs(record?.due).format("DD/MM/YYYY")}</p>
       }
@@ -86,7 +84,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ data, setData }) => {
                 disabled={editingKey !== ''}
                 onClick={() => edit(record)}
                 shape="circle" icon={<EditFilled />} />
-              <Button disabled={editingKey !== ''} shape="circle" icon={<DeleteFilled />} />
+              <Button disabled={editingKey !== ''} shape="circle" icon={<DeleteFilled />} onClick={() => deleteVoucher(record.code)} />
             </>
           }
 
@@ -94,6 +92,14 @@ const VoucherTable: FC<VoucherTableProps> = ({ data, setData }) => {
       }
     },
   ];
+
+  const deleteVoucher = (code: string) => {
+    setIsLoading(true)
+    shutDownVoucher(code).then(({ data }) => {
+      setData && setData((prev: IVoucher[]) => prev.filter((value) => value.code != code))
+      SuccessAlert(`Voucher mã khuyến mãi ${code} đã bị ngưng hoạt động`);
+    }).catch((err) => err).finally(() => setIsLoading(false))
+  }
 
   const edit = (record: Partial<IVoucher>) => {
     editForm?.setFieldsValue({ name: '', discount: '', due: '', description: '', ...record });
@@ -104,25 +110,23 @@ const VoucherTable: FC<VoucherTableProps> = ({ data, setData }) => {
     setEditingKey('');
   };
 
-  const save = async (values: IVoucher) => {
-    setIsLoading(true)
-    updateVoucher({ ...values, code: editingKey }).then(({ data }) => {
-      setData && setData((prev: IVoucher[]) => {
-        const newData = prev ? [...prev] : [];
-        const index = newData.findIndex((item) => editingKey == item.code);
-        if (index > -1) {
-          const item = newData[index];
-          newData.splice(index, 1, {
-            ...item,
-            ...values,
-          });
-          setEditingKey('');
-        } else {
-          newData.push(values);
-          setEditingKey('');
-        }
-        return newData
-      })
+  const save = async (values: any) => {
+    updateVoucher({ ...values, code: editingKey, due: values.due_to }).then(({ data: dataRes }) => {
+      const newData = data ? [...data] : [];
+      const index = newData.findIndex((item) => editingKey == item.code);
+      if (index > -1) {
+        const item = newData[index];
+        newData.splice(index, 1, {
+          ...item,
+          ...values,
+        });
+        setEditingKey('');
+      } else {
+        newData.push(values);
+        setEditingKey('');
+      }
+      setData && setData(newData)
+      SuccessAlert('Cập nhật thành công');
     }).catch((err) => console.log(err)).finally(() => setIsLoading(false))
   };
 
@@ -133,12 +137,13 @@ const VoucherTable: FC<VoucherTableProps> = ({ data, setData }) => {
     return {
       ...col,
       onCell: (record: IVoucher) => ({
-        record,
+        record: { ...record, due: dayjs(record.due) },
         inputType: getType(col.dataIndex),
-        dataIndex: col.key === 'due' ? dayjs(record.due) : col.dataIndex,
+        dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
-      }),
+        rules: col.rules
+      })
     };
   });
 
@@ -173,7 +178,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ data, setData }) => {
 
 function getType(dataIndex: string) {
   switch (dataIndex) {
-    case 'due':
+    case 'due_to':
       return DATE;
     case 'description':
       return TEXTAREA;
