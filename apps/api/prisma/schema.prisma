@@ -118,6 +118,7 @@ model Voucher {
   description String?
   due         DateTime  @db.Date
   Receipt     Receipt[]
+  isActive    Boolean   @default(true)
 
   @@map("voucher")
 }
