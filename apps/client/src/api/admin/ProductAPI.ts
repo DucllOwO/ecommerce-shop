@@ -1,4 +1,5 @@
 import { http } from "..";
+import IProduct from "../../interface/Product";
 
 export function fetchAllProducts(){
   return http.get(`/product`);
@@ -17,5 +18,9 @@ export function fetchAllCollection(){
 }
 
 export function fetchCollection(id: number){
-  return httpw.get(`/collection/${id}`);
+  return http.get(`/collection/${id}`);
+}
+
+export function postProduct(newProduct: IProduct){
+  return http.post(`/product`, {newProduct})
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Divider, Form, Input, InputNumber, Row, Space, Typography } from 'antd';
+import { Button, Col, Divider, Form, FormInstance, Input, InputNumber, Row, Space, Typography } from 'antd';
 import { SIZES } from '../../constant/constant';
 
 const inventoryData = [
@@ -37,10 +37,11 @@ const initialValues = {
 
 interface ProductInventoryFormProps {
   isReadOnly?: boolean;
+  form: FormInstance<any>
 }
 
-const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly = false }) => {
-  const [form] = Form.useForm();
+const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly = false, form }) => {
+  // const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);

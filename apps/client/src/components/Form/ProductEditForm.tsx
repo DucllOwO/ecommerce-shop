@@ -5,12 +5,13 @@ import { REQUIRED_RULE } from '../../constant/formRules'
 import { FORM_NO_BOTTOM_MARGIN } from '../../constant/styles'
 import ProductInventoryForm from './ProductInventoryForm'
 import ProductFormProps from '../../interface/ProductFormProps'
+import IProduct from '../../interface/Product'
 
 interface ProductEditFormProps extends  ProductFormProps {
-
+  selectedItem?: IProduct
 }
 
-const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, discountInit, tagInit }) => {
+const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, discountInit, tagInit, selectedItem }) => {
     const [fileList, setFileList] = useState<UploadFile[]>([
         {
             uid: '-1',
@@ -24,29 +25,31 @@ const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, disc
         setFileList(newFileList);
     };
 
-    const normFile = (e: any) => {
-        console.log('Upload event:', e);
-        if (Array.isArray(e)) {
-            return e;
-        }
-        return e?.fileList;
-    };
+  const normFile = (e: any) => {
+    console.log('Upload event:', e);
+      if (Array.isArray(e)) {
+        return e;
+      }
+    return e?.fileList;
+  };
   return (
     <Form form={form}>
           <Space direction='vertical' style={{ width: '100%' }}>
-            <Descriptions title="Chinh sua thông tin sản phẩm" bordered>
-              <Descriptions.Item label="ID" span={1}>1</Descriptions.Item>
+            <Descriptions title="Chỉnh sửa thông tin sản phẩm" bordered>
+              <Descriptions.Item label="ID" span={1}>{selectedItem?.id}</Descriptions.Item>
               <Descriptions.Item label="Bộ siêu tập" span={2}>
                 <Form.Item initialValue={collectionInit} name={'collection'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <Select
                     allowClear
                     style={{ width: '100%', color: 'black'}}
                     placeholder="Chọn nhãn cho sản phẩm"
+                    options={collectionInit}
+                    defaultValue={selectedItem?.collection?.name}
                   />
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label="Tên sản phẩm" span={3}>
-                <Form.Item name={'name'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'name'} rules={[REQUIRED_RULE]} initialValue={selectedItem?.name} style={FORM_NO_BOTTOM_MARGIN}>
                   <Input style={{ width: '100%' }} />
                 </Form.Item>
               </Descriptions.Item>
@@ -57,11 +60,13 @@ const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, disc
                     allowClear
                     style={{ width: '100%' }}
                     placeholder="Chọn nhãn cho sản phẩm"
+                    options={tagInit}
+                    defaultValue={selectedItem?.HaveTag[0].tag.name}
                   />
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label="Giá bán (đ)" span={1}>
-                <Form.Item name={'price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'price'} rules={[REQUIRED_RULE]} initialValue={selectedItem?.price} style={FORM_NO_BOTTOM_MARGIN}>
                   <InputNumber
                     min={0}
                     max={100}
@@ -71,10 +76,10 @@ const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, disc
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label="Lượt xem" span={1}>
-                1000
+                {selectedItem?.view}
               </Descriptions.Item>
               <Descriptions.Item label="Lượt mua" span={1}>
-                1000
+                {selectedItem?.sold}
               </Descriptions.Item>
               <Descriptions.Item label="Trạng thái" span={3}>
                 <Form.Item name={'collection'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
@@ -136,7 +141,7 @@ const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, disc
               </Descriptions.Item>
             </Descriptions>
             <Divider />
-            <ProductInventoryForm />
+            <ProductInventoryForm form={form}/>
           </Space>
     </Form>
   )

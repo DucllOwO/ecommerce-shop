@@ -48,14 +48,14 @@ const ProductManagement = () => {
 function renderModal(isOpen: boolean, setIsModalOpen: Function, action: string, selectedItem?: IProduct)  {
   if (isOpen === false)
     return null;
-
+    // console.log(selectedItem)
     switch (action) {
       case ACTION_CREATE:
         return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} action={ACTION_CREATE}/>
       case ACTION_EDIT:
         return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} action={ACTION_EDIT} selectedItem={selectedItem}/>
       case ACTION_READ:
-        return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} action={ACTION_READ}/>
+        return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} action={ACTION_READ} selectedItem={selectedItem}/>
     }
 }
 

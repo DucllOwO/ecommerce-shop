@@ -14,7 +14,11 @@ export class ProductController {
 
   @Get()
   findAll() {
-    return this.productService.products({});
+    return this.productService.products({
+      orderBy:{
+        id: 'asc'
+      }
+    });
   }
 
   @Get(':id')

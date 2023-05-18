@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from 'react'
 import { ModalProps } from '../../interface/ModalProps'
 import ProductInventoryTable from '../Table/Product/ProductInventoryTable'
 import ITag from '../../interface/Tag'
-import { fetchAllCollection, fetchAllTag } from '../../api/admin/ProductAPI'
+import { fetchAllCollection, fetchAllTag, postProduct } from '../../api/admin/ProductAPI'
 import ICollection from '../../interface/Collection'
 import { fetchAllDiscounts } from '../../api/admin/DiscountAPI'
 import IDiscount from '../../interface/Discount'
@@ -73,7 +73,40 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
   function setModalFooter(action: string) {
     return action == ACTION_CREATE || action == ACTION_EDIT ? [
       <Button key="submit" type="primary" onClick={() => {
-        setIsModalOpen(false)
+        form.validateFields();
+        console.log(form.getFieldValue('inventory'))
+        if(ACTION_CREATE){
+          const newProduct = {
+            name: form.getFieldValue('name'),
+            price: form.getFieldValue('price'),
+            description: form.getFieldValue('description'),
+            discount: {
+              connect: {
+                id: form.getFieldValue('discount')
+              }
+            },
+            HaveTag:{
+              createMany:{
+                data: form.getFieldValue('tags').map((item: number) => {
+                  return {tagID: item}
+                }),
+                skipDuplicates: true
+              }
+            },
+            collection: {
+              connect: {
+                id: form.getFieldValue('collection')
+              }
+            },
+            Product_item: {
+              createMany: {
+                data: getProductItem(form),
+                skipDuplicates: true
+              }}
+          }
+          console.log(newProduct)
+          setIsModalOpen(false)
+        }
       }}>
         Lưu
       </Button>,
@@ -85,13 +118,33 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
     ] : null
   }
 }
+function getProductItem(form: FormInstance<any>){
+  const productItemValue = form.getFieldValue('inventory')
+  .map((item: any) => {
+    let result: any = [];
+    for(var property in item.amount){
+      result = [
+        ...result, {
+          color: item.color,
+          size: property,
+          amount: item.amount[property] ,
+      }]
+    }
+    return [...result];
+  })
+  let result : any = [];
+  productItemValue.forEach((item: any) => {
+    result = [...result, ...item];
+  })
+  return result;
+}
 
 function renderModalContent(action: string, form: FormInstance<any>, tags : ITag[], collections: ICollection[], discounts: IDiscount[], selectedItem?: IProduct) {
   switch (action) {
     case ACTION_CREATE:
       return <ProductCreateForm form={form} tagInit={tags} collectionInit={collections} discountInit={discounts}/>
     case ACTION_EDIT:
-      return <ProductEditForm form={form} tagInit={tags} collectionInit={collections} discountInit={discounts}/>
+      return <ProductEditForm form={form} tagInit={tags} collectionInit={collections} discountInit={discounts} selectedItem={selectedItem}/>
     case ACTION_READ:
       return <Space direction='vertical' style={{ width: '100%' }}>
       <Descriptions title="Thông tin sản phẩm" bordered>
@@ -115,7 +168,7 @@ function renderModalContent(action: string, form: FormInstance<any>, tags : ITag
           {selectedItem?.sold}
         </Descriptions.Item>
         <Descriptions.Item label="Trạng thái" span={3}>
-          <Tag color={'green'} title={'Hoàn thành'} />
+          {selectedItem?.isActive ? <Tag>Đang bán</Tag> : <Tag>Đã tạm ngừng</Tag>}
         </Descriptions.Item>
         <Descriptions.Item label="Hỉnh ảnh" span={3}>
           <AntdImage.PreviewGroup
@@ -135,20 +188,13 @@ function renderModalContent(action: string, form: FormInstance<any>, tags : ITag
         </Descriptions.Item>
         <Descriptions.Item label="Giảm giá" span={3}>{selectedItem?.discount?.name}</Descriptions.Item>
         <Descriptions.Item label="Giá nhập (đ)" span={3}>
-          <InputNumber
-            defaultValue={100}
-            min={0}
-            max={100}
-            controls={false}
-            style={{ width: "100%" }}
-          />
+          {selectedItem?.price}
         </Descriptions.Item>
-        <Descriptions.Item label="Tổng giá" span={3}>$60.00</Descriptions.Item>
+        <Descriptions.Item label="Tổng giá" span={3}>{selectedItem?.price}</Descriptions.Item>
       </Descriptions>
       <Divider />
       <ProductInventoryTable data={selectedItem?.Product_item} />
     </Space>
-  
     default:
       break;
   }

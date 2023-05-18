@@ -34,13 +34,14 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
     <Form form={form}>
           <Space direction='vertical' style={{ width: '100%' }}>
             <Descriptions title="Them sản phẩm" bordered>
-              <Descriptions.Item label="ID" span={1}>1</Descriptions.Item>
+              <Descriptions.Item label="ID" span={1}>Auto</Descriptions.Item>
               <Descriptions.Item label="Bộ siêu tập" span={2}>
-                <Form.Item initialValue={collectionInit} name={'collection'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'collection'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <Select
                     allowClear
                     style={{ width: '100%', color: 'black'}}
                     placeholder="Chọn nhãn cho sản phẩm"
+                    options={collectionInit}
                   />
                 </Form.Item>
               </Descriptions.Item>
@@ -50,12 +51,13 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label="Nhãn" span={3}>
-                <Form.Item initialValue={tagInit} name={'tags'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'tags'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <Select
                     mode="multiple"
                     allowClear
                     style={{ width: '100%' }}
                     placeholder="Chọn nhãn cho sản phẩm"
+                    options={tagInit}
                   />
                 </Form.Item>
               </Descriptions.Item>
@@ -97,11 +99,12 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label="Giảm giá (%)" span={3}>
-                <Form.Item name={'discount'} initialValue={discountInit} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'discount'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <Select
                     allowClear
                     style={{ width: '100%' }}
                     placeholder="Chọn mã giảm giá áp dụng cho sản phẩm"
+                    options={discountInit}
                   />
                 </Form.Item>
               </Descriptions.Item>
@@ -129,7 +132,7 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
               </Descriptions.Item>
             </Descriptions>
             <Divider />
-            <ProductInventoryForm />
+            <ProductInventoryForm form={form}/>
           </Space>
     </Form>
   )
