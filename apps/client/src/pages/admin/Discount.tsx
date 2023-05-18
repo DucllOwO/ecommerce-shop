@@ -6,7 +6,6 @@ import { fetchAllDiscounts } from '../../api/admin/DiscountAPI';
 import DiscountCreateModal from '../../components/Modal/DiscountCreateModal';
 
 const Discount = () => {
-  const [form] = Form.useForm();
   const [data, setData] = useState<IDiscount[]>();
   const [isLoading, setIsLoading] = useState(true)
   const [isModalOpen, setisModalOpen] = useState(false)
@@ -21,9 +20,7 @@ const Discount = () => {
     <Spin spinning={isLoading}>
       <Space direction='vertical' style={{ width: '100%' }}>
         <Button type="primary" onClick={() => setisModalOpen(true)}>Thêm mới</Button>
-        <Form form={form} component={false}>
-          <DiscountTable form={form} data={data} setData={setData} />
-        </Form>
+        <DiscountTable data={data} setData={setData} />
       </Space>
       <DiscountCreateModal setDataState={setData} isOpen={isModalOpen} setIsModalOpen={setisModalOpen} />
     </Spin>

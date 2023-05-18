@@ -21,11 +21,12 @@ import { AccountModule } from './account/account.module';
 import { DiscountModule } from './discount/discount.module';
 import { MiddlewareConsumer } from '@nestjs/common/interfaces';
 import * as cors from 'cors';
+import { HelperModule } from './helper/helper.module';
 
 @Module({
-  imports: [AuthModule, ConfigModule.forRoot({
+  imports: [ConfigModule.forRoot({
     isGlobal: true,
-  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule, AccountModule, DiscountModule],
+  }), HelperModule ,AuthModule, UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule, AccountModule, DiscountModule, HelperModule],
   controllers: [AppController],
   providers: [AppService, PrismaService]
 })

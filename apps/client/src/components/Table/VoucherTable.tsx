@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { Table, Space, Button, Typography, Popconfirm } from 'antd';
+import { Table, Space, Button, Typography, Popconfirm, Form, Spin } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
 import { TableProps } from '../../interface/TableProps';
@@ -8,6 +8,7 @@ import EditableCell from './EditableCell';
 import { DATE, INPUT, INPUT_NUMBER, TEXTAREA } from '../../constant/constant';
 import IVoucher from '../../interface/Voucher';
 import dayjs from 'dayjs';
+import { updateVoucher } from '../../api/admin/VoucherAPI';
 
 // export interface VoucherType {
 //   code: string;
@@ -21,9 +22,11 @@ interface VoucherTableProps extends TableProps {
   data?: IVoucher[],
 }
 
-const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
+const VoucherTable: FC<VoucherTableProps> = ({ data, setData }) => {
+  const [editForm] = Form.useForm()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [editingKey, setEditingKey] = useState<string | undefined>('');
+  const [editingKey, setEditingKey] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false)
 
   const isEditing = (record: IVoucher) => record.code === editingKey;
 
@@ -45,7 +48,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
       key: 'discount',
       editable: true,
       render: (_: any, record: IVoucher) => {
-        return <p>{`${record.discount*100}%`}</p>
+        return <p>{`${record.discount}%`}</p>
       }
     },
     {
@@ -71,7 +74,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
-            <Typography.Link onClick={() => save(record.code)} style={{ marginRight: 8 }}>
+            <Typography.Link onClick={() => editForm.submit()} style={{ marginRight: 8 }}>
               Lưu
             </Typography.Link>
             <Popconfirm title="Thông tin sẽ không được lưu bạn có chắc chắn muốn hủy?" onConfirm={cancel}>
@@ -93,36 +96,34 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
   ];
 
   const edit = (record: Partial<IVoucher>) => {
-    form?.setFieldsValue({ name: '', discount: '', due: '', description: '', ...record });
-    setEditingKey(record.code);
+    editForm?.setFieldsValue({ name: '', discount: '', due: '', description: '', ...record });
+    setEditingKey(record.code ? record.code : '');
   };
 
   const cancel = () => {
     setEditingKey('');
   };
 
-  const save = async (id: string) => {
-    try {
-      const row = (await form?.validateFields()) as IVoucher;
-
-      const newData = data ? [...data] : [];
-      const index = newData.findIndex((item) => id === item.code);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setData && setData(newData);
-        setEditingKey('');
-      } else {
-        newData.push(row);
-        setData && setData(newData);
-        setEditingKey('');
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
+  const save = async (values: IVoucher) => {
+    setIsLoading(true)
+    updateVoucher({ ...values, code: editingKey }).then(({ data }) => {
+      setData && setData((prev: IVoucher[]) => {
+        const newData = prev ? [...prev] : [];
+        const index = newData.findIndex((item) => editingKey == item.code);
+        if (index > -1) {
+          const item = newData[index];
+          newData.splice(index, 1, {
+            ...item,
+            ...values,
+          });
+          setEditingKey('');
+        } else {
+          newData.push(values);
+          setEditingKey('');
+        }
+        return newData
+      })
+    }).catch((err) => console.log(err)).finally(() => setIsLoading(false))
   };
 
   const mergedColumns = columns.map((col) => {
@@ -134,7 +135,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
       onCell: (record: IVoucher) => ({
         record,
         inputType: getType(col.dataIndex),
-        dataIndex: col.dataIndex,
+        dataIndex: col.key === 'due' ? dayjs(record.due) : col.dataIndex,
         title: col.title,
         editing: isEditing(record),
       }),
@@ -143,24 +144,29 @@ const VoucherTable: FC<VoucherTableProps> = ({ form, data, setData }) => {
 
   return (
     <>
-      <Table
-        columns={mergedColumns}
-        dataSource={data}
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: (event: React.MouseEvent) => {
-              if (isClickOnATableCell(event))
-                setIsModalOpen(prev => !prev)
-            }, // click row
-          };
-        }}
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        rowClassName="editable-row"
-      />
+      <Spin spinning={isLoading}>
+        <Form form={editForm} onFinish={save}>
+          <Table
+            rowKey={record => record.code}
+            columns={mergedColumns}
+            dataSource={data}
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: (event: React.MouseEvent) => {
+                  if (isClickOnATableCell(event))
+                    setIsModalOpen(prev => !prev)
+                }, // click row
+              };
+            }}
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            rowClassName="editable-row"
+          />
+        </Form>
+      </Spin>
     </>
   )
 }

@@ -1,21 +1,25 @@
 import React, { FC, useState } from 'react'
-import { Table, Space, Button, Typography, Popconfirm } from 'antd';
+import { Table, Space, Button, Typography, Popconfirm, Form, Spin, DatePicker } from 'antd';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
 import DiscountModal from '../../Modal/DiscountModal';
 import { isClickOnATableCell } from '../../../helper/checkEventClick';
 import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
 import IDiscount from '../../../interface/Discount';
-import { deleteDiscount } from '../../../api/admin/DiscountAPI';
+import { deleteDiscount, updateDiscount } from '../../../api/admin/DiscountAPI';
 import SuccessAlert from '../../Alert/SuccessAlert';
 
 interface DiscountTableProps extends TableProps {
   data?: IDiscount[],
 }
 
-const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
+const DiscountTable: FC<DiscountTableProps> = ({ data, setData }) => {
+
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingKey, setEditingKey] = useState<string | undefined>('');
+  const [form] = Form.useForm()
+  const [isLoading, setIsLoading] = useState(false);
 
   const isEditing = (record: IDiscount) => record.id.toString() === editingKey;
 
@@ -39,7 +43,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
       editable: true,
     },
     {
-      title: 'Giảm giá',
+      title: 'Giảm giá (%)',
       dataIndex: 'discount',
       key: 'discount',
       editable: true,
@@ -52,7 +56,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
-            <Typography.Link onClick={() => save(record.id.toString())} style={{ marginRight: 8 }}>
+            <Typography.Link onClick={() => form.submit()} style={{ marginRight: 8 }}>
               Lưu
             </Typography.Link>
             <Popconfirm title="Thông tin sẽ không được lưu bạn có chắc chắn muốn hủy?" onConfirm={cancel}>
@@ -85,32 +89,26 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
     setEditingKey(record.id?.toString());
   };
 
-  const cancel = () => {
-    setEditingKey('');
-  };
-
-  const save = async (id: string) => {
-    try {
-      const row = (await form?.validateFields()) as IDiscount;
-
-      const newData = data ? [...data] : [];
-      const index = newData.findIndex((item) => id === item.id.toString());
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setData && setData(newData);
-        setEditingKey('');
-      } else {
-        newData.push(row);
-        setData && setData(newData);
-        setEditingKey('');
-      }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
+  const save = async (values: IDiscount) => {
+    setIsLoading(true)
+    updateDiscount({ ...values, id: Number(editingKey) }).then(({ data }) => {
+      setData && setData((prev: IDiscount[]) => {
+        const newData = prev ? [...prev] : [];
+        const index = newData.findIndex((item) => Number(editingKey) == item.id);
+        if (index > -1) {
+          const item = newData[index];
+          newData.splice(index, 1, {
+            ...item,
+            ...values,
+          });
+          setEditingKey('');
+        } else {
+          newData.push(values);
+          setEditingKey('');
+        }
+        return newData
+      })
+    }).catch((err) => console.log(err)).finally(() => setIsLoading(false))
   };
 
   const mergedColumns = columns.map((col) => {
@@ -131,28 +129,36 @@ const DiscountTable: FC<DiscountTableProps> = ({ form, data, setData }) => {
 
   return (
     <>
-      <DiscountModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
-      <Table
-        rowKey={record => record.id}
-        columns={mergedColumns}
-        dataSource={data}
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: (event: React.MouseEvent) => {
-              if (isClickOnATableCell(event))
-                setIsModalOpen(prev => !prev)
-            }, // click row
-          };
-        }}
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        rowClassName="editable-row"
-      />
+      <Spin spinning={isLoading}>
+        <DiscountModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+        <Form form={form} onFinish={save}>
+          <Table
+            rowKey={record => record.id}
+            columns={mergedColumns}
+            dataSource={data}
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: (event: React.MouseEvent) => {
+                  if (isClickOnATableCell(event))
+                    setIsModalOpen(prev => !prev)
+                }, // click row
+              };
+            }}
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            rowClassName="editable-row"
+          />
+        </Form>
+      </Spin>
     </>
   )
+
+  function cancel() {
+    setEditingKey('');
+  };
 }
 
 export default DiscountTable

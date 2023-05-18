@@ -1,7 +1,7 @@
 import { DatePicker, Form, Input, InputNumber, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { locale } from "dayjs";
-import { DATE, INPUT_NUMBER, SELECT, TEXTAREA } from "../../constant/constant";
+import { DATE, DATE_FORMAT, INPUT_NUMBER, SELECT, TEXTAREA } from "../../constant/constant";
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
@@ -17,7 +17,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
 const getComponentByType = (type: string) => {
   switch (type) {
     case DATE:
-      return <Input type="date" />;
+      return <DatePicker />;
     case INPUT_NUMBER:
       return <InputNumber />;
     case TEXTAREA:

@@ -35,7 +35,7 @@ export class DiscountService {
 
   updateDiscount(params: {
     where: Prisma.DiscountWhereUniqueInput,
-    data: Prisma.DiscountCreateInput
+    data: Prisma.DiscountUpdateInput
   }): Promise<Discount> {
     const { where, data } = params
     return this.prisma.discount.update({

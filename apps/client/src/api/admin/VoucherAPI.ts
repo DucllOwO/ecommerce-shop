@@ -6,5 +6,13 @@ export function fetchAllVouchers(){
 };
 
 export function createVoucher({ code, name, discount, due, description} : IVoucher) {
+  return http.post('/voucher', { code, name, discount, due, description });
+}
 
+export function updateVoucher({ code, name, discount, due, description }: IVoucher) {
+  return http.patch(`/voucher/${code}`, { name, discount, due, description })
+}
+
+export function shutDownVoucher(code: string) {
+  return http.patch(`/voucher/${code}`)
 }

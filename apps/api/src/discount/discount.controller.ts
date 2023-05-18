@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
 import { DiscountService } from './discount.service';
 import { Prisma } from '@prisma/client';
 
@@ -18,19 +18,28 @@ export class DiscountController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    if (!id)
+      throw new BadRequestException();
+    
     return this.discountService.discount({id: Number(id)});
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDiscountDto: Prisma.DiscountCreateInput) {
+  update(@Param('id') id: number, @Body() updateDiscountDto: Prisma.DiscountUpdateInput) {
+    if (isNaN(id))
+      throw new BadRequestException();
+    
     return this.discountService.updateDiscount({
       where: {id: Number(id)},
-      data: updateDiscountDto,
+      data: {...updateDiscountDto, discount: Number(updateDiscountDto.discount)},
     });
   }
 
   @Delete(':id')
   delete(@Param('id') id: number) {
+    if (!id)
+      throw new BadRequestException();
+    
     return this.discountService.removeDiscount({ id: Number(id) })
   }
 }
