@@ -2,7 +2,7 @@ import { UserOutlined } from '@ant-design/icons'
 import { Avatar, Button, Col, Form, Input, Row, Select, Space } from 'antd'
 import React, { useEffect, useState } from 'react'
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import productData from '../../assets/fake-data/products'
 import { EMAIL_FORMAT_RULE, PHONENUMBER_FORMAT_RULE, REQUIRED_RULE } from '../../constant/formRules'
 import CartItem, { CartItemType } from './components/CartItem'
@@ -16,6 +16,7 @@ const paymentMethods = [
 ]
 
 const Cart = () => {
+    const nav = useNavigate();
 
     const [cartProducts, setCartProducts] = useState(productData.getProducts(4))
 
@@ -25,6 +26,11 @@ const Cart = () => {
 
     const onFinish = (values: any) => {
         console.log(values)
+    }
+
+    const submitOrder = () => {
+        // form.submit() here
+        nav('/payment');
     }
 
     return (
@@ -93,7 +99,7 @@ const Cart = () => {
                                     </div>
                                 </div>
                                 <div className="cart__info__btn">
-                                    <Button type='primary' htmlType="submit" style={{ width: '100%' }}>
+                                    <Button type='primary' htmlType="submit" style={{ width: '100%' }} onClick={submitOrder}>
                                         Đặt hàng
                                     </Button>
                                 </div>

@@ -27,6 +27,7 @@ import Order from './pages/customer/Order.js';
 import OrderDetail from './pages/customer/OrderDetail.js';
 import { useContext } from 'react';
 import { AppContext } from './context/AppContext.js';
+import Payment from './pages/customer/Payment.js';
 
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
           <Route key={'order'} path='orders' element={<Order />}>
           </Route>
           <Route key={'order-detail'} path='orders/:id' element={<OrderDetail />} />
+          <Route key={'payment'} path='payment' element={<Payment />} />
         </Route>
 
       </Routes>

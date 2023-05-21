@@ -16,14 +16,14 @@ const ProductCard = (props: ProductCardProps) => {
                         <del>{props.price}</del>
                     </span>
                 </div>
+                <div className="product-card__btn">
+                    <Button
+                        type='primary'
+                    >
+                        Xem chi tiết
+                    </Button>
+                </div>
             </Link>
-            <div className="product-card__btn">
-                <Button
-                    type='primary'
-                >
-                    Xem chi tiết
-                </Button>
-            </div>
         </div>
     )
 }

@@ -11,6 +11,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@ant-design/plots": "^1.2.5",
+    "@types/react-image-gallery": "^1.2.0",
     "antd": "^5.4.4",
     "antd-img-crop": "^4.12.2",
     "axios": "^1.4.0",
@@ -20,6 +21,7 @@
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.4",
     "react-horizontal-scrolling-menu": "^3.2.5",
+    "react-image-gallery": "^1.2.11",
     "react-infinite-scroll-component": "^6.1.0",
     "react-router-dom": "^6.8.2",
     "sass": "^1.58.3",
