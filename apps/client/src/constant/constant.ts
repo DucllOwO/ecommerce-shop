@@ -17,3 +17,4 @@ export const ACTION_CREATE = 'ACTION_CREATE'
 export const ACTION_EDIT = 'ACTION_EDIT'
 export const SET_ACTION = 'SET_ACTION'
 
+export const BUCKET_URL = 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/product/'

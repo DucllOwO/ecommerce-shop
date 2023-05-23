@@ -1,18 +1,19 @@
-import { Tag, Descriptions, Modal, Image as AntdImage, InputNumber, Button, Space, Divider } from 'antd'
+import { Tag, Descriptions, Modal, Image as AntdImage, InputNumber, Button, Space, Divider, UploadFile } from 'antd'
 import { FormInstance, useForm } from 'antd/es/form/Form'
 import { FC, useEffect, useState } from 'react'
 import { ModalProps } from '../../interface/ModalProps'
 import ProductInventoryTable from '../Table/Product/ProductInventoryTable'
 import ITag from '../../interface/Tag'
-import { fetchAllCollection, fetchAllTag, postProduct } from '../../api/admin/ProductAPI'
+import { fetchAllCollection, fetchAllTag, postProduct, uploadImage } from '../../api/admin/ProductAPI'
 import ICollection from '../../interface/Collection'
 import { fetchAllDiscounts } from '../../api/admin/DiscountAPI'
 import IDiscount from '../../interface/Discount'
 import IProduct from '../../interface/Product'
 import { IHaveTag } from '../../interface/HaveTag'
-import { ACTION_CREATE, ACTION_EDIT, ACTION_READ } from '../../constant/constant'
+import { ACTION_CREATE, ACTION_EDIT, ACTION_READ, BUCKET_URL } from '../../constant/constant'
 import ProductCreateForm from '../Form/ProductCreateForm'
 import ProductEditForm from '../Form/ProductEditForm'
+import slugify from 'slugify'
 
 interface ProductModalProps extends ModalProps {
   action: string,
@@ -25,6 +26,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
   const [tag, setTag] = useState([]);
   const [collection, setCollection] = useState([]);
   const [discount, setDiscount] = useState([]);
+  const [imageList, setImageList] = useState([]);
 
   useEffect(()=> {
     console.log(selectedItem)
@@ -46,7 +48,47 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
     console.log(`selected ${value}`);
   };
 
-  
+  const handleOKCreateModal = () => {
+    form.validateFields().then((data) => {
+      // console.log(data)
+      if(action == ACTION_CREATE){
+        const slugString = slugify(data.name);
+        const newProduct = {
+          name: data.name,
+          slug: slugString,
+          price: data.price,
+          description: data.note,
+          discount: {
+            connect: {
+              id: data.discount
+            }
+          },
+          image: createImageName(imageList, slugString),
+          HaveTag:{
+            createMany:{
+              data: data.tags.map((item: number) => {
+                return {tagID: item}
+              }),
+              skipDuplicates: true
+            }
+          },
+          collection: {
+            connect: {
+              id: data.collection
+            }
+          },
+          Product_item: {
+            createMany: {
+              data: getProductItem(data.inventory),
+              skipDuplicates: true
+            }}
+        }
+        // console.log(newProduct);
+        uploadImageFunc(imageList, slugString);
+        setIsModalOpen(false)
+      }
+    });
+  }
 
   return (
     <Modal
@@ -66,49 +108,13 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
         else
           setIsModalOpen((prev: boolean) => !prev)
       }} >
-      {renderModalContent(action, form, tag, collection, discount, selectedItem)}
+      {renderModalContent(action, form, tag, collection, discount, selectedItem, setImageList)}
     </Modal>
   )
 
   function setModalFooter(action: string) {
     return action == ACTION_CREATE || action == ACTION_EDIT ? [
-      <Button key="submit" type="primary" onClick={() => {
-        form.validateFields();
-        console.log(form.getFieldValue('inventory'))
-        if(ACTION_CREATE){
-          const newProduct = {
-            name: form.getFieldValue('name'),
-            price: form.getFieldValue('price'),
-            description: form.getFieldValue('description'),
-            discount: {
-              connect: {
-                id: form.getFieldValue('discount')
-              }
-            },
-            image: form.getFieldValue('upload'),
-            HaveTag:{
-              createMany:{
-                data: form.getFieldValue('tags').map((item: number) => {
-                  return {tagID: item}
-                }),
-                skipDuplicates: true
-              }
-            },
-            collection: {
-              connect: {
-                id: form.getFieldValue('collection')
-              }
-            },
-            Product_item: {
-              createMany: {
-                data: getProductItem(form),
-                skipDuplicates: true
-              }}
-          }
-          console.log(newProduct)
-          setIsModalOpen(false)
-        }
-      }}>
+      <Button key="submit" type="primary" onClick={handleOKCreateModal}>
         Lưu
       </Button>,
       <Button key="back" onClick={() => {
@@ -119,8 +125,25 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
     ] : null
   }
 }
-function getProductItem(form: FormInstance<any>){
-  const productItemValue = form.getFieldValue('inventory')
+
+function createImageName(imageList: any, slugString: string){
+  return imageList.map((item: any, index: number) => `${BUCKET_URL}${slugString}-${index}`)
+}
+
+function uploadImageFunc(imageList: UploadFile[], slugString: string){
+  console.log(imageList);
+  imageList.forEach((item: any, index: number) => {
+    // const blob = new Blob([item.originFileObj, name: `${slugString}-${index}`], {type: item.originFileObj.type})
+    console.log(item);
+    const formData = new FormData();
+    formData.append('file', item.originFileObj, `${slugString}-${index+1}`);
+    // console.log(blob)
+    uploadImage(formData)
+  })
+}
+
+function getProductItem(inventory: any){
+  const productItemValue = inventory
   .map((item: any) => {
     let result: any = [];
     for(var property in item.amount){
@@ -140,10 +163,10 @@ function getProductItem(form: FormInstance<any>){
   return result;
 }
 
-function renderModalContent(action: string, form: FormInstance<any>, tags : ITag[], collections: ICollection[], discounts: IDiscount[], selectedItem?: IProduct) {
+function renderModalContent(action: string, form: FormInstance<any>, tags : ITag[], collections: ICollection[], discounts: IDiscount[], selectedItem?: IProduct, setImageList?: any) {
   switch (action) {
     case ACTION_CREATE:
-      return <ProductCreateForm form={form} tagInit={tags} collectionInit={collections} discountInit={discounts}/>
+      return <ProductCreateForm form={form} tagInit={tags} collectionInit={collections} discountInit={discounts} setImageList={setImageList}/>
     case ACTION_EDIT:
       return <ProductEditForm form={form} tagInit={tags} collectionInit={collections} discountInit={discounts} selectedItem={selectedItem}/>
     case ACTION_READ:

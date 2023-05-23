@@ -1,15 +1,16 @@
 import { Form, Space, Descriptions, Select, Input, InputNumber, Switch, Upload, Divider, UploadFile, UploadProps } from 'antd'
 import AntdImgCrop from 'antd-img-crop'
-import { FC, useState } from 'react'
+import React, { FC, useState } from 'react'
 import { REQUIRED_RULE } from '../../constant/formRules'
 import { FORM_NO_BOTTOM_MARGIN } from '../../constant/styles'
 import ProductInventoryForm from './ProductInventoryForm'
 import ProductFormProps from '../../interface/ProductFormProps'
 
 interface ProductCreateProps extends ProductFormProps {
+  setImageList: React.SetStateAction<any>
 }
 
-const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionInit, discountInit }) => {
+const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionInit, discountInit, setImageList }) => {
     const [fileList, setFileList] = useState<UploadFile[]>([
         {
             uid: '-1',
@@ -18,14 +19,19 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
             url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
         },
         ]);
-
-    const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+    const [blobList, setBlobList] = useState<Blob[]>();
+    // const formData = new FormData();
+    const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {    
+      // reader.readAsDataURL();
+      console.log(newFileList)
+      setImageList([...newFileList])
         setFileList(newFileList);
     };
 
     const normFile = (e: any) => {
         console.log('Upload event:', e);
         if (Array.isArray(e)) {
+          console.log(e)
             return e;
         }
         return e?.fileList;
@@ -64,8 +70,7 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
               <Descriptions.Item label="Giá bán (đ)" span={1}>
                 <Form.Item name={'price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <InputNumber
-                    min={0}
-                    max={100}
+                    min={1000}
                     controls={false}
                     style={{ width: "100%" }}
                   />
@@ -85,8 +90,13 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
                 >
                   <AntdImgCrop rotationSlider>
                     <Upload
-                      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                      accept='.png, .jpg'
+                      name="avatar"
                       listType="picture-card"
+                      beforeUpload={file => {
+                        return false;
+                      }}
+                      onChange={onChange}
                     >
                       {fileList.length < 4 && '+ Thêm ảnh'}
                     </Upload>
@@ -112,8 +122,7 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
                 <Form.Item name={'import_price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <InputNumber
                     defaultValue={100}
-                    min={0}
-                    max={100}
+                    min={1000}
                     controls={false}
                     style={{ width: "100%" }}
                   />
@@ -123,8 +132,7 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
                 <Form.Item name={'actual_price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <InputNumber
                     defaultValue={100}
-                    min={0}
-                    max={100}
+                    min={1000}
                     controls={false}
                     style={{ width: "100%" }}
                   />

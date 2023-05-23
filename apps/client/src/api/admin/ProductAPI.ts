@@ -24,3 +24,7 @@ export function fetchCollection(id: number){
 export function postProduct(newProduct: IProduct){
   return http.post(`/product`, {newProduct})
 }
+
+export function uploadImage(newImage: FormData){
+  return http.post(`/image`, newImage);
+}

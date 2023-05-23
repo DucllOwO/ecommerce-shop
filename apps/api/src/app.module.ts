@@ -20,12 +20,13 @@ import { CollectionModule } from './collection/collection.module';
 import { AccountModule } from './account/account.module';
 import { DiscountModule } from './discount/discount.module';
 import { MiddlewareConsumer } from '@nestjs/common/interfaces';
+import { ImageModule } from './image/image.module';
 import * as cors from 'cors';
 
 @Module({
   imports: [AuthModule, ConfigModule.forRoot({
     isGlobal: true,
-  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule, AccountModule, DiscountModule],
+  }), UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule, AccountModule, DiscountModule, ImageModule],
   controllers: [AppController],
   providers: [AppService, PrismaService]
 })
