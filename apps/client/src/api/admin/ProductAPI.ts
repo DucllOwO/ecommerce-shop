@@ -21,8 +21,8 @@ export function fetchCollection(id: number){
   return http.get(`/collection/${id}`);
 }
 
-export function postProduct(newProduct: IProduct){
-  return http.post(`/product`, {newProduct})
+export function postProduct(newProduct: any){
+  return http.post(`/product`, newProduct)
 }
 
 export function uploadImage(newImage: FormData){

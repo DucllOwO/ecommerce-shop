@@ -42,7 +42,7 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
             <Descriptions title="Them sản phẩm" bordered>
               <Descriptions.Item label="ID" span={1}>Auto</Descriptions.Item>
               <Descriptions.Item label="Bộ siêu tập" span={2}>
-                <Form.Item name={'collection'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'collection'} style={FORM_NO_BOTTOM_MARGIN}>
                   <Select
                     allowClear
                     style={{ width: '100%', color: 'black'}}
@@ -109,7 +109,7 @@ const ProductCreateForm : FC<ProductCreateProps> = ({ form, tagInit, collectionI
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label="Giảm giá (%)" span={3}>
-                <Form.Item name={'discount'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'discount'} style={FORM_NO_BOTTOM_MARGIN}>
                   <Select
                     allowClear
                     style={{ width: '100%' }}

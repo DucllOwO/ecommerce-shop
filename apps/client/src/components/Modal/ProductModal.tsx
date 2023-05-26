@@ -50,7 +50,6 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
 
   const handleOKCreateModal = () => {
     form.validateFields().then((data) => {
-      // console.log(data)
       if(action == ACTION_CREATE){
         const slugString = slugify(data.name);
         const newProduct = {
@@ -58,11 +57,11 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
           slug: slugString,
           price: data.price,
           description: data.note,
-          discount: {
+          discount: data.discount ? {
             connect: {
-              id: data.discount
+              id:  data.discount
             }
-          },
+          } : undefined,
           image: createImageName(imageList, slugString),
           HaveTag:{
             createMany:{
@@ -72,11 +71,11 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
               skipDuplicates: true
             }
           },
-          collection: {
+          collection: data.collection ? {
             connect: {
-              id: data.collection
+              id:  data.collection
             }
-          },
+          } : undefined,
           Product_item: {
             createMany: {
               data: getProductItem(data.inventory),
@@ -84,8 +83,16 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
             }}
         }
         // console.log(newProduct);
-        uploadImageFunc(imageList, slugString);
+        postProduct(newProduct).then(() => {
+          uploadImageFunc(imageList, slugString);
+        }).catch((error) => {
+          console.log(error);
+          throw new Error;
+        })
         setIsModalOpen(false)
+      }
+      else{
+
       }
     });
   }
@@ -127,18 +134,21 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
 }
 
 function createImageName(imageList: any, slugString: string){
-  return imageList.map((item: any, index: number) => `${BUCKET_URL}${slugString}-${index}`)
+  return imageList.map((item: any, index: number) => `${BUCKET_URL}${slugString}-${index+1}.${item.originFileObj.type.split('/')[1]}`)
 }
 
 function uploadImageFunc(imageList: UploadFile[], slugString: string){
   console.log(imageList);
   imageList.forEach((item: any, index: number) => {
-    // const blob = new Blob([item.originFileObj, name: `${slugString}-${index}`], {type: item.originFileObj.type})
+
     console.log(item);
+    
     const formData = new FormData();
-    formData.append('file', item.originFileObj, `${slugString}-${index+1}`);
-    // console.log(blob)
-    uploadImage(formData)
+    formData.append('file', item.originFileObj, `${slugString}-${index+1}.${item.originFileObj.type.split('/')[1]}`);
+    uploadImage(formData).catch((error) => {
+      console.log(error);
+      throw new Error();
+    })
   })
 }
 
@@ -151,7 +161,7 @@ function getProductItem(inventory: any){
         ...result, {
           color: item.color,
           size: property,
-          amount: item.amount[property] ,
+          quantity: item.amount[property] ,
       }]
     }
     return [...result];
