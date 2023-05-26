@@ -7,7 +7,7 @@ import FilterTree from './components/FilterTree'
 import Helmet from './components/Helmet'
 import ProductCard from './components/ProductCard'
 import { fetchAllProducts } from '../../api/CustomerAPI'
-import { IProduct } from '../../interface/Product'
+import Product from '../../interface/Product'
 
 const treeColorData: DataNode[] = [
     {
@@ -70,69 +70,66 @@ const treeSizeData: DataNode[] = [
 ];
 
 const Catalog = () => {
-    
+    const [isLoading, setIsLoading] = useState(false)
+
     useEffect(() => {
-        fetchAllProducts().then((data)=> {
+        setIsLoading(true);
+        fetchAllProducts().then((data) => {
             console.log(data)
             setProducts(data.data)
-        }).catch((error)=> {
+        }).catch((error) => {
             console.log(error)
-        })
-    },[])
+        }).finally(() => setIsLoading(false))
+    }, [])
 
-    const [products, setProducts] = useState<IProduct[]>();
+    const [products, setProducts] = useState<Product[]>();
     const [numOfItem, setNumOfItem] = useState(10)
 
     return (
         <Helmet title="Sản phẩm">
-            <div className="catalog">
-                <div className="catalog__filter">
+            <Spin spinning={isLoading}>
+                <div className="catalog">
+                    <div className="catalog__filter">
 
-                    <div className="catalog__filter__widget">
-                        <div className="catalog__filter__widget__title">
-                            Màu sắc
+                        <div className="catalog__filter__widget">
+                            <div className="catalog__filter__widget__title">
+                                Màu sắc
+                            </div>
+                            <div className="catalog__filter__widget__content">
+                                <FilterTree treeData={treeColorData} />
+                            </div>
                         </div>
-                        <div className="catalog__filter__widget__content">
-                            <FilterTree treeData={treeColorData} />
+
+                        <div className="catalog__filter__widget">
+                            <div className="catalog__filter__widget__title">
+                                Kích cỡ
+                            </div>
+                            <div className="catalog__filter__widget__content">
+                                <FilterTree treeData={treeSizeData} />
+                            </div>
                         </div>
                     </div>
 
-                    <div className="catalog__filter__widget">
-                        <div className="catalog__filter__widget__title">
-                            Kích cỡ
-                        </div>
-                        <div className="catalog__filter__widget__content">
-                            <FilterTree treeData={treeSizeData} />
-                        </div>
+                    <div className="catalog__content">
+                        <List
+                            grid={{ gutter: 16, column: 3 }}
+                            dataSource={products}
+                            renderItem={(item, index) => (
+                                <List.Item>
+                                    <ProductCard
+                                        key={index}
+                                        id={item?.id}
+                                        img01={item?.image[0]}
+                                        img02={item?.image[1]}
+                                        name={item.name}
+                                        price={item.price}
+                                    />
+                                </List.Item>
+                            )}
+                        />
                     </div>
                 </div>
-                <div className="catalog__content">
-                    <InfiniteScroll
-                        dataLength={numOfItem}
-                        hasMore={true}
-                        loader={<div style={{ textAlign: 'center', display: 'block' }}>
-                            <Spin />
-                        </div>}
-                        next={() => {
-                            setTimeout(() => { setNumOfItem(prev => prev + 4) }, 3000)
-
-                        }}
-                        style={{ display: 'flex', flexWrap: "wrap" }}
-                    >
-                        {products?.map((item, index) => (
-                            <ProductCard
-                                key={index}
-                                id={item?.id}
-                                img01={item?.image[0]}
-                                img02={item?.image[1]}
-                                name={item.name}
-                                price={item.price}
-                                slug="quan-somi"
-                            />
-                        ))}
-                    </InfiniteScroll>
-                </div>
-            </div>
+            </Spin>
         </Helmet>
     )
 }

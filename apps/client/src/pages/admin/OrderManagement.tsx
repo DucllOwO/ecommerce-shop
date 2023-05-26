@@ -5,13 +5,13 @@ interface OrderProps {
   state: string
 }
 
-const Order = ({ state }: OrderProps) => {
-  // console.log(state)
+const OrderManagement = ({ state }: OrderProps) => {
+  console.log(state)
   return (
     <div>
-      <OrderTable state={state}/>
+      <OrderTable />
     </div>
   )
 }
 
-export default Order
+export default OrderManagement

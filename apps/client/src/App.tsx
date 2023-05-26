@@ -8,7 +8,7 @@ import Cart from './pages/customer/Cart.js';
 import Login from './pages/auth/Login.js';
 import SignUp from './pages/auth/SignUp.js';
 import Dashboard from './pages/admin/Dashboard.js';
-import Order from './pages/admin/Order.js';
+import OrderManagement from './pages/admin/OrderManagement.js';
 import ProductManagement from './pages/admin/ProductManagement.js';
 import Collection from './pages/admin/Collection.js';
 import Delivery from './pages/admin/Delivery.js';
@@ -22,17 +22,24 @@ import Feedback from './pages/admin/Feedback.js';
 import Voucher from './pages/admin/Voucher.js';
 import CustomerManagement from './pages/admin/CustomerManagement.js';
 import Importing from './pages/admin/Importing.js';
+import UserProfileSetting from './pages/customer/UserProfileSetting.js';
+import Order from './pages/customer/Order.js';
+import OrderDetail from './pages/customer/OrderDetail.js';
+import { useContext } from 'react';
+import { AppContext } from './context/AppContext.js';
+import Payment from './pages/customer/Payment.js';
 
 
 function App() {
+  const appCtx = useContext(AppContext);
   return (
     <BrowserRouter>
       <Routes>
-        <Route key={'admin'} path='/admin' element={<Admin />}>
+        {appCtx?.user?.is_admin ? <Route key={'admin'} path='/admin' element={<Admin />}>
           <Route key={'dashboard'} path='dashboard' index element={<Dashboard />} />
           <Route key={'order'} path='order'>
-            <Route key={'order_waiting'} path='waiting' element={<Order state={ORDER_WAITING_STATE} />} />
-            <Route key={'order_completed'} path='completed' element={<Order state={ORDER_COMPLETED_STATE} />} />
+            <Route key={'order_waiting'} path='waiting' element={<OrderManagement state={ORDER_WAITING_STATE} />} />
+            <Route key={'order_completed'} path='completed' element={<OrderManagement state={ORDER_COMPLETED_STATE} />} />
           </Route>
           <Route key={'product'} path='product'>
             <Route key={'collection'} path='collection' element={<Collection />} />
@@ -51,7 +58,8 @@ function App() {
           <Route key={'policy'} path='policy' element={<Policy />} />
           <Route key={'customer-management'} path='customer-management' element={<CustomerManagement />}></Route>
           <Route key={'importing'} path='importing' element={<Importing />}></Route>
-        </Route>
+        </Route> : null}
+
         <Route key={'customer'} path='/' element={<Customer />}>
           <Route key={'home'} index element={<Home />}></Route>
           <Route key={'catalog'} path='catalog' element={<Catalog />}></Route>
@@ -59,6 +67,11 @@ function App() {
           <Route key={'cart'} path='cart' element={<Cart />}></Route>
           <Route key={'login'} path='login' element={<Login />}></Route>
           <Route key={'signup'} path='signup' element={<SignUp />}></Route>
+          <Route key={'user-profile-setting'} path='profile' element={<UserProfileSetting />}></Route>
+          <Route key={'order'} path='orders' element={<Order />}>
+          </Route>
+          <Route key={'order-detail'} path='orders/:id' element={<OrderDetail />} />
+          <Route key={'payment'} path='payment' element={<Payment />} />
         </Route>
 
       </Routes>

@@ -1,34 +1,30 @@
-import { Button, Form, Space } from 'antd';
+import { Button, Form, Space, Spin } from 'antd';
 import { useEffect, useState } from 'react'
 import TagTable from '../../components/Table/Tag/TagTable'
 import { fetchAllTag } from '../../api/admin/ProductAPI';
 import ITag from '../../interface/Tag';
-
-
-// const originData: TagType[] = [];
-// for (let i = 0; i < 20; i++) {
-//   originData.push({
-//     id: i.toString(),
-//     name: `Tag ${i}`,
-//     discount: i,
-//   });
-// }
+import TagCreateModal from '../../components/Modal/TagCreateModal';
 
 const Tag = () => {
   const [form] = Form.useForm();
   const [data, setData] = useState<ITag[]>();
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchAllTag().then(data => setData(data.data));
+    fetchAllTag().then(data => setData(data.data)).finally(() => setIsLoading(false));
   }, [])
 
   return (
-    <Space direction='vertical' style={{ width: '100%' }}>
-      <Button type="primary">Thêm mới</Button>
-      <Form form={form} component={false}>
-        <TagTable form={form} data={data} setData={setData} />
-      </Form>
-    </Space>
+    <Spin spinning={isLoading}>
+      <Space direction='vertical' style={{ width: '100%' }}>
+        <Button type="primary" onClick={() => setIsModalOpen(true)}>Thêm mới</Button>
+        <Form form={form} component={false}>
+          <TagTable form={form} data={data} setData={setData} />
+        </Form>
+      </Space>
+      <TagCreateModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+    </Spin>
   )
 }
 

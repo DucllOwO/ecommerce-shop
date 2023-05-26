@@ -1,14 +1,13 @@
 import { Button, Result } from 'antd'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const ErrorResult = () => {
-  const nav = useNavigate();
   return (
     <Result
+      status="500"
       title="Lỗi!!"
       subTitle="Đã xảy ra lỗi, xin hãy thử lại."
-      extra={<Button type="primary" onClick={() => nav('/')}>Back Home</Button>}
     />
   )
 }

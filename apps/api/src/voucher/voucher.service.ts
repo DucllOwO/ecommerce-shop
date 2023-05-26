@@ -3,7 +3,7 @@ import { Prisma, Voucher } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class VoucherService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async voucher(
     voucherWhereUniqueInput: Prisma.VoucherWhereUniqueInput,
@@ -29,15 +29,15 @@ export class VoucherService {
   }
   createVoucher(data: Prisma.VoucherCreateInput): Promise<Voucher> {
     return this.prisma.voucher.create({
-      data
+      data,
     });
   }
 
   updateVoucher(params: {
-    where: Prisma.VoucherWhereUniqueInput,
-    data: Prisma.VoucherCreateInput
+    where: Prisma.VoucherWhereUniqueInput;
+    data: Prisma.VoucherUpdateInput;
   }): Promise<Voucher> {
-    const { where, data } = params
+    const { where, data } = params;
     return this.prisma.voucher.update({
       where,
       data,

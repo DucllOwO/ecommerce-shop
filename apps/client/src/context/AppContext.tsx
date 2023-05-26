@@ -1,14 +1,21 @@
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import LocalStorage from "../helper/localStorage";
+import IUserLocalStorage from "../interface/UserLocalStorage";
 
-export const AppContext = createContext({});
+export const AppContext = createContext<AppContextProps | null>(null);
 
 interface AppProviderProps {
   children: ReactNode;
+
+}
+
+interface AppContextProps {
+  user: IUserLocalStorage | null;
+  setUser: React.Dispatch<React.SetStateAction<IUserLocalStorage | null>>;
 }
 
 export const AppProvider = ({ children }: AppProviderProps) => {
-  const [user, setUser] = useState(LocalStorage.getItem("user"));
+  const [user, setUser] = useState<IUserLocalStorage | null>(LocalStorage.getItem("user"));
 
   return (
     <AppContext.Provider

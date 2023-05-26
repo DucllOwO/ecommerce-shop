@@ -5,8 +5,10 @@ import productData from '../../assets/fake-data/products'
 import Helmet from './components/Helmet';
 import ProductCard from './components/ProductCard';
 import ProductView from './components/ProductView';
-import { IProduct } from '../../interface/Product';
+import IProduct from '../../interface/Product';
 import { fetchProduct } from '../../api/CustomerAPI';
+import { ScrollMenu } from 'react-horizontal-scrolling-menu';
+import { LeftArrow, RightArrow } from './components/Arrow';
 
 const Product = () => {
 
@@ -15,7 +17,7 @@ const Product = () => {
   const [selectedProduct, setSelectedProduct] = useState<number>(Number(window.location.pathname.split('/')[2]))
 
   const relatedProducts = productData.getProducts(8)
-  
+
   React.useEffect(() => {
     fetchProduct(selectedProduct).then((data) => {
       setProduct(data.data);
@@ -24,45 +26,39 @@ const Product = () => {
   }, [selectedProduct])
 
   return (
-    <Helmet title={product? product.name : ""}>
+    <Helmet title={product ? product.name : ""}>
       <Space>
-
-        <ProductView id={selectedProduct}/>
+        <ProductView id={selectedProduct} />
       </Space>
-      <Space direction='vertical'>
+      <Space direction='vertical' style={{ width: '100%', margin: '0 20px' }}>
         <Title level={2} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>GỢI Ý CHO BẠN</Title>
-        <Space>
-
-          {
-            relatedProducts.map((item, index) => (
-              <ProductCard
-                key={index}
-                img01={item.image01}
-                img02={item.image02}
-                name={item.title}
-                price={Number(item.price)}
-                slug={item.slug}
-              />
-            ))
-          }
-        </Space>
+        <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow} Footer={null}>
+          {productData.getProducts(8).map((item, index) => (
+            <ProductCard
+              id={index}
+              key={index}
+              img01={item.image01}
+              img02={item.image02}
+              name={item.title}
+              price={Number(item.price)}
+            />
+          ))}
+        </ScrollMenu>
       </Space>
-      <Space direction='vertical'>
+      <Space direction='vertical' style={{ width: '100%', margin: '0 20px' }}>
         <Title level={2} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>SẢN PHẨM LIÊN QUAN</Title>
-        <Space>
-          {
-            relatedProducts.map((item, index) => (
-              <ProductCard
-                key={index}
-                img01={item.image01}
-                img02={item.image02}
-                name={item.title}
-                price={Number(item.price)}
-                slug={item.slug}
-              />
-            ))
-          }
-        </Space>
+        <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow} Footer={null}>
+          {productData.getProducts(8).map((item, index) => (
+            <ProductCard
+              id={index}
+              key={index}
+              img01={item.image01}
+              img02={item.image02}
+              name={item.title}
+              price={Number(item.price)}
+            />
+          ))}
+        </ScrollMenu>
       </Space>
     </Helmet>
   )

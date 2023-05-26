@@ -6,13 +6,7 @@ import { isClickOnATableCell } from '../../helper/checkEventClick';
 import { TableProps } from '../../interface/TableProps';
 import EditableCell from './EditableCell';
 import { INPUT, SELECT } from '../../constant/constant';
-import { ICollection } from '../../interface/Collection';
-
-// export interface CollectionType {
-//   id: string;
-//   name: string;
-//   discount: number;
-// }
+import ICollection from '../../interface/Collection';
 
 interface CollectionTableProps extends TableProps {
   data?: ICollection[],
@@ -38,6 +32,12 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
       title: 'Tên',
       key: 'name',
       dataIndex: 'name',
+      editable: true,
+    },
+    {
+      title: 'Giảm giá',
+      key: 'discount',
+      dataIndex: 'discountID',
       editable: true,
     },
     {
@@ -131,11 +131,10 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
         columns={mergedColumns}
         dataSource={data}
         rowClassName="editable-row"
-        onRow={(record : ICollection, rowIndex) => {
+        onRow={(record: ICollection, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
-              if (isClickOnATableCell(event))
-              {
+              if (isClickOnATableCell(event)) {
                 setIsModalOpen(prev => !prev)
                 setSelectedItem(record)
               }

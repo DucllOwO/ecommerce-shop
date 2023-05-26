@@ -131,6 +131,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
     <>
       <TagModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedTag={selectedTag} />
       <Table
+        rowKey={record => record.id}
         components={{
           body: {
             cell: EditableCell,
@@ -139,7 +140,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
         columns={mergedColumns}
         dataSource={data}
         rowClassName="editable-row"
-        onRow={(record : ITag, rowIndex) => {
+        onRow={(record: ITag, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
               if (isClickOnATableCell(event))

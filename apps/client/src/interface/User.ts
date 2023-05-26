@@ -7,7 +7,7 @@ import IReview from "./Review";
 
 export default interface IUser {
   id: number;
-  firstname: string;
+  firstname?: string;
   lastname?: string;
   phone_number?: string;
   address?: string;

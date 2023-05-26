@@ -1,7 +1,8 @@
 import { DatePicker, Form, Input, InputNumber, Select } from "antd";
+import { Rule } from "antd/es/form";
 import TextArea from "antd/es/input/TextArea";
 import { locale } from "dayjs";
-import { DATE, INPUT_NUMBER, SELECT, TEXTAREA } from "../../constant/constant";
+import { DATE, DATE_FORMAT, INPUT_NUMBER, SELECT, TEXTAREA } from "../../constant/constant";
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
@@ -11,13 +12,13 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   record: any;
   index: number;
   children: React.ReactNode;
-  rules: object;
+  rules: Rule[];
 }
 
 const getComponentByType = (type: string) => {
   switch (type) {
     case DATE:
-      return <Input type="date" />;
+      return <DatePicker format={DATE_FORMAT} />;
     case INPUT_NUMBER:
       return <InputNumber />;
     case TEXTAREA:
@@ -42,19 +43,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
   ...restProps
 }) => {
   const inputNode = getComponentByType(inputType)
-
+  console.log(rules)
   return (
     <td {...restProps}>
       {editing ? (
         <Form.Item
           name={dataIndex}
           style={{ margin: 0 }}
-          rules={[
-            {
-              required: true,
-              message: `Hãy nhập ${title}!`,
-            },
-          ]}
+          rules={rules ? rules : []}
         >
           {inputNode}
         </Form.Item>
