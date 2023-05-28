@@ -46,16 +46,27 @@ Trang web bán quần áo cung cấp một giao diện dễ sử dụng cho khá
 Để đơn giản cho việc phát triển hệ thống, nhóm quyết định sử dụng thư viện [Content Based Recommender](https://github.com/stanleyfok/content-based-recommender) giúp hỗ trợ trong việc sử dụng triển khai hệ thống. Nhóm chỉ cần chuẩn bị dữ liệu để thư viện thực hiện việc train.
 
 #### Lý do chọn thư viện
-
-Nhóm quyết định chọn thư viện này vì đặc điểm trang web sẽ có lượng dữ liệu ít
+- Có 2 thuật toán phổ biến được sử dụng là collaborative filtering and content-based trong việc xây dựng hệ thống đề xuất. 
+- **Collaborative filtering** sẽ phù hợp hơn khi có lượng dữ liệu lớn cùng với dữ liệu tương tác giữa người dùng và sản phẩm hoặc các đánh giá. Nó phụ thuộc vào hành vi và sở thích của những người dùng giống nhau để đề xuất và nó không cần thông tin chi tiết sản phẩm.
+- **Content-based** sẽ phù hợp hơn trong trường hợp hơn khi có lượng dữ liệu ít về các sản phẩm sẽ được đề xuất. Nó phụ thuộc vào đặc trưng và tính chất để đề xuất và nó không cần có sự tương tác giữa người dùng với sản phẩm.
+- Nhóm quyết định chọn thư viện sử dụng thuật toán **Content-based** vì đặc điểm trang web sẽ có lượng dữ liệu ít cũng như sẽ ít có tương tác giữa người dùng với sản phẩm.
 
 #### Một số thông tin về thư viện
 Đây là một content-based recommender đơn giản được viết bằng javascript để minh họa khái niệm đề xuất dựa trên nội dung, đặc biệt hữu ích cho các website về thương mại điện tử, tin tức,...
 
-#### Việc training bao gồm 3 bước chính:
+#### Thư viện sẽ thực hiện training bao gồm 3 bước chính:
 
-- 
+1. Content Preprocessing:
+- Loại bỏ thẻ HTML: loại bỏ tất cả các thẻ HTML có trong dữ liệu. Vì các thẻ HTML thường được sử dụng để định dạng và cấu trúc trang web nên chúng không phù hợp để tìm hay tính toán sự giống nhau của các tài liệu.
+- Loại bỏ những từ không quan trọng như là các từ nối điều này sẽ giúp thuật toán tập trung vào những từ quan trọng.
+2. Document Vectors Formation using TF-IDF:
+- TF-IDF (Term Frequency-Inverse Document Frequency): là một thuật toán tiện dụng sử dụng tần suất xuất hiện của các từ để xác định mức độ liên quan của các từ đó đối với một tài liệu nhất định. 
+- Nó tính đến cả tần suất của thuật ngữ trong tài liệu hiện tại (TF) và độ hiếm của nó trên tất cả các tài liệu (IDF). TF-IDF gán trọng số cao hơn cho các thuật ngữ xuất hiện thường xuyên hơn trong tài liệu hiện tại nhưng ít phổ biến hơn trong các tài liệu khác, do đó nắm bắt được tầm quan trọng tương đối của chúng.
+3. Cosine Similarity Calculation:
+- Cosine Similarity: là một số liệu được sử dụng để đo lường sự giống nhau giữa hai tài liệu được biểu diễn dưới dạng vectơ. Nó tính toán cosin của góc giữa các vectơ, biểu thị sự giống nhau của chúng. Điểm tương tự cosine cao hơn cho thấy sự tương đồng lớn hơn giữa các tài liệu.
+- Similarity Scores: được tính bởi tất cả các cặp vectơ tài liệu. Những điểm số này thể hiện sự giống nhau giữa từng cặp tài liệu và giúp xác định các tài liệu giống nhau nhất. Điểm tương đồng cao hơn biểu thị mức độ tương đồng mạnh hơn, trong khi điểm thấp hơn biểu thị sự khác biệt.
 
+##### Các bước này giúp xử lý trước nội dung, biểu thị các tài liệu dưới dạng vectơ số và tính toán độ tương tự của chúng, cho phép hệ thống Đề xuất dựa trên nội dung cung cấp các đề xuất có liên quan dựa trên lịch sử mua hàng của người dùng.
 ## Cài đặt và sử dụng
 
 Dự án đang trong quá trình phát triển.
