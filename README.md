@@ -45,6 +45,8 @@ Trang web bán quần áo cung cấp một giao diện dễ sử dụng cho khá
 
 Để đơn giản cho việc phát triển hệ thống, nhóm quyết định sử dụng thư viện [Content Based Recommender](https://github.com/stanleyfok/content-based-recommender) giúp hỗ trợ trong việc sử dụng triển khai hệ thống. Nhóm chỉ cần chuẩn bị dữ liệu để thư viện thực hiện việc train.
 
+Nhóm sẽ thực hiện gợi ý sản phẩm dựa trên ***các lịch sử mua hàng gần nhất của khách hàng***
+
 #### Lý do chọn thư viện
 - Có 2 thuật toán phổ biến được sử dụng là collaborative filtering and content-based trong việc xây dựng hệ thống đề xuất. 
 - **Collaborative filtering** sẽ phù hợp hơn khi có lượng dữ liệu lớn cùng với dữ liệu tương tác giữa người dùng và sản phẩm hoặc các đánh giá. Nó phụ thuộc vào hành vi và sở thích của những người dùng giống nhau để đề xuất và nó không cần thông tin chi tiết sản phẩm.
@@ -66,7 +68,27 @@ Trang web bán quần áo cung cấp một giao diện dễ sử dụng cho khá
 - Cosine Similarity: là một số liệu được sử dụng để đo lường sự giống nhau giữa hai tài liệu được biểu diễn dưới dạng vectơ. Nó tính toán cosin của góc giữa các vectơ, biểu thị sự giống nhau của chúng. Điểm tương tự cosine cao hơn cho thấy sự tương đồng lớn hơn giữa các tài liệu.
 - Similarity Scores: được tính bởi tất cả các cặp vectơ tài liệu. Những điểm số này thể hiện sự giống nhau giữa từng cặp tài liệu và giúp xác định các tài liệu giống nhau nhất. Điểm tương đồng cao hơn biểu thị mức độ tương đồng mạnh hơn, trong khi điểm thấp hơn biểu thị sự khác biệt.
 
-##### Các bước này giúp xử lý trước nội dung, biểu thị các tài liệu dưới dạng vectơ số và tính toán độ tương tự của chúng, cho phép hệ thống Đề xuất dựa trên nội dung cung cấp các đề xuất có liên quan dựa trên lịch sử mua hàng của người dùng.
+Các bước này giúp xử lý trước nội dung, biểu thị các tài liệu dưới dạng vectơ số và tính toán độ tương tự của chúng, cho phép hệ thống Đề xuất dựa trên nội dung cung cấp các đề xuất có liên quan dựa trên lịch sử mua hàng của người dùng.
+
+## Thực tế triển khai
+
+#### 1. Lựa chọn dữ liệu
+Do đây là thuật toán dựa trên đặc trưng của sản phẩm nên bộ dữ liệu có cấu trúc như sau:
+```typescript
+    productData = { 
+        id: productID, 
+        content: { name, description, tags, collection }
+    }
+```
+#### 2. Các bước chạy để lấy sản phẩm được đề xuất
+<div align="center">
+
+![recommendation-system-flow-chart](https://drive.google.com/uc?export=view&id=1NC_jq4R3XAqyPDHP5VeBKLQ9XS0w27JA)
+
+</div>
+
+
+
 ## Cài đặt và sử dụng
 
 Dự án đang trong quá trình phát triển.
