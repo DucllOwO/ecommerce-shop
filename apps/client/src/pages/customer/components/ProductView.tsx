@@ -36,7 +36,10 @@ const ProductView = (props: ProductViewProps) => {
         fetchProduct(props.id).then((data) => {
             console.log(data.data)
             setProduct(data.data);
-            setPreviewImg(data.data?.image);
+            setPreviewImg(data.data?.image.map((item: string) => {return {
+                original: item,
+                thumbnail: item,
+            }}));
             setColor(Array.from(new Set(data.data.Product_item?.map((data: any) => data.color))))
             setSize(Array.from(new Set(data.data.Product_item?.map((data: any) => data.size))))
         })
@@ -46,7 +49,7 @@ const ProductView = (props: ProductViewProps) => {
     return (
         <Row>
             <Col span={13} style={{ marginTop: 20 }}>
-                <ImageGallery items={images} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} />
+                <ImageGallery items={previewImg} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} />
             </Col>
             <Col offset={1} span={10}>
                 <div className="product__info">
@@ -107,7 +110,7 @@ const ProductView = (props: ProductViewProps) => {
                             setDescriptionExpand(prev => !prev)
                         }}>
                             {
-                                descriptionExpand ? 'Thu gọn' : 'Xem thêm'
+                                !descriptionExpand ? 'Thu gọn' : 'Xem thêm'
                             }
                         </Button>
                     </div>

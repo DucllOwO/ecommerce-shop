@@ -24,11 +24,12 @@ export class ProductService {
     where?: Prisma.ProductWhereInput;
     orderBy?: Prisma.ProductOrderByWithRelationInput;
   }): Promise<Product[]> {
-    const { skip, take, orderBy } = params;
+    const { skip, take, orderBy, where } = params;
     return this.prisma.product.findMany({
       skip,
       take,
       orderBy,
+      where,
       include: {
         Product_item: true,
         HaveTag: {
@@ -55,6 +56,7 @@ export class ProductService {
   }) : Promise<Product>
   {
     const { where, data } = params;
+    console.log(data);
     return this.prisma.product.update({
       data,
       where,

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Req, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Body, Req, UseInterceptors, UploadedFile, Delete, Param } from '@nestjs/common';
 import { ImageService } from './image.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -12,5 +12,10 @@ export class ImageController {
   uploadImage(@UploadedFile() newImage: Express.Multer.File) {
     console.log(newImage)
     return this.imageService.uploadImage(newImage);
+  }
+
+  @Delete('/:URL')
+  deleteImage(@Param('URL') URL: string) {
+    return this.imageService.deleteImage(URL);
   }
 }

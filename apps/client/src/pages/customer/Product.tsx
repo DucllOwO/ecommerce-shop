@@ -6,7 +6,7 @@ import Helmet from './components/Helmet';
 import ProductCard from './components/ProductCard';
 import ProductView from './components/ProductView';
 import IProduct from '../../interface/Product';
-import { fetchProduct } from '../../api/CustomerAPI';
+import { fetchProductDetail } from '../../api/CustomerAPI';
 import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import { LeftArrow, RightArrow } from './components/Arrow';
 
@@ -14,13 +14,18 @@ const Product = () => {
 
   const [product, setProduct] = useState<IProduct>();
 
-  const [selectedProduct, setSelectedProduct] = useState<number>(Number(window.location.pathname.split('/')[2]))
+  const [selectedProduct, setSelectedProduct] = useState<string>(window.location.pathname.split('/')[2])
 
   const relatedProducts = productData.getProducts(8)
 
   React.useEffect(() => {
-    fetchProduct(selectedProduct).then((data) => {
-      setProduct(data.data);
+    fetchProductDetail({
+      slug: {
+        equals: selectedProduct
+      }
+    }).then((data) => {
+      console.log(data.data[0])
+      setProduct(data.data[0]);
     })
     window.scrollTo(0, 0)
   }, [selectedProduct])
@@ -28,7 +33,7 @@ const Product = () => {
   return (
     <Helmet title={product ? product.name : ""}>
       <Space>
-        <ProductView id={selectedProduct} />
+        <ProductView id={product ? product.id : 1} />
       </Space>
       <Space direction='vertical' style={{ width: '100%', margin: '0 20px' }}>
         <Title level={2} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>GỢI Ý CHO BẠN</Title>

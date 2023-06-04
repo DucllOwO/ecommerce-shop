@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Logger } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Logger, Req, Query } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Prisma } from '@prisma/client';
 
@@ -13,21 +13,24 @@ export class ProductController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Query() query : any) {
     return this.productService.products({
       orderBy:{
         id: 'asc'
-      }
+      },
+      where: query
     });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    console.log("first")
     return this.productService.product({id : Number(id)});
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateProductDto: Prisma.ProductCreateInput) {
+  update(@Param('id') id: string, @Body() updateProductDto: Prisma.ProductUpdateInput) {
+    console.log("called")
     return this.productService.updateProduct({
       where: {id: Number(id)},
       data: updateProductDto
