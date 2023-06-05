@@ -24,7 +24,6 @@ export class ProductController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    console.log("first")
     return this.productService.product({id : Number(id)});
   }
 

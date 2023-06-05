@@ -1,6 +1,6 @@
 import { Space } from 'antd';
 import Title from 'antd/es/typography/Title';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import productData from '../../assets/fake-data/products'
 import Helmet from './components/Helmet';
 import ProductCard from './components/ProductCard';
@@ -18,7 +18,7 @@ const Product = () => {
 
   const relatedProducts = productData.getProducts(8)
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchProductDetail({
       slug: {
         equals: selectedProduct

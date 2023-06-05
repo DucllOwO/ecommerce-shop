@@ -3,6 +3,11 @@ import { useState, useEffect } from 'react'
 import { fetchProduct } from '../../../api/CustomerAPI'
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss'
+import ReactImageGallery from 'react-image-gallery';
+import { ReactImageGalleryItem } from 'react-image-gallery';
+import IProduct from '../../../interface/Product';
+import { useNavigate } from 'react-router-dom';
+import LocalStorage from '../../../helper/localStorage';
 
 const images = [
     {
@@ -20,25 +25,29 @@ const images = [
 ];
 
 const ProductView = (props: ProductViewProps) => {
-    const [product, setProduct] = useState<any>();
+    const [product, setProduct] = useState<IProduct>();
 
-    const [previewImg, setPreviewImg] = useState<string[]>();
+    const [previewImg, setPreviewImg] = useState<ReactImageGalleryItem[]>();
 
-    const [descriptionExpand, setDescriptionExpand] = useState(true)
+    const [descriptionExpand, setDescriptionExpand] = useState(true);
 
-    const [color, setColor] = useState<string[]>()
+    const [color, setColor] = useState<string[]>();
 
-    const [size, setSize] = useState<string[]>()
+    const [size, setSize] = useState<string[]>();
 
-    const [quantity, setQuantity] = useState(1)
+    const [quantity, setQuantity] = useState(1);
+
+    const [selectedSize, setSelectedSize] = useState();
+
+    const nav = useNavigate();
 
     useEffect(() => {
         fetchProduct(props.id).then((data) => {
             console.log(data.data)
             setProduct(data.data);
             setPreviewImg(data.data?.image.map((item: string) => {return {
-                original: item,
-                thumbnail: item,
+                original: item ? item : "",
+                thumbnail: item ? item : "",
             }}));
             setColor(Array.from(new Set(data.data.Product_item?.map((data: any) => data.color))))
             setSize(Array.from(new Set(data.data.Product_item?.map((data: any) => data.size))))
@@ -49,14 +58,14 @@ const ProductView = (props: ProductViewProps) => {
     return (
         <Row>
             <Col span={13} style={{ marginTop: 20 }}>
-                <ImageGallery items={previewImg} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} />
+                <ImageGallery items={previewImg ? previewImg : images} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} />
             </Col>
             <Col offset={1} span={10}>
                 <div className="product__info">
                     <h1 className="product__info__title">{product?.name}</h1>
                     <div className="product__info__item">
                         <span className="product__info__item__price">
-                            {1000000}
+                            {product?.price}
                         </span>
                     </div>
                     <div className="product__info__item">
@@ -81,7 +90,7 @@ const ProductView = (props: ProductViewProps) => {
                             <Radio.Group buttonStyle="solid">
                                 {
                                     size?.map((item, index) => (
-                                        <Radio.Button value="item">{item}</Radio.Button>
+                                        <Radio.Button onClick={(value) => {setSelectedSize(value)}} value="item">{item}</Radio.Button>
                                     ))
                                 }
                             </Radio.Group>
@@ -92,12 +101,23 @@ const ProductView = (props: ProductViewProps) => {
                             Số lượng
                         </div>
                         <div>
-                            <InputNumber defaultValue={1} />
+                            <InputNumber defaultValue={1} onChange={(value) => setQuantity(value)}/>
                         </div>
                     </div>
                     <div className="product__info__item">
-                        <Button>Thêm vào giỏ</Button>
-                        <Button>Mua ngay</Button>
+                        <Button onClick={() => {
+                            if(LocalStorage.getItem('cart') && !LocalStorage.getItem('cart').includes(product))
+                                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,{...product, quantity: quantity}]);
+                            else if(!LocalStorage.getItem('cart'))
+                                LocalStorage.setItem('cart', [{...product, quantity: quantity}])
+                        }}>Thêm vào giỏ</Button>
+                        <Button onClick={() => {
+                            if(LocalStorage.getItem('cart') && !Array(LocalStorage.getItem('cart')).includes(product))
+                                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,{...product, quantity: quantity}]);
+                            else if(!LocalStorage.getItem('cart'))
+                                LocalStorage.setItem('cart', [{...product, quantity: quantity}])
+                            nav('/cart');
+                        }}>Mua ngay</Button>
                     </div>
                     <div className={`product-description ${descriptionExpand ? 'expand' : ''}`}>
                         <div className="product-description__title">

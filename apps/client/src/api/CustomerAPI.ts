@@ -11,3 +11,7 @@ export function fetchProductDetail(where: any){
 export function fetchProduct(id: number){
   return http.get(`/product/${id}`)
 }
+
+export function createOrder(order: any){
+  return http.post('/order', order)
+}
