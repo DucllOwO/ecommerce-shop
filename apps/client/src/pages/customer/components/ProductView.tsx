@@ -3,11 +3,18 @@ import { useState, useEffect } from 'react'
 import { fetchProduct } from '../../../api/CustomerAPI'
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss'
+import { ReactImageGalleryItem } from '../../../interface/ReactImageGalleryItem';
+
+
 
 const images = [
     {
         original: 'https://picsum.photos/id/1018/1000/600/',
+        originalHeight: 800,
+        originalWidth: 1000,
         thumbnail: 'https://picsum.photos/id/1018/250/150/',
+        thumbnailHeight: 150,
+        thumbnailWidth: 250,
     },
     {
         original: 'https://picsum.photos/id/1015/1000/600/',
@@ -22,7 +29,7 @@ const images = [
 const ProductView = (props: ProductViewProps) => {
     const [product, setProduct] = useState<any>();
 
-    const [previewImg, setPreviewImg] = useState<string[]>();
+    const [previewImg, setPreviewImg] = useState<ReactImageGalleryItem[]>();
 
     const [descriptionExpand, setDescriptionExpand] = useState(true)
 
@@ -36,17 +43,16 @@ const ProductView = (props: ProductViewProps) => {
         fetchProduct(props.id).then((data) => {
             console.log(data.data)
             setProduct(data.data);
-            setPreviewImg(data.data?.image);
+            setPreviewImg(convertImageToFormatGallaryItem(data.data?.image));
             setColor(Array.from(new Set(data.data.Product_item?.map((data: any) => data.color))))
             setSize(Array.from(new Set(data.data.Product_item?.map((data: any) => data.size))))
         })
     }, [props])
 
-
     return (
         <Row>
             <Col span={13} style={{ marginTop: 20 }}>
-                <ImageGallery items={images} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} />
+                <ImageGallery items={previewImg ? previewImg : []} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} disableThumbnailScroll />
             </Col>
             <Col offset={1} span={10}>
                 <div className="product__info">
@@ -131,6 +137,20 @@ const ProductView = (props: ProductViewProps) => {
         </Row>
     )
 }
+
+function convertImageToFormatGallaryItem(images: string[]) {
+    return images.map((image) => {
+        return {
+            original: image,
+            originalHeight: 800,
+            originalWidth: 1000,
+            thumbnail: image,
+            thumbnailHeight: 150,
+            thumbnailWidth: 250,
+        }
+    })
+}
+
 type ProductViewProps = {
     id: number
 }
