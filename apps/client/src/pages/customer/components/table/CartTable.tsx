@@ -1,7 +1,8 @@
 import { Button, Image, InputNumber, Space, Table, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table';
-import React from 'react'
+import React, { useState } from 'react'
 import productData from '../../../../assets/fake-data/products';
+import LocalStorage from '../../../../helper/localStorage';
 
 export type CartItemType = {
   image01: string,
@@ -19,7 +20,7 @@ const columns: ColumnsType<any> = [
     key: '1',
     width: '15%',
     render: (text, record) => {
-      return <Image src={record.image01} />
+      return <Image src={record.image[0]} />
     },
   },
   {
@@ -28,7 +29,7 @@ const columns: ColumnsType<any> = [
     width: '30%',
     render: (text, record) => {
       return <Space style={{ display: 'flex', flexDirection: 'column', alignContent: 'space-between' }}>
-        <p>{record.title}</p>
+        <p>{record.name}</p>
         <p>{record.size}</p>
       </Space>
     },
@@ -38,7 +39,7 @@ const columns: ColumnsType<any> = [
     key: '3',
     width: '15%',
     render: (text, record) => {
-      return <p>{record.quantity}</p>
+      return <p>{record.price}</p>
     },
   },
   {
@@ -46,8 +47,8 @@ const columns: ColumnsType<any> = [
     key: '4',
     width: '15%',
     dataIndex: 'tags',
-    render: (_) => {
-      return <InputNumber />
+    render: (_, record) => {
+      return <InputNumber defaultValue={record.quantity}/>
     }
   },
   {
@@ -55,8 +56,8 @@ const columns: ColumnsType<any> = [
     key: '5',
     width: '25%',
     dataIndex: 'tags',
-    render: (_) => {
-      return <p>10000000</p>
+    render: (text, record) => {
+      return <p>{record.price*record.quantity}</p>
     }
   },
   {
@@ -70,7 +71,7 @@ const columns: ColumnsType<any> = [
 
 const CartTable = () => {
   return (
-    <Table columns={columns} dataSource={productData.getProducts(4)} scroll={{ x: '100%' }} ></Table>
+    <Table columns={columns} dataSource={LocalStorage.getItem('cart')} scroll={{ x: '100%' }} ></Table>
   )
 }
 

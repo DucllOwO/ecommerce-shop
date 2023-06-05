@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from 'react'
 import { ModalProps } from '../../interface/ModalProps'
 import ProductInventoryTable from '../Table/Product/ProductInventoryTable'
 import ITag from '../../interface/Tag'
-import { fetchAllCollection, fetchAllTag, postProduct, uploadImage } from '../../api/admin/ProductAPI'
+import { fetchAllCollection, fetchAllTag, postProduct, updateProduct, uploadImage } from '../../api/admin/ProductAPI'
 import ICollection from '../../interface/Collection'
 import { fetchAllDiscounts } from '../../api/admin/DiscountAPI'
 import IDiscount from '../../interface/Discount'
@@ -44,14 +44,54 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
       }))});
   },[])
 
-  const handleChange = (value: string[]) => {
-    console.log(`selected ${value}`);
-  };
+  // const handleChange = (value: string[]) => {
+  //   console.log(`selected ${value}`);
+  // };
 
-  const handleOKCreateModal = () => {
+  const handleOKModal = () => {
     form.validateFields().then((data) => {
+      const slugString = slugify(data.name);
       if(action == ACTION_CREATE){
-        const slugString = slugify(data.name);
+        const newProduct = {
+        name: data.name,
+        slug: slugString,
+        price: data.price,
+        description: data.note,
+        discount: data.discount ? {
+          connect: {
+            id:  data.discount
+          }
+        } : undefined,
+        image: createImageName(imageList, slugString),
+        HaveTag:{
+          createMany:{
+            data: data.tags.map((item: number) => {
+              return {tagID: item}
+            }),
+            skipDuplicates: true
+          }
+        },
+        collection: data.collection ? {
+          connect: {
+            id:  data.collection
+          }
+        } : undefined,
+        Product_item: {
+          createMany: {
+            data: getProductItem(data.inventory),
+            skipDuplicates: true
+          }}
+      }
+        postProduct(newProduct).then(() => {
+          uploadImageFunc(imageList, slugString);
+        }).catch((error) => {
+          console.log(error);
+          throw new Error;
+        })
+        setIsModalOpen(false)
+      }
+      else if(selectedItem){
+        console.log(data)
         const newProduct = {
           name: data.name,
           slug: slugString,
@@ -66,14 +106,14 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
           HaveTag:{
             createMany:{
               data: data.tags.map((item: number) => {
-                return {tagID: item}
+                return {tagID: item?.value}
               }),
               skipDuplicates: true
             }
           },
           collection: data.collection ? {
             connect: {
-              id:  data.collection
+              id:  data.collection.value
             }
           } : undefined,
           Product_item: {
@@ -81,21 +121,15 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
               data: getProductItem(data.inventory),
               skipDuplicates: true
             }}
-        }
-        // console.log(newProduct);
-        postProduct(newProduct).then(() => {
-          uploadImageFunc(imageList, slugString);
-        }).catch((error) => {
-          console.log(error);
-          throw new Error;
-        })
-        setIsModalOpen(false)
-      }
-      else{
-
+          };
+        console.log(newProduct);
+        updateProduct(newProduct, selectedItem.id).then(() => {
+            updateImageFunc(imageList, slugString);
+        }).catch((error) => console.log(error))
       }
     });
   }
+  
 
   return (
     <Modal
@@ -121,7 +155,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
 
   function setModalFooter(action: string) {
     return action == ACTION_CREATE || action == ACTION_EDIT ? [
-      <Button key="submit" type="primary" onClick={handleOKCreateModal}>
+      <Button key="submit" type="primary" onClick={handleOKModal}>
         Lưu
       </Button>,
       <Button key="back" onClick={() => {
@@ -134,7 +168,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
 }
 
 function createImageName(imageList: any, slugString: string){
-  return imageList.map((item: any, index: number) => `${BUCKET_URL}${slugString}-${index+1}.${item.originFileObj.type.split('/')[1]}`)
+  return imageList.map((item: any, index: number) => item.url ? item.url : `${BUCKET_URL}${slugString}-${index+1}.${item.originFileObj.type.split('/')[1]}`)
 }
 
 function uploadImageFunc(imageList: UploadFile[], slugString: string){
@@ -149,6 +183,22 @@ function uploadImageFunc(imageList: UploadFile[], slugString: string){
       console.log(error);
       throw new Error();
     })
+  })
+}
+function updateImageFunc(imageList: UploadFile[], slugString: string){
+  console.log(imageList);
+  imageList.forEach((item: any, index: number) => {
+
+    console.log(item);
+    if(item.originFileObj)
+    {
+      const formData = new FormData();
+      formData.append('file', item.originFileObj, `${slugString}-${index+1}.${item.originFileObj.type.split('/')[1]}`);
+      uploadImage(formData).catch((error) => {
+        console.log(error);
+        throw new Error();
+      })
+    }
   })
 }
 
@@ -178,7 +228,7 @@ function renderModalContent(action: string, form: FormInstance<any>, tags : ITag
     case ACTION_CREATE:
       return <ProductCreateForm form={form} tagInit={tags} collectionInit={collections} discountInit={discounts} setImageList={setImageList}/>
     case ACTION_EDIT:
-      return <ProductEditForm form={form} tagInit={tags} collectionInit={collections} discountInit={discounts} selectedItem={selectedItem}/>
+      return selectedItem ? <ProductEditForm form={form} tagInit={tags} collectionInit={collections} discountInit={discounts} selectedItem={selectedItem} setImageList={setImageList}/> : null
     case ACTION_READ:
       return <Space direction='vertical' style={{ width: '100%' }}>
       <Descriptions title="Thông tin sản phẩm" bordered>

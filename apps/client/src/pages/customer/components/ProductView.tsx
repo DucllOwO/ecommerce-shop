@@ -4,6 +4,9 @@ import { fetchProduct } from '../../../api/CustomerAPI'
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss'
 import { ReactImageGalleryItem } from '../../../interface/ReactImageGalleryItem';
+import IProduct from '../../../interface/Product';
+import { useNavigate } from 'react-router-dom';
+import LocalStorage from '../../../helper/localStorage';
 
 
 
@@ -27,17 +30,21 @@ const images = [
 ];
 
 const ProductView = (props: ProductViewProps) => {
-    const [product, setProduct] = useState<any>();
+    const [product, setProduct] = useState<IProduct>();
 
     const [previewImg, setPreviewImg] = useState<ReactImageGalleryItem[]>();
 
-    const [descriptionExpand, setDescriptionExpand] = useState(true)
+    const [descriptionExpand, setDescriptionExpand] = useState(true);
 
-    const [color, setColor] = useState<string[]>()
+    const [color, setColor] = useState<string[]>();
 
-    const [size, setSize] = useState<string[]>()
+    const [size, setSize] = useState<string[]>();
 
-    const [quantity, setQuantity] = useState(1)
+    const [quantity, setQuantity] = useState(1);
+
+    const [selectedSize, setSelectedSize] = useState<string>();
+
+    const nav = useNavigate();
 
     useEffect(() => {
         fetchProduct(props.id).then((data) => {
@@ -59,7 +66,7 @@ const ProductView = (props: ProductViewProps) => {
                     <h1 className="product__info__title">{product?.name}</h1>
                     <div className="product__info__item">
                         <span className="product__info__item__price">
-                            {1000000}
+                            {product?.price}
                         </span>
                     </div>
                     <div className="product__info__item">
@@ -84,7 +91,7 @@ const ProductView = (props: ProductViewProps) => {
                             <Radio.Group buttonStyle="solid">
                                 {
                                     size?.map((item, index) => (
-                                        <Radio.Button value="item">{item}</Radio.Button>
+                                        <Radio.Button onClick={(e) => setSelectedSize(item)} value="item">{item}</Radio.Button>
                                     ))
                                 }
                             </Radio.Group>
@@ -95,12 +102,23 @@ const ProductView = (props: ProductViewProps) => {
                             Số lượng
                         </div>
                         <div>
-                            <InputNumber defaultValue={1} />
+                            <InputNumber defaultValue={1} onChange={(value) => value && setQuantity(value)} />
                         </div>
                     </div>
                     <div className="product__info__item">
-                        <Button>Thêm vào giỏ</Button>
-                        <Button>Mua ngay</Button>
+                        <Button onClick={() => {
+                            if (LocalStorage.getItem('cart') && !LocalStorage.getItem('cart').includes(product))
+                                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), { ...product, quantity: quantity }]);
+                            else if (!LocalStorage.getItem('cart'))
+                                LocalStorage.setItem('cart', [{ ...product, quantity: quantity }])
+                        }}>Thêm vào giỏ</Button>
+                        <Button onClick={() => {
+                            if (LocalStorage.getItem('cart') && !Array(LocalStorage.getItem('cart')).includes(product))
+                                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), { ...product, quantity: quantity }]);
+                            else if (!LocalStorage.getItem('cart'))
+                                LocalStorage.setItem('cart', [{ ...product, quantity: quantity }])
+                            nav('/cart');
+                        }}>Mua ngay</Button>
                     </div>
                     <div className={`product-description ${descriptionExpand ? 'expand' : ''}`}>
                         <div className="product-description__title">
@@ -113,7 +131,7 @@ const ProductView = (props: ProductViewProps) => {
                             setDescriptionExpand(prev => !prev)
                         }}>
                             {
-                                descriptionExpand ? 'Thu gọn' : 'Xem thêm'
+                                !descriptionExpand ? 'Thu gọn' : 'Xem thêm'
                             }
                         </Button>
                     </div>

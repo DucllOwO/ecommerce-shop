@@ -1,17 +1,19 @@
-import { Form, Space, Descriptions, Select, Input, InputNumber, Switch, Upload, Divider, UploadFile, UploadProps } from 'antd'
+import { Form, Space, Descriptions, Select, Input, InputNumber, Switch, Upload, Divider, UploadFile, UploadProps, Modal } from 'antd'
 import AntdImgCrop from 'antd-img-crop'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { REQUIRED_RULE } from '../../constant/formRules'
 import { FORM_NO_BOTTOM_MARGIN } from '../../constant/styles'
 import ProductInventoryForm from './ProductInventoryForm'
 import ProductFormProps from '../../interface/ProductFormProps'
 import IProduct from '../../interface/Product'
+import { deleteImage, updateProduct } from '../../api/admin/ProductAPI'
 
 interface ProductEditFormProps extends  ProductFormProps {
-  selectedItem?: IProduct
+  selectedItem: IProduct,
+  setImageList: React.SetStateAction<any>
 }
 
-const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, discountInit, tagInit, selectedItem }) => {
+const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, discountInit, tagInit, selectedItem, setImageList }) => {
     const [fileList, setFileList] = useState<UploadFile[]>([
         {
             uid: '-1',
@@ -21,9 +23,53 @@ const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, disc
         },
         ]);
 
+    const [isOpen, setIsModalOpen] = useState(false);
+
     const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
+      console.log(fileList);
+      setImageList(newFileList);
         setFileList(newFileList);
     };
+    useEffect(() => {
+      selectedItem ? setFileList(selectedItem.image.map((item, index) => { return {
+        uid: `${index}`,
+        name: item.split('/')[8],
+        status: 'done',
+        url: item,
+      }})) : null;
+      console.log(fileList);
+    }, []);
+
+  const handleOnRemove = async (item: UploadFile) => {
+    console.log(item);
+    if(item.url)
+    {
+      let isDone = false;
+      Modal.confirm({
+        title: 'Cảnh báo xoá dữ liệu',
+        content: 'Bạn có chắc muốn xoá ảnh này?',
+        okText: 'Đồng ý',
+        cancelText: 'Quay lại',
+        onOk: async () => {
+          return await deleteImage(item.url?.split("/")[8])
+            .then((data) => {
+              const newProductImageList = selectedItem.image.filter((image) => image !== item.url)
+
+              updateProduct({image: newProductImageList}, selectedItem.id);
+              
+              setFileList((prev: UploadFile[]) => prev.filter((file) => file !== item));
+            })
+            .catch((error) => {
+              console.log(error)
+            });
+        }
+      });
+      return false;
+    }
+    else if(item.originFileObj){
+      return true;
+    }
+  } 
 
   const normFile = (e: any) => {
     console.log('Upload event:', e);
@@ -38,13 +84,12 @@ const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, disc
             <Descriptions title="Chỉnh sửa thông tin sản phẩm" bordered>
               <Descriptions.Item label="ID" span={1}>{selectedItem?.id}</Descriptions.Item>
               <Descriptions.Item label="Bộ siêu tập" span={2}>
-                <Form.Item initialValue={collectionInit} name={'collection'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'collection'} initialValue={selectedItem.collectionID ? {value: selectedItem.collectionID, label: selectedItem?.collection?.name} : null} style={FORM_NO_BOTTOM_MARGIN}>
                   <Select
                     allowClear
                     style={{ width: '100%', color: 'black'}}
                     placeholder="Chọn nhãn cho sản phẩm"
                     options={collectionInit}
-                    defaultValue={selectedItem?.collection?.name}
                   />
                 </Form.Item>
               </Descriptions.Item>
@@ -54,14 +99,14 @@ const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, disc
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label="Nhãn" span={3}>
-                <Form.Item initialValue={tagInit} name={'tags'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'tags'} rules={[REQUIRED_RULE]} initialValue={selectedItem?.HaveTag.map((item) => {return {value: item.tagID, label: item.tag.name}})} style={FORM_NO_BOTTOM_MARGIN}>
                   <Select
                     mode="multiple"
                     allowClear
                     style={{ width: '100%' }}
                     placeholder="Chọn nhãn cho sản phẩm"
                     options={tagInit}
-                    defaultValue={selectedItem?.HaveTag[0].tag.name}
+                    // defaultValue={selectedItem?.HaveTag.map((item) => {return {value: item.tagID, label: item.tag.name}})}
                   />
                 </Form.Item>
               </Descriptions.Item>
@@ -82,7 +127,7 @@ const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, disc
                 {selectedItem?.sold}
               </Descriptions.Item>
               <Descriptions.Item label="Trạng thái" span={3}>
-                <Form.Item name={'collection'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'collection'} initialValue={selectedItem.isActive ? true : false} style={FORM_NO_BOTTOM_MARGIN}>
                   <Switch defaultChecked />
                 </Form.Item>
               </Descriptions.Item>
@@ -95,29 +140,40 @@ const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, disc
                 >
                   <AntdImgCrop rotationSlider>
                     <Upload
-                      action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                      accept='.png, .jpg'
+                      name="avatar"
                       listType="picture-card"
+                      fileList={fileList}
+                      beforeUpload={file => {
+                        return false;
+                      }}
+                      onRemove={e =>{
+                        return handleOnRemove(e);
+                      }}
+                      onChange={onChange}
                     >
-                      {fileList.length < 4 && '+ Thêm ảnh'}
+                      {fileList.length < 10 && '+ Thêm ảnh'}
                     </Upload>
                   </AntdImgCrop>
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label="Ghi chú" span={3}>
-                <Form.Item name={'note'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'note'} rules={[REQUIRED_RULE]} initialValue={selectedItem.description ? selectedItem.description : ""} style={FORM_NO_BOTTOM_MARGIN}>
                   <Input.TextArea style={{ width: '100%', height: 150 }} />
                 </Form.Item>
               </Descriptions.Item>
               <Descriptions.Item label="Giảm giá (%)" span={3}>
-                <Form.Item name={'discount'} initialValue={discountInit} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+                <Form.Item name={'discount'} style={FORM_NO_BOTTOM_MARGIN}>
                   <Select
                     allowClear
                     style={{ width: '100%' }}
                     placeholder="Chọn mã giảm giá áp dụng cho sản phẩm"
+                    options={discountInit}
+                    defaultValue={selectedItem.discountID ? {value: selectedItem.discountID, label: selectedItem.discount?.name} : null}
                   />
                 </Form.Item>
               </Descriptions.Item>
-              <Descriptions.Item label="Giá nhập (đ)" span={3}>
+              {/* <Descriptions.Item label="Giá nhập (đ)" span={3}>
                 <Form.Item name={'import_price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <InputNumber
                     defaultValue={100}
@@ -127,21 +183,21 @@ const ProductEditForm : FC<ProductEditFormProps> = ({ form, collectionInit, disc
                     style={{ width: "100%" }}
                   />
                 </Form.Item>
-              </Descriptions.Item>
-              <Descriptions.Item label="Giá bán (đ)" span={3}>
+              </Descriptions.Item> */}
+              {/* <Descriptions.Item label="Giá bán (đ)" span={3}>
                 <Form.Item name={'actual_price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
                   <InputNumber
-                    defaultValue={100}
+                    defaultValue={selectedItem.price}
                     min={0}
                     max={100}
                     controls={false}
                     style={{ width: "100%" }}
                   />
                 </Form.Item>
-              </Descriptions.Item>
+              </Descriptions.Item> */}
             </Descriptions>
             <Divider />
-            <ProductInventoryForm form={form}/>
+            <ProductInventoryForm form={form} isReadOnly={true}/>
           </Space>
     </Form>
   )

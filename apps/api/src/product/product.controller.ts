@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Logger,
+  Req,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Prisma } from '@prisma/client';
@@ -23,11 +25,12 @@ export class ProductController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Query() query: any) {
     return this.productService.products({
       orderBy: {
         id: 'asc',
       },
+      where: query,
     });
   }
 

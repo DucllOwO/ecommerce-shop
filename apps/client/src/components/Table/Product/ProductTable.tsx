@@ -68,7 +68,7 @@ const ProductTable: FC<ProductTableProps> = ({ data, setSelectedItem, dispatch, 
           setIsModalOpen((prev: boolean) => !prev);
           setSelectedItem(record);
         }} />
-        <Button shape="circle" icon={<DeleteFilled />} />
+        {/* <Button shape="circle" icon={<DeleteFilled />} /> */}
       </Space>,
     },
   ];

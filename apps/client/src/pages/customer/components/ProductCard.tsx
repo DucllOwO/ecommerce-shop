@@ -4,7 +4,7 @@ import { Button } from 'antd'
 const ProductCard = (props: ProductCardProps) => {
     return (
         <div className="product-card">
-            <Link to={`/product/${props.id}`}>
+            <Link to={`/product/${props.slug}`}>
                 <div className="product-card__image">
                     <img src={props.img01} alt="" style={{ borderRadius: 10 }} />
                     <img src={props.img02} alt="" />
@@ -34,6 +34,7 @@ type ProductCardProps = {
     img02: string,
     name: string,
     price: number,
+    slug: string
 }
 
 export default ProductCard
