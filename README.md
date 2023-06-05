@@ -1,6 +1,9 @@
 # Trang web bán quần áo với hệ thống đề xuất dựa trên lịch sử mua hàng
+<div align="center">
 
-![Logo trang web](path/to/logo.png)
+<img src="https://drive.google.com/uc?export=view&id=1zLIzLk9Hl_u-K5j67mEgkC8CdxVBY_s2" alt="Logo-trang-web" width="300" height="200">
+
+</div>
 
 ## Giới thiệu
 
@@ -60,7 +63,7 @@ Nhóm sẽ thực hiện gợi ý sản phẩm dựa trên ***các lịc
 
 1. Content Preprocessing:
 - Loại bỏ thẻ HTML: loại bỏ tất cả các thẻ HTML có trong dữ liệu. Vì các thẻ HTML thường được sử dụng để định dạng và cấu trúc trang web nên chúng không phù hợp để tìm hay tính toán sự giống nhau của các tài liệu.
-- Loại bỏ những từ không quan trọng như là các từ nối điều này sẽ giúp thuật toán tập trung vào những từ quan trọng.
+- Loại bỏ những từ không quan trọng như là các từ nối điều này sẽ giúp thuật toán tập trung vào những từ quan trọng. (các từ nối này sẽ chỉ hoạt động khi ngôn ngữ là tiếng Anh)
 2. Document Vectors Formation using TF-IDF:
 - TF-IDF (Term Frequency-Inverse Document Frequency): là một thuật toán tiện dụng sử dụng tần suất xuất hiện của các từ để xác định mức độ liên quan của các từ đó đối với một tài liệu nhất định. 
 - Nó tính đến cả tần suất của thuật ngữ trong tài liệu hiện tại (TF) và độ hiếm của nó trên tất cả các tài liệu (IDF). TF-IDF gán trọng số cao hơn cho các thuật ngữ xuất hiện thường xuyên hơn trong tài liệu hiện tại nhưng ít phổ biến hơn trong các tài liệu khác, do đó nắm bắt được tầm quan trọng tương đối của chúng.
@@ -75,10 +78,14 @@ Các bước này giúp xử lý trước nội dung, biểu thị các tài li�
 #### 1. Lựa chọn dữ liệu
 Do đây là thuật toán dựa trên đặc trưng của sản phẩm nên bộ dữ liệu có cấu trúc như sau:
 ```typescript
-    productData = { 
+    document = { 
         id: productID, 
-        content: { name, description, tags, collection }
+        content: { name, description, tags(name), collection(name), slug }
     }
+```
+Dữ liệu thuộc tính content sẽ được **gộp thành một chuỗi** và **lược bỏ hết tất cả dấu** để có thể hoạt động tốt hơn vì thư hiện không hỗ trợ ngôn ngữ tiếng Việt do đó sẽ ảnh hưởng đến bước content preprocessing.
+```Ví dụ như:
+    Hôm nay trời đẹp -> Hom nay troi dep
 ```
 #### 2. Các bước chạy để lấy sản phẩm được đề xuất
 <div align="center">
@@ -87,6 +94,16 @@ Do đây là thuật toán dựa trên đặc trưng của sản phẩm n�
 
 </div>
 
+#### 3. Xử lí kết quả
+
+Kết quả trả về sẽ có dạng:
+```
+    {
+        id: id của sản phẩm,
+        score: điểm được dánh giá từ 0 đến 1 tương ứng 1 là giống nhất
+    }
+```
+Khi đó sẽ tiến hành gọi hàm getSimilarDocuments để lấy những sản phẩm có số điểm phù hợp và trả kết quả về client.
 
 
 ## Cài đặt và sử dụng
