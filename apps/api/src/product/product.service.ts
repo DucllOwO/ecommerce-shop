@@ -4,7 +4,7 @@ import { Prisma, Product } from '@prisma/client';
 
 @Injectable()
 export class ProductService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async product(
     productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
@@ -12,8 +12,8 @@ export class ProductService {
     return this.prisma.product.findUnique({
       where: productWhereUniqueInput,
       include: {
-        Product_item: true
-      }
+        Product_item: true,
+      },
     });
   }
 
@@ -34,27 +34,25 @@ export class ProductService {
         Product_item: true,
         HaveTag: {
           include: {
-            tag: true
-          }
-        }, 
+            tag: true,
+          },
+        },
         collection: true,
         discount: true,
-      }
+      },
     });
   }
-  async createProduct(data: Prisma.ProductCreateInput) : Promise<Product>
-  {
+  async createProduct(data: Prisma.ProductCreateInput): Promise<Product> {
     console.log(data);
     return this.prisma.product.create({
-      data: {...data},
-    })
+      data: { ...data },
+    });
   }
 
   async updateProduct(params: {
     where: Prisma.ProductWhereUniqueInput;
     data: Prisma.ProductUpdateInput;
-  }) : Promise<Product>
-  {
+  }): Promise<Product> {
     const { where, data } = params;
     console.log(data);
     return this.prisma.product.update({

@@ -1,9 +1,34 @@
-import { Module } from '@nestjs/common';
+import { ProductService } from './../product/product.service';
+import { forwardRef, Module, OnModuleInit } from '@nestjs/common';
 import { RecommenderService } from './recommender.service';
 import { RecommenderController } from './recommender.controller';
+import { ProductModule } from 'src/product/product.module';
+import * as ContentBasedRecommender from 'content-based-recommender-ts';
+import { Inject } from '@nestjs/common/decorators';
 
 @Module({
+  imports: [ProductModule],
   controllers: [RecommenderController],
-  providers: [RecommenderService]
+  providers: [RecommenderService, ProductService],
 })
-export class RecommenderModule {}
+export class RecommenderModule implements OnModuleInit {
+  constructor(
+    @Inject(forwardRef(() => ProductService))
+    private productService: ProductService,
+    @Inject(forwardRef(() => RecommenderService))
+    private recommenderService: RecommenderService,
+  ) {}
+
+  async onModuleInit() {
+    const recommender = new ContentBasedRecommender({
+      minScore: 0.1,
+      maxSimilarDocs: 100,
+      maxVectorSize: 200,
+      debug: true,
+    });
+
+    this.recommenderService.setRecommender(recommender);
+    const products = await this.productService.products({});
+    this.recommenderService.train(products);
+  }
+}

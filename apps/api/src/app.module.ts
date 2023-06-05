@@ -48,6 +48,7 @@ import { RecommenderModule } from './recommender/recommender.module';
     DiscountModule,
     HelperModule,
     RecommenderModule,
+    ImageModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
