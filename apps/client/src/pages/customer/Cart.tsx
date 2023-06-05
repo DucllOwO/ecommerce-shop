@@ -82,7 +82,7 @@ const Cart = () => {
         <Helmet title="Giỏ hàng">
             <Row style={{ marginTop: 20 }}>
                 <Col span={14} offset={1}>
-                    <CartTable />
+                    <CartTable cartList={cartProducts}/>
                 </Col>
                 <Col span={8} offset={1}>
                     <Space direction='vertical' style={{ width: '90%' }}>
@@ -131,10 +131,12 @@ const Cart = () => {
                                 <Input disabled={currentUser ? true : false}/>  
                             </Form.Item>
                             <Form.Item
+                                style={{flexDirection: 'row'}}
                                 label="Voucher"
                                 name="voucher"
                             >
-                                <Input/>
+                                <Input style={{width: "80%"}}/>
+                                <Button style={{marginLeft: 5}}>Kiểm tra</Button>
                             </Form.Item>
                             <Form.Item
                                 label="Phương thức thanh toán"
@@ -144,7 +146,7 @@ const Cart = () => {
                             <div className="cart__info">
                                 <div className="cart__info__txt">
                                     <p>
-                                        Bạn đang có {totalProducts} sản phẩm trong giỏ hàng
+                                        Bạn đang có {cartProducts.length} sản phẩm trong giỏ hàng
                                     </p>
                                     <div
                                         className="cart__info__txt__price">

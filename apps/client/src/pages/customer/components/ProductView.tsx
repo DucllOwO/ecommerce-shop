@@ -1,4 +1,4 @@
-import { Button, Carousel, Col, Image, InputNumber, Radio, Row, Space } from 'antd'
+import { Button, Carousel, Col, Image, InputNumber, Radio, RadioChangeEvent, Row, Space } from 'antd'
 import { useState, useEffect } from 'react'
 import { fetchProduct } from '../../../api/CustomerAPI'
 import ImageGallery from 'react-image-gallery';
@@ -8,6 +8,7 @@ import { ReactImageGalleryItem } from 'react-image-gallery';
 import IProduct from '../../../interface/Product';
 import { useNavigate } from 'react-router-dom';
 import LocalStorage from '../../../helper/localStorage';
+import ErrorAlert from '../../../components/Alert/ErrorAlert';
 
 const images = [
     {
@@ -31,13 +32,15 @@ const ProductView = (props: ProductViewProps) => {
 
     const [descriptionExpand, setDescriptionExpand] = useState(true);
 
-    const [color, setColor] = useState<string[]>();
+    const [color, setColor] = useState<object[]>();
 
-    const [size, setSize] = useState<string[]>();
+    const [size, setSize] = useState<object[]>();
 
     const [quantity, setQuantity] = useState(1);
 
     const [selectedSize, setSelectedSize] = useState();
+
+    const [selectedColor, setSelectedColor] = useState();
 
     const nav = useNavigate();
 
@@ -49,10 +52,77 @@ const ProductView = (props: ProductViewProps) => {
                 original: item ? item : "",
                 thumbnail: item ? item : "",
             }}));
-            setColor(Array.from(new Set(data.data.Product_item?.map((data: any) => data.color))))
-            setSize(Array.from(new Set(data.data.Product_item?.map((data: any) => data.size))))
+            const colorSet = Array.from(new Set(data.data.Product_item?.map((data: any) => data.color)));
+            setColor(colorSet.map((data) => {
+                return {
+                    value: data,
+                    label: data,
+                    disabled: false
+                }
+            }))
+            const sizeSet = Array.from(new Set(data.data.Product_item?.map((data: any) => data.size)));
+            setSize(sizeSet.map((data) => {
+                return {
+                    value: data,
+                    label: data,
+                    disabled: false
+                }
+            }))
         })
     }, [props])
+
+
+    const handleColorOnClick = ({target}: RadioChangeEvent) => {
+        console.log(color)
+        setSelectedColor(target.value)
+        const size = Array.from(new Set(product?.Product_item.filter((item) => item.color === target.value).map((data) => data.size)));
+
+        console.log(size)
+
+        setSize((prev) => prev?.map((data) => {
+                if(!size?.some((item) => item === data.value))
+                    return {...data, disabled:true};
+                else
+                    return {...data, disabled: false};
+        })
+        )
+    }
+    const handleSizeOnClick = ({target}: RadioChangeEvent) => {
+        setSelectedSize(target.value);
+        const color = Array.from(new Set(product?.Product_item.filter((item) => item.size === target.value).map((data) => data.color)));
+
+        console.log(color)
+
+        setColor((prev) => prev?.map((data) => {
+                if(!color?.some((item) => item === data.value))
+                    return {...data, disabled:true};
+                else
+                    return {...data, disabled: false};
+        })
+        )
+    }
+    const handleAddToCart = () => {
+        if(selectedColor && selectedSize){
+            const selectedItem = {
+                id: product?.id,
+                image: product?.image[0],
+                name: product?.name,
+                price: product?.price,
+                quantity: quantity,
+                color: selectedColor,
+                size: selectedSize
+            }
+            if(LocalStorage.getItem('cart') && 
+            !Array(LocalStorage.getItem('cart')).some((data: any) => {
+                JSON.stringify(data) === JSON.stringify(selectedItem)}))
+                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,selectedItem]);
+            else if(!LocalStorage.getItem('cart'))
+                LocalStorage.setItem('cart', [selectedItem])
+        }
+        else{ 
+            ErrorAlert("Vui lòng chọn size và màu")
+        }
+    }
 
 
     return (
@@ -73,13 +143,13 @@ const ProductView = (props: ProductViewProps) => {
                             Màu sắc
                         </div>
                         <div className="product__info__item__list">
-                            <Radio.Group buttonStyle="solid">
-                                {
-                                    color?.map((item, index) => (
-                                        <Radio.Button value="item">{item}</Radio.Button>
-                                    ))
-                                }
-                            </Radio.Group>
+                            <Radio.Group 
+                                onChange={handleColorOnClick}
+                                options={color}
+                                // value={value4}
+                                optionType="button"
+                                buttonStyle="solid"
+                            />
                         </div>
                     </div>
                     <div className="product__info__item">
@@ -87,13 +157,13 @@ const ProductView = (props: ProductViewProps) => {
                             Kích cỡ
                         </div>
                         <div className="product__info__item__list">
-                            <Radio.Group buttonStyle="solid">
-                                {
-                                    size?.map((item, index) => (
-                                        <Radio.Button onClick={(value) => {setSelectedSize(value)}} value="item">{item}</Radio.Button>
-                                    ))
-                                }
-                            </Radio.Group>
+                            <Radio.Group 
+                                options={size}
+                                onChange={handleSizeOnClick}
+                                // value={value4}
+                                optionType="button"
+                                buttonStyle="solid"
+                            />
                         </div>
                     </div>
                     <div className="product__info__item">
@@ -105,17 +175,11 @@ const ProductView = (props: ProductViewProps) => {
                         </div>
                     </div>
                     <div className="product__info__item">
+                        <Button 
+                            onClick={handleAddToCart}
+                        >Thêm vào giỏ</Button>
                         <Button onClick={() => {
-                            if(LocalStorage.getItem('cart') && !LocalStorage.getItem('cart').includes(product))
-                                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,{...product, quantity: quantity}]);
-                            else if(!LocalStorage.getItem('cart'))
-                                LocalStorage.setItem('cart', [{...product, quantity: quantity}])
-                        }}>Thêm vào giỏ</Button>
-                        <Button onClick={() => {
-                            if(LocalStorage.getItem('cart') && !Array(LocalStorage.getItem('cart')).includes(product))
-                                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,{...product, quantity: quantity}]);
-                            else if(!LocalStorage.getItem('cart'))
-                                LocalStorage.setItem('cart', [{...product, quantity: quantity}])
+                            handleAddToCart();
                             nav('/cart');
                         }}>Mua ngay</Button>
                     </div>
