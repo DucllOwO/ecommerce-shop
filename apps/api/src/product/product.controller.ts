@@ -1,10 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Logger } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Logger,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Prisma } from '@prisma/client';
+import * as ContentBasedRecommender from 'content-based-recommender-ts';
 
 @Controller('product')
 export class ProductController {
-  private readonly logger = new Logger(ProductController.name)
+  private readonly logger = new Logger(ProductController.name);
   constructor(private readonly productService: ProductService) {}
 
   @Post()
@@ -13,20 +23,33 @@ export class ProductController {
   }
 
   @Get()
-  findAll() {
-    return this.productService.products({});
+  async findAll() {
+    const res = await this.productService.products({});
+    const rec = new ContentBasedRecommender();
+
+    rec.train(
+      res.map((ele) => ({
+        id: ele.id.toString(),
+        content: JSON.stringify(ele),
+      })),
+    );
+    console.log(rec.getSimilarDocuments('3'));
+    return res;
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.productService.product({id : Number(id)});
+    return this.productService.product({ id: Number(id) });
   }
 
   @Patch(':id')
-  update(@Param('id') id: number, @Body() updateProductDto: Prisma.ProductCreateInput) {
+  update(
+    @Param('id') id: number,
+    @Body() updateProductDto: Prisma.ProductCreateInput,
+  ) {
     return this.productService.updateProduct({
-      where: {id: Number(id)},
-      data: updateProductDto
+      where: { id: Number(id) },
+      data: updateProductDto,
     });
   }
 }
