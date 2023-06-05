@@ -12,9 +12,25 @@ export class ReceiptController {
     return this.receiptService.createReceipt(createReceiptDto);
   }
 
-  @Get()
-  findAll() {
-    return this.receiptService.receipts({});
+  @Get('/unpaid')
+  findUnpaid() {
+    return this.receiptService.receipts({
+      where: {
+        status: {
+          equals: "0"
+        }
+      }
+    });
+  }
+  @Get('/paid')
+  findPaid() {
+    return this.receiptService.receipts({
+      where: {
+        status: {
+          equals: "1"
+        }
+      }
+    });
   }
 
   @Get(':id')

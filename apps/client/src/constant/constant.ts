@@ -14,3 +14,9 @@ export const SIZES : string[] = ['S', 'M', 'L', 'XL', 'XXL']
 
 export const DATE_FORMAT: string = 'DD/MM/YYYY'
 
+export const ACTION_READ = 'ACTION_READ'
+export const ACTION_CREATE = 'ACTION_CREATE'
+export const ACTION_EDIT = 'ACTION_EDIT'
+export const SET_ACTION = 'SET_ACTION'
+
+export const BUCKET_URL = 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/product/'

@@ -8,6 +8,7 @@ import { DeleteFilled, EditFilled } from '@ant-design/icons';
 import { isClickOnAnImgTag, isClickOnAnSVGTag, isClickOnATableCell } from '../../../helper/checkEventClick';
 import { TableProps } from '../../../interface/TableProps';
 import IProduct from '../../../interface/Product';
+import { ACTION_EDIT, ACTION_READ, SET_ACTION } from '../../../constant/constant';
 // export interface ProductType {
 //   id: string;
 //   name: string;
@@ -19,11 +20,12 @@ import IProduct from '../../../interface/Product';
 
 interface ProductTableProps extends TableProps {
   data?: IProduct[],
-  setIsEditing: Function,
+  setSelectedItem: Function,
+  dispatch: Function,
   setIsModalOpen: Function
 }
 
-const ProductTable: FC<ProductTableProps> = ({ data, setData, setIsEditing, setIsModalOpen }) => {
+const ProductTable: FC<ProductTableProps> = ({ data, setSelectedItem, dispatch, setIsModalOpen }) => {
 
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
@@ -62,8 +64,9 @@ const ProductTable: FC<ProductTableProps> = ({ data, setData, setIsEditing, setI
       width: '10%',
       render: (_: any, record: IProduct) => <Space>
         <Button shape="circle" icon={<EditFilled />} onClick={() => {
-          setIsEditing((prev: boolean) => !prev);
-          setIsModalOpen((prev: boolean) => !prev)
+          dispatch({ type: SET_ACTION, payload: ACTION_EDIT})
+          setIsModalOpen((prev: boolean) => !prev);
+          setSelectedItem(record);
         }} />
         <Button shape="circle" icon={<DeleteFilled />} />
       </Space>,
@@ -76,8 +79,11 @@ const ProductTable: FC<ProductTableProps> = ({ data, setData, setIsEditing, setI
       <Table columns={columns} dataSource={data} onRow={(record, rowIndex) => {
         return {
           onClick: (event) => {
-            if (isClickOnATableCell(event))
+            if (isClickOnATableCell(event)) {
+              dispatch({ type: SET_ACTION, payload: ACTION_READ})
               setIsModalOpen((prev: boolean) => !prev)
+              setSelectedItem(record)
+            }
           },
         };
       }} />

@@ -92,10 +92,11 @@ model Collection {
 
 model Product {
   id            Int              @id @default(autoincrement())
-  name          String           @db.VarChar(256)
+  name          String           @db.VarChar(256) @unique
   price         Int
   description   String?
   image         String[]
+  slug          String           @default("") @unique
   view          Int              @default(0)
   sold          Int              @default(0)
   isActive      Boolean          @default(true)

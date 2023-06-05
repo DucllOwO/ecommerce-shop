@@ -29,12 +29,23 @@ export class ProductService {
       skip,
       take,
       orderBy,
+      include: {
+        Product_item: true,
+        HaveTag: {
+          include: {
+            tag: true
+          }
+        }, 
+        collection: true,
+        discount: true,
+      }
     });
   }
   async createProduct(data: Prisma.ProductCreateInput) : Promise<Product>
   {
+    console.log(data);
     return this.prisma.product.create({
-      data,
+      data: {...data},
     })
   }
 

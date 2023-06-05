@@ -20,18 +20,39 @@ import { CollectionModule } from './collection/collection.module';
 import { AccountModule } from './account/account.module';
 import { DiscountModule } from './discount/discount.module';
 import { MiddlewareConsumer } from '@nestjs/common/interfaces';
+import { ImageModule } from './image/image.module';
 import * as cors from 'cors';
 import { HelperModule } from './helper/helper.module';
 import { RecommenderModule } from './recommender/recommender.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({
-    isGlobal: true,
-  }), HelperModule ,AuthModule, UserModule, ProductModule, ReviewModule, ReceiptModule, FeedbackModule, VoucherModule, OrderModule, CartModule, ReportModule, TagModule, ProductItemModule, CollectionModule, AccountModule, DiscountModule, HelperModule, RecommenderModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    HelperModule,
+    AuthModule,
+    UserModule,
+    ProductModule,
+    ReviewModule,
+    ReceiptModule,
+    FeedbackModule,
+    VoucherModule,
+    OrderModule,
+    CartModule,
+    ReportModule,
+    TagModule,
+    ProductItemModule,
+    CollectionModule,
+    AccountModule,
+    DiscountModule,
+    HelperModule,
+    RecommenderModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, PrismaService]
+  providers: [AppService, PrismaService],
 })
-export class AppModule { 
+export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(cors()).forRoutes('*');
   }

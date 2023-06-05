@@ -23,18 +23,12 @@ export class ProductController {
   }
 
   @Get()
-  async findAll() {
-    const res = await this.productService.products({});
-    const rec = new ContentBasedRecommender();
-
-    rec.train(
-      res.map((ele) => ({
-        id: ele.id.toString(),
-        content: JSON.stringify(ele),
-      })),
-    );
-    console.log(rec.getSimilarDocuments('3'));
-    return res;
+  findAll() {
+    return this.productService.products({
+      orderBy: {
+        id: 'asc',
+      },
+    });
   }
 
   @Get(':id')
