@@ -74,7 +74,7 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
                         <Form.Item name={[field.name, `color`]} label="Màu sắc" style={{ marginBottom: 0 }}>
                           <Input />
                         </Form.Item>
-                        <MinusCircleOutlined onClick={() => remove(field.name)} />
+                        <MinusCircleOutlined onClick={() => remove(field.name)} disabled={isReadOnly}/>
                       </Space>
                       {
                         SIZES.map(size => <Row align={'middle'}>

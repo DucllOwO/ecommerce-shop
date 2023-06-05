@@ -14,6 +14,7 @@ export default interface IProduct {
   image: string[];
   view: number;
   sold: number;
+  slug: string;
   isActive: boolean;
   discount?: IDiscount | null;
   discountID?: number | null;

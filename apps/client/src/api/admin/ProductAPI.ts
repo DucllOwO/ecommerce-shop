@@ -28,3 +28,11 @@ export function postProduct(newProduct: any){
 export function uploadImage(newImage: FormData){
   return http.post(`/image`, newImage);
 }
+
+export function updateProduct(newProduct: any, id: number){
+  return http.patch(`/product/${id}`, newProduct);
+}
+
+export function deleteImage(fileURL: string){
+  return http.delete(`/image/${fileURL}`);
+}

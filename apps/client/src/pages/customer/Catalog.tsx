@@ -8,6 +8,7 @@ import Helmet from './components/Helmet'
 import ProductCard from './components/ProductCard'
 import { fetchAllProducts } from '../../api/CustomerAPI'
 import Product from '../../interface/Product'
+import IProduct from '../../interface/Product'
 
 const treeColorData: DataNode[] = [
     {
@@ -82,7 +83,7 @@ const Catalog = () => {
         }).finally(() => setIsLoading(false))
     }, [])
 
-    const [products, setProducts] = useState<Product[]>();
+    const [products, setProducts] = useState<IProduct[]>();
     const [numOfItem, setNumOfItem] = useState(10)
 
     return (
@@ -123,6 +124,7 @@ const Catalog = () => {
                                         img02={item?.image[1]}
                                         name={item.name}
                                         price={item.price}
+                                        slug={item.slug}
                                     />
                                 </List.Item>
                             )}
