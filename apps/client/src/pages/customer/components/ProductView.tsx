@@ -48,10 +48,12 @@ const ProductView = (props: ProductViewProps) => {
         fetchProduct(props.id).then((data) => {
             console.log(data.data)
             setProduct(data.data);
-            setPreviewImg(data.data?.image.map((item: string) => {return {
-                original: item ? item : "",
-                thumbnail: item ? item : "",
-            }}));
+            setPreviewImg(data.data?.image.map((item: string) => {
+                return {
+                    original: item ? item : "",
+                    thumbnail: item ? item : "",
+                }
+            }));
             const colorSet = Array.from(new Set(data.data.Product_item?.map((data: any) => data.color)));
             setColor(colorSet.map((data) => {
                 return {
@@ -72,7 +74,7 @@ const ProductView = (props: ProductViewProps) => {
     }, [props])
 
 
-    const handleColorOnClick = ({target}: RadioChangeEvent) => {
+    const handleColorOnClick = ({ target }: RadioChangeEvent) => {
         console.log(color)
         setSelectedColor(target.value)
         const size = Array.from(new Set(product?.Product_item.filter((item) => item.color === target.value).map((data) => data.size)));
@@ -80,29 +82,29 @@ const ProductView = (props: ProductViewProps) => {
         console.log(size)
 
         setSize((prev) => prev?.map((data) => {
-                if(!size?.some((item) => item === data.value))
-                    return {...data, disabled:true};
-                else
-                    return {...data, disabled: false};
+            if (!size?.some((item) => item === data.value))
+                return { ...data, disabled: true };
+            else
+                return { ...data, disabled: false };
         })
         )
     }
-    const handleSizeOnClick = ({target}: RadioChangeEvent) => {
+    const handleSizeOnClick = ({ target }: RadioChangeEvent) => {
         setSelectedSize(target.value);
         const color = Array.from(new Set(product?.Product_item.filter((item) => item.size === target.value).map((data) => data.color)));
 
         console.log(color)
 
         setColor((prev) => prev?.map((data) => {
-                if(!color?.some((item) => item === data.value))
-                    return {...data, disabled:true};
-                else
-                    return {...data, disabled: false};
+            if (!color?.some((item) => item === data.value))
+                return { ...data, disabled: true };
+            else
+                return { ...data, disabled: false };
         })
         )
     }
     const handleAddToCart = () => {
-        if(selectedColor && selectedSize){
+        if (selectedColor && selectedSize) {
             const productItem = product?.Product_item.filter((item) => item.color === selectedColor && item.size === selectedSize)
             const selectedItem = {
                 id: productItem[0]?.id,
@@ -113,14 +115,15 @@ const ProductView = (props: ProductViewProps) => {
                 color: selectedColor,
                 size: selectedSize
             }
-            if(LocalStorage.getItem('cart') && 
-            !Array(LocalStorage.getItem('cart')).some((data: any) => {
-                JSON.stringify(data) === JSON.stringify(selectedItem)}))
-                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,selectedItem]);
-            else if(!LocalStorage.getItem('cart'))
+            if (LocalStorage.getItem('cart') &&
+                !Array(LocalStorage.getItem('cart')).some((data: any) => {
+                    JSON.stringify(data) === JSON.stringify(selectedItem)
+                }))
+                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), selectedItem]);
+            else if (!LocalStorage.getItem('cart'))
                 LocalStorage.setItem('cart', [selectedItem])
         }
-        else{ 
+        else {
             ErrorAlert("Vui lòng chọn size và màu")
         }
     }
@@ -144,7 +147,7 @@ const ProductView = (props: ProductViewProps) => {
                             Màu sắc
                         </div>
                         <div className="product__info__item__list">
-                            <Radio.Group 
+                            <Radio.Group
                                 onChange={handleColorOnClick}
                                 options={color}
                                 // value={value4}
@@ -158,7 +161,7 @@ const ProductView = (props: ProductViewProps) => {
                             Kích cỡ
                         </div>
                         <div className="product__info__item__list">
-                            <Radio.Group 
+                            <Radio.Group
                                 options={size}
                                 onChange={handleSizeOnClick}
                                 // value={value4}
@@ -172,11 +175,11 @@ const ProductView = (props: ProductViewProps) => {
                             Số lượng
                         </div>
                         <div>
-                            <InputNumber defaultValue={1} onChange={(value) => setQuantity(value)}/>
+                            <InputNumber defaultValue={1} onChange={(value) => setQuantity(value)} />
                         </div>
                     </div>
                     <div className="product__info__item">
-                        <Button 
+                        <Button
                             onClick={handleAddToCart}
                         >Thêm vào giỏ</Button>
                         <Button onClick={() => {
