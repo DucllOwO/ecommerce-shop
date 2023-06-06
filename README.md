@@ -1,6 +1,9 @@
 # Trang web bán quần áo với hệ thống đề xuất dựa trên lịch sử mua hàng
+<div align="center">
 
-![Logo trang web](path/to/logo.png)
+<img src="https://drive.google.com/uc?export=view&id=1zLIzLk9Hl_u-K5j67mEgkC8CdxVBY_s2" alt="Logo-trang-web" width="300" height="200">
+
+</div>
 
 ## Giới thiệu
 
@@ -48,10 +51,11 @@ Trang web bán quần áo cung cấp một giao diện dễ sử dụng cho khá
 Nhóm sẽ thực hiện gợi ý sản phẩm dựa trên ***các lịch sử mua hàng gần nhất của khách hàng***
 
 #### Lý do chọn thư viện
-- Có 2 thuật toán phổ biến được sử dụng là collaborative filtering and content-based trong việc xây dựng hệ thống đề xuất. 
-- **Collaborative filtering** sẽ phù hợp hơn khi có lượng dữ liệu lớn cùng với dữ liệu tương tác giữa người dùng và sản phẩm hoặc các đánh giá. Nó phụ thuộc vào hành vi và sở thích của những người dùng giống nhau để đề xuất và nó không cần thông tin chi tiết sản phẩm.
-- **Content-based** sẽ phù hợp hơn trong trường hợp hơn khi có lượng dữ liệu ít về các sản phẩm sẽ được đề xuất. Nó phụ thuộc vào đặc trưng và tính chất để đề xuất và nó không cần có sự tương tác giữa người dùng với sản phẩm.
-- Nhóm quyết định chọn thư viện sử dụng thuật toán **Content-based** vì đặc điểm trang web sẽ có lượng dữ liệu ít cũng như sẽ ít có tương tác giữa người dùng với sản phẩm.
+- Có 2 nhóm chính được sử dụng là collaborative filtering and content-based trong việc xây dựng hệ thống đề xuất. 
+- **Content-based systems**: đánh giá đặc tính của items được recommended. Ví dụ: một user xem rất nhiều các bộ phim về cảnh sát hình sự, vậy thì gơi ý một bộ phim trong cơ sở dữ liệu có chung đặc tính hình sự tới user này, ví dụ phim Người phán xử. Cách tiếp cận này yêu cầu việc sắp xếp các items vào từng nhóm hoặc đi tìm các đặc trưng của từng item. Tuy nhiên, có những items không có nhóm cụ thể và việc xác định nhóm hoặc đặc trưng của từng item đôi khi là bất khả thi.
+
+- **Collaborative filtering**: hệ thống gợi ý items dựa trên sự tương quan (similarity) giữa các users và/hoặc items. Có thể hiểu rằng ở nhóm này một item được recommended tới một user dựa trên những users có hành vi tương tự. Ví dụ: users A, B, C đều thích các bài hát của Noo Phước Thịnh. Ngoài ra, hệ thống biết rằng users B, C cũng thích các bài hát của Bích Phương nhưng chưa có thông tin về việc liệu user A có thích Bích Phương hay không. Dựa trên thông tin của những users tương tự là B và C, hệ thống có thể dự đoán rằng A cũng thích Bích Phương và gợi ý các bài hát của ca sĩ này tới A.
+- Nhóm quyết định chọn thư viện sử dụng phương pháp **Content-based** vì đây phương pháp đơn giản nhất trong các hệ thống Recommendation Systems. Đặc điểm của phương pháp này là việc xây dựng mô hình cho mỗi user không phụ thuộc vào các users khác.
 
 #### Một số thông tin về thư viện
 Đây là một content-based recommender đơn giản được viết bằng javascript để minh họa khái niệm đề xuất dựa trên nội dung, đặc biệt hữu ích cho các website về thương mại điện tử, tin tức,...
@@ -60,7 +64,11 @@ Nhóm sẽ thực hiện gợi ý sản phẩm dựa trên ***các lịc
 
 1. Content Preprocessing:
 - Loại bỏ thẻ HTML: loại bỏ tất cả các thẻ HTML có trong dữ liệu. Vì các thẻ HTML thường được sử dụng để định dạng và cấu trúc trang web nên chúng không phù hợp để tìm hay tính toán sự giống nhau của các tài liệu.
-- Loại bỏ những từ không quan trọng như là các từ nối điều này sẽ giúp thuật toán tập trung vào những từ quan trọng.
+- Loại bỏ những từ không quan trọng như là các từ nối điều này sẽ giúp thuật toán tập trung vào những từ quan trọng. (các từ nối này sẽ chỉ hoạt động khi ngôn ngữ là tiếng Anh)
+- Vì thư viện chưa hỗ trợ tiếng Việt nên nhóm sẽ tự xử lí dữ liệu thuộc tính sẽ được **gộp thành một chuỗi** và **lược bỏ hết tất cả dấu** để có thể hoạt động tốt hơn vì thư hiện không hỗ trợ ngôn ngữ tiếng Việt do đó sẽ ảnh hưởng đến bước content preprocessing.
+```Ví dụ như:
+    Hôm nay trời đẹp -> Hom nay troi dep
+```
 2. Document Vectors Formation using TF-IDF:
 - TF-IDF (Term Frequency-Inverse Document Frequency): là một thuật toán tiện dụng sử dụng tần suất xuất hiện của các từ để xác định mức độ liên quan của các từ đó đối với một tài liệu nhất định. 
 - Nó tính đến cả tần suất của thuật ngữ trong tài liệu hiện tại (TF) và độ hiếm của nó trên tất cả các tài liệu (IDF). TF-IDF gán trọng số cao hơn cho các thuật ngữ xuất hiện thường xuyên hơn trong tài liệu hiện tại nhưng ít phổ biến hơn trong các tài liệu khác, do đó nắm bắt được tầm quan trọng tương đối của chúng.
@@ -75,9 +83,9 @@ Các bước này giúp xử lý trước nội dung, biểu thị các tài li�
 #### 1. Lựa chọn dữ liệu
 Do đây là thuật toán dựa trên đặc trưng của sản phẩm nên bộ dữ liệu có cấu trúc như sau:
 ```typescript
-    productData = { 
+    document = { 
         id: productID, 
-        content: { name, description, tags, collection }
+        content: { name, tags(name), collection(name) }
     }
 ```
 #### 2. Các bước chạy để lấy sản phẩm được đề xuất
@@ -87,6 +95,16 @@ Do đây là thuật toán dựa trên đặc trưng của sản phẩm n�
 
 </div>
 
+#### 3. Xử lí kết quả
+
+Kết quả trả về sẽ có dạng:
+```
+    {
+        id: id của sản phẩm,
+        score: điểm được dánh giá từ 0 đến 1 tương ứng 1 là giống nhất
+    }
+```
+=> Khi đó sẽ tiến hành gọi hàm getSimilarDocuments để lấy những sản phẩm có số điểm phù hợp và trả kết quả về client.
 
 
 ## Cài đặt và sử dụng
