@@ -91,23 +91,22 @@ model Collection {
 }
 
 model Product {
-  id            Int              @id @default(autoincrement())
-  name          String           @db.VarChar(256) @unique
-  price         Int
-  description   String?
-  image         String[]
-  slug          String           @default("") @unique
-  view          Int              @default(0)
-  sold          Int              @default(0)
-  isActive      Boolean          @default(true)
-  discount      Discount?        @relation(fields: [discountID], references: [id], onDelete: SetNull)
-  discountID    Int?
-  collection    Collection?      @relation(fields: [collectionID], references: [id], onDelete: SetNull)
-  collectionID  Int?
-  ReceiptDetail Receipt_detail[]
-  Review        Review[]
-  Product_item  Product_item[]
-  HaveTag       HaveTag[]
+  id           Int            @id @default(autoincrement())
+  name         String         @unique @db.VarChar(256)
+  price        Int
+  description  String?
+  image        String[]
+  slug         String         @unique @default("")
+  view         Int            @default(0)
+  sold         Int            @default(0)
+  isActive     Boolean        @default(true)
+  discount     Discount?      @relation(fields: [discountID], references: [id], onDelete: SetNull)
+  discountID   Int?
+  collection   Collection?    @relation(fields: [collectionID], references: [id], onDelete: SetNull)
+  collectionID Int?
+  Review       Review[]
+  Product_item Product_item[]
+  HaveTag      HaveTag[]
 
   @@map("product")
 }
@@ -125,27 +124,18 @@ model Voucher {
 }
 
 model Receipt {
-  id            Int              @id @default(autoincrement())
-  date          DateTime         @default(now()) @db.Timestamptz()
-  cost          Int              @default(0)
-  status        String           @default("0") @db.Char(1)
-  voucher       Voucher?         @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
-  voucherCode   String?          @db.Char(6)
-  buyer         User             @relation(fields: [userID], references: [id], onDelete: NoAction)
-  userID        Int
-  ReceiptDetail Receipt_detail[]
+  id          Int      @id @default(autoincrement())
+  date        DateTime @default(now()) @db.Timestamptz()
+  cost        Int      @default(0)
+  status      String   @default("0") @db.Char(1)
+  voucher     Voucher? @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
+  voucherCode String?  @db.Char(6)
+  buyer       User     @relation(fields: [userID], references: [id], onDelete: NoAction)
+  userID      Int
+  order       Order    @relation(fields: [orderID], references: [id], onDelete: NoAction)
+  orderID     Int
 
   @@map("receipt")
-}
-
-model Receipt_detail {
-  id        Int     @id @default(autoincrement())
-  receipt   Receipt @relation(fields: [receiptID], references: [id], onDelete: NoAction)
-  receiptID Int
-  product   Product @relation(fields: [productID], references: [id], onDelete: NoAction)
-  productID Int
-
-  @@map("receipt_detail")
 }
 
 model Review {
@@ -200,10 +190,15 @@ model Order {
   date         DateTime       @default(now()) @db.Timestamptz()
   total_cost   Int            @default(0)
   status       String         @default("0") @db.Char(1)
+  firstname    String         @db.VarChar(50)
+  lastname     String?        @db.VarChar(50)
+  phone_number String?        @db.Char(10)
+  address      String?        @db.VarChar(150)
   buyer        User           @relation(fields: [userID], references: [id], onDelete: NoAction)
   userID       Int
   Order_detail Order_detail[]
-
+  Receipt      Receipt[]
+  
   @@map("order")
 }
 

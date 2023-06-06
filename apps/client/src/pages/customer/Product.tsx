@@ -45,6 +45,7 @@ const Product = () => {
               img01={item.image01}
               img02={item.image02}
               name={item.title}
+              slug={item.slug}
               price={Number(item.price)}
             />
           ))}
@@ -59,6 +60,7 @@ const Product = () => {
               key={index}
               img01={item.image01}
               img02={item.image02}
+              slug={item.slug}
               name={item.title}
               price={Number(item.price)}
             />

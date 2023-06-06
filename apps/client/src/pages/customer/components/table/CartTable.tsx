@@ -74,7 +74,7 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
       key: 'action',
       render: (_, record) => {
         return <Button onClick={() => {
-          LocalStorage.setItem('cart', LocalStorage.getItem('cart').filter((item) => JSON.stringify(item) !== JSON.stringify(record)))
+          LocalStorage.setItem('cart', LocalStorage.getItem('cart').filter((item: any) => JSON.stringify(item) !== JSON.stringify(record)))
           setCartList((prev: ICart[]) => prev.filter((item) => JSON.stringify(item) !== JSON.stringify(record)));
         }}>Xóa</Button>
       }
