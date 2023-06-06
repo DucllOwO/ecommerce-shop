@@ -13,12 +13,6 @@ export class RecommenderService {
   train(products: Product[]): void {
     // Initialize the product features
     this.recommender.train(this.extractFeatures(products));
-    console.log(this.recommender.getSimilarDocuments('1'));
-    console.log(this.recommender.getSimilarDocuments('2'));
-    console.log(this.recommender.getSimilarDocuments('3'));
-    console.log(this.recommender.getSimilarDocuments('4'));
-    console.log(this.recommender.getSimilarDocuments('5'));
-    console.log(this.recommender.getSimilarDocuments('6'));
   }
 
   convertToAscii(input: string): string {
@@ -29,23 +23,12 @@ export class RecommenderService {
     return asciiString;
   }
 
-  // recommend(productId: string): string[] {
-  //   const features = this.productFeatures.get(productId);
-
-  //   // Implement the recommendation logic based on the features
-  //   // You can use similarity measures like cosine similarity to find similar products
-
-  //   return []; // Return an array of recommended product IDs
-  // }
+  recommendForProduct(productId: string) {
+    return this.recommender.getSimilarDocuments(productId);
+  }
 
   private extractFeatures(products: Product[]): IDocument[] {
-    const keysToExtract = [
-      'name',
-      'description',
-      'HaveTag',
-      'collection',
-      'slug',
-    ];
+    const keysToExtract = ['name', 'HaveTag', 'collection'];
     return products.map((product) => {
       const content = '';
       const document: IDocument = { id: '', content: '' };
