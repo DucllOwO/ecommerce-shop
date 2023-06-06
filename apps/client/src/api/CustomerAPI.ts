@@ -15,3 +15,11 @@ export function fetchProduct(id: number){
 export function createOrder(order: any){
   return http.post('/order', order)
 }
+
+export function getVoucher(voucherCode: string, isActive: boolean = true){ 
+  return http.get(`/voucher/${voucherCode}?isActive=${isActive}`)
+}
+
+export function createReceipt(newReceipt: any){
+  return http.get(`/receipt`, newReceipt);
+}

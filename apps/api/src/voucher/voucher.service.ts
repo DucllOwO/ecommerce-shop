@@ -20,9 +20,10 @@ export class VoucherService {
     where?: Prisma.VoucherWhereInput;
     orderBy?: Prisma.VoucherOrderByWithRelationInput;
   }): Promise<Voucher[]> {
-    const { skip, take, orderBy } = params;
+    const { skip, take, orderBy, where } = params;
     return this.prisma.voucher.findMany({
       skip,
+      where,
       take,
       orderBy,
     });

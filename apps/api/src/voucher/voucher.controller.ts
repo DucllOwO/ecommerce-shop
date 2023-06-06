@@ -8,6 +8,7 @@ import {
   Param,
   Delete,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { VoucherService } from './voucher.service';
@@ -31,10 +32,21 @@ export class VoucherController {
     return this.voucherService.vouchers({});
   }
 
+  
   @Get(':code')
-  findOne(@Param('code') code: string) {
-    return this.voucherService.voucher({ code });
+  findOne(@Param('code') code: string, @Query('isActive') isActive: string) {
+    if(isActive)
+      return this.voucherService.vouchers({where: {
+        AND:{
+          code: code,
+          isActive: Boolean(isActive) 
+        }
+      }});
+    else
+      return this.voucherService.voucher({code});
   }
+
+
 
   @Patch(':code')
   update(

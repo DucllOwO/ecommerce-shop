@@ -103,8 +103,9 @@ const ProductView = (props: ProductViewProps) => {
     }
     const handleAddToCart = () => {
         if(selectedColor && selectedSize){
+            const productItem = product?.Product_item.filter((item) => item.color === selectedColor && item.size === selectedSize)
             const selectedItem = {
-                id: product?.id,
+                id: productItem[0]?.id,
                 image: product?.image[0],
                 name: product?.name,
                 price: product?.price,

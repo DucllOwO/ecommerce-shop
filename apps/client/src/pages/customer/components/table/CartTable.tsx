@@ -57,7 +57,22 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
       width: '15%',
       dataIndex: 'tags',
       render: (_, record) => {
-        return <InputNumber defaultValue={record.quantity}/>
+        return <InputNumber defaultValue={record.quantity} onChange={(value) => {
+          console.log(value)
+          console.log(cartList)
+          setCartList((prev: any) => prev.map((data: any) => {
+              if(data.id === record.id && data.color === record.color && data.size === record.size){
+                return {
+                  ...data,
+                  quantity: value
+                }
+              }
+              else{
+                return data;
+              }
+            })
+          )
+        }}/>
       }
     },
     {
