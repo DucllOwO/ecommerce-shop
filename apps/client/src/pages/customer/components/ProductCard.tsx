@@ -6,8 +6,8 @@ const ProductCard = (props: ProductCardProps) => {
         <div className="product-card">
             <Link to={`/product/${props.slug}`}>
                 <div className="product-card__image">
-                    <img src={props.img01} alt="" style={{ borderRadius: 10 }} />
-                    <img src={props.img02} alt="" />
+                    <img src={props.img01} alt="" style={{ borderRadius: 10, width: 250, height: 300 }} />
+                    <img src={props.img02} alt="" style={{ borderRadius: 10, width: 250, height: 300 }} />
                 </div>
                 <h3 className="product-card__name">{props.name}</h3>
                 <div className="product-card__price">
@@ -34,7 +34,8 @@ type ProductCardProps = {
     img02: string,
     name: string,
     price: number,
-    slug: string
+    slug: string,
+    discount: number | null;
 }
 
 export default ProductCard
