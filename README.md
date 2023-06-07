@@ -1,4 +1,4 @@
-# Trang web bán quần áo với hệ thống đề xuất dựa trên lịch sử mua hàng
+# Trang web bán quần áo với hệ thống đề xuất sản phẩm tương tự dựa trên lịch sử tương tác của người dùng
 <div align="center">
 
 <img src="https://drive.google.com/uc?export=view&id=1zLIzLk9Hl_u-K5j67mEgkC8CdxVBY_s2" alt="Logo-trang-web" width="300" height="200">
@@ -7,15 +7,15 @@
 
 ## Giới thiệu
 
-Đây là đồ án 1 trên GitHub của trang web bán quần áo, nơi triển khai một hệ thống đề xuất dựa trên lịch sử mua hàng của khách hàng. Thư viện Content Based Recommender được sử dụng để tạo ra các gợi ý sản phẩm phù hợp với sở thích và hành vi mua hàng của từng khách hàng.
+Đây là đồ án 1 trên GitHub của trang web bán quần áo, nơi triển khai ***một hệ thống đề xuất dựa trên tương tác của khách hàng.*** Thư viện Content Based Recommender được sử dụng để tạo ra các gợi ý sản phẩm phù hợp với hành vi mua hàng của từng khách hàng.
 
-Trang web bán quần áo cung cấp một giao diện dễ sử dụng cho khách hàng tìm kiếm và mua sắm các sản phẩm thời trang. Hệ thống đề xuất giúp cá nhân hóa trải nghiệm mua hàng, đồng thời cung cấp những gợi ý sản phẩm mới và tương tự dựa trên lịch sử mua hàng của khách hàng.
+Trang web bán quần áo cung cấp một giao diện dễ sử dụng cho khách hàng tìm kiếm và mua sắm các sản phẩm thời trang. Hệ thống đề xuất giúp cá nhân hóa trải nghiệm mua hàng, đồng thời cung cấp những gợi ý sản phẩm mới và tương tự dựa trên tương tác của khách hàng như xem hay đặt hàng.
 
 ## Tính năng
 #### Hệ thống gợi ý sản phẩm:  
 - Hệ thống gợi ý những sản phẩm tương tự dựa trên những sản phẩm người dùng đã xem và đã mua.
 - Hệ thống gợi ý sản phẩm theo từng cá nhân.
-- Cung cấp thông tin cơ bản về sản phẩm
+- Cung cấp thông tin cơ bản về sản phẩm.
 #### Xây dựng website: 
 - Ứng dụng chạy trên nền tảng Web
 - Giới thiệu về sản phẩm, cửa hàng, quy trình mua hàng, thông tin liên hệ một cách trực quan, đem đến cho người dùng những nội dung chi tiết nhất 
@@ -46,16 +46,16 @@ Trang web bán quần áo cung cấp một giao diện dễ sử dụng cho khá
 
 ## Hệ thống gợi ý sản phẩm
 
-Để đơn giản cho việc phát triển hệ thống, nhóm quyết định sử dụng thư viện [Content Based Recommender](https://github.com/stanleyfok/content-based-recommender) giúp hỗ trợ trong việc sử dụng triển khai hệ thống. Nhóm chỉ cần chuẩn bị dữ liệu để thư viện thực hiện việc train.
+Để đơn giản cho việc phát triển hệ thống, nhóm quyết định sử dụng thư viện [Content Based Recommender](https://github.com/stanleyfok/content-based-recommender) giúp hỗ trợ trong việc sử dụng triển khai hệ thống gợi ý. Nhóm chỉ cần chuẩn bị dữ liệu để thư viện thực hiện việc train.
 
-Nhóm sẽ thực hiện gợi ý sản phẩm dựa trên ***các lịch sử mua hàng gần nhất của khách hàng***
+Nhóm sẽ thực hiện gợi ý sản phẩm dựa trên ***tương tác của khách hàng cụ thể là xem hay đặt hàng sản phẩm***
 
 #### Lý do chọn thư viện
 - Có 2 nhóm chính được sử dụng là collaborative filtering and content-based trong việc xây dựng hệ thống đề xuất. 
-- **Content-based systems**: đánh giá đặc tính của items được recommended. Ví dụ: một user xem rất nhiều các bộ phim về cảnh sát hình sự, vậy thì gơi ý một bộ phim trong cơ sở dữ liệu có chung đặc tính hình sự tới user này, ví dụ phim Người phán xử. Cách tiếp cận này yêu cầu việc sắp xếp các items vào từng nhóm hoặc đi tìm các đặc trưng của từng item. Tuy nhiên, có những items không có nhóm cụ thể và việc xác định nhóm hoặc đặc trưng của từng item đôi khi là bất khả thi.
+- **Content-based**: đánh giá đặc tính của items được recommended. Ví dụ: một user xem rất nhiều các bộ phim về cảnh sát hình sự, vậy thì gơi ý một bộ phim trong cơ sở dữ liệu có chung đặc tính hình sự tới user này, ví dụ phim Người phán xử. Cách tiếp cận này yêu cầu việc sắp xếp các items vào từng nhóm hoặc đi tìm các đặc trưng của từng item. Tuy nhiên, có những items không có nhóm cụ thể và việc xác định nhóm hoặc đặc trưng của từng item đôi khi là bất khả thi.
 
 - **Collaborative filtering**: hệ thống gợi ý items dựa trên sự tương quan (similarity) giữa các users và/hoặc items. Có thể hiểu rằng ở nhóm này một item được recommended tới một user dựa trên những users có hành vi tương tự. Ví dụ: users A, B, C đều thích các bài hát của Noo Phước Thịnh. Ngoài ra, hệ thống biết rằng users B, C cũng thích các bài hát của Bích Phương nhưng chưa có thông tin về việc liệu user A có thích Bích Phương hay không. Dựa trên thông tin của những users tương tự là B và C, hệ thống có thể dự đoán rằng A cũng thích Bích Phương và gợi ý các bài hát của ca sĩ này tới A.
-- Nhóm quyết định chọn thư viện sử dụng phương pháp **Content-based** vì đây phương pháp đơn giản nhất trong các hệ thống Recommendation Systems. Đặc điểm của phương pháp này là việc xây dựng mô hình cho mỗi user không phụ thuộc vào các users khác.
+- Nhóm quyết định chọn thư viện sử dụng phương pháp **Content-based** vì đây phương pháp đơn giản nhất trong các hệ thống gợi ý. Đặc điểm của phương pháp này là việc xây dựng mô hình cho mỗi user không phụ thuộc vào các users khác mà chỉ tập trung vào đặc tính của sản phẩm.
 
 #### Một số thông tin về thư viện
 Đây là một content-based recommender đơn giản được viết bằng javascript để minh họa khái niệm đề xuất dựa trên nội dung, đặc biệt hữu ích cho các website về thương mại điện tử, tin tức,...
