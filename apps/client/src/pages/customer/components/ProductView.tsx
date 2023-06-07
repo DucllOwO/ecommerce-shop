@@ -48,10 +48,7 @@ const ProductView = (props: ProductViewProps) => {
         fetchProduct(props.id).then((data) => {
             console.log(data.data)
             setProduct(data.data);
-            setPreviewImg(data.data?.image.map((item: string) => {return {
-                original: item ? item : "",
-                thumbnail: item ? item : "",
-            }}));
+            setPreviewImg(convertImageToFormatGallaryItem(data.data?.image));
             const colorSet = Array.from(new Set(data.data.Product_item?.map((data: any) => data.color)));
             setColor(colorSet.map((data) => {
                 return {
@@ -72,7 +69,7 @@ const ProductView = (props: ProductViewProps) => {
     }, [props])
 
 
-    const handleColorOnClick = ({target}: RadioChangeEvent) => {
+    const handleColorOnClick = ({ target }: RadioChangeEvent) => {
         console.log(color)
         setSelectedColor(target.value)
         const size = Array.from(new Set(product?.Product_item.filter((item) => item.color === target.value).map((data) => data.size)));
@@ -80,29 +77,29 @@ const ProductView = (props: ProductViewProps) => {
         console.log(size)
 
         setSize((prev) => prev?.map((data) => {
-                if(!size?.some((item) => item === data.value))
-                    return {...data, disabled:true};
-                else
-                    return {...data, disabled: false};
+            if (!size?.some((item) => item === data.value))
+                return { ...data, disabled: true };
+            else
+                return { ...data, disabled: false };
         })
         )
     }
-    const handleSizeOnClick = ({target}: RadioChangeEvent) => {
+    const handleSizeOnClick = ({ target }: RadioChangeEvent) => {
         setSelectedSize(target.value);
         const color = Array.from(new Set(product?.Product_item.filter((item) => item.size === target.value).map((data) => data.color)));
 
         console.log(color)
 
         setColor((prev) => prev?.map((data) => {
-                if(!color?.some((item) => item === data.value))
-                    return {...data, disabled:true};
-                else
-                    return {...data, disabled: false};
+            if (!color?.some((item) => item === data.value))
+                return { ...data, disabled: true };
+            else
+                return { ...data, disabled: false };
         })
         )
     }
     const handleAddToCart = () => {
-        if(selectedColor && selectedSize){
+        if (selectedColor && selectedSize) {
             const productItem = product?.Product_item.filter((item) => item.color === selectedColor && item.size === selectedSize)
             const selectedItem = {
                 id: productItem[0]?.id,
@@ -120,14 +117,14 @@ const ProductView = (props: ProductViewProps) => {
             else if(!LocalStorage.getItem('cart'))
                 LocalStorage.setItem('cart', [selectedItem])
         }
-        else{ 
+        else {
             ErrorAlert("Vui lòng chọn size và màu")
         }
     }
 
 
     return (
-        <Row>
+        <Row style={{ width: '100vw' }}>
             <Col span={13} style={{ marginTop: 20 }}>
                 <ImageGallery items={previewImg ? previewImg : images} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} />
             </Col>
@@ -144,7 +141,7 @@ const ProductView = (props: ProductViewProps) => {
                             Màu sắc
                         </div>
                         <div className="product__info__item__list">
-                            <Radio.Group 
+                            <Radio.Group
                                 onChange={handleColorOnClick}
                                 options={color}
                                 // value={value4}
@@ -158,7 +155,7 @@ const ProductView = (props: ProductViewProps) => {
                             Kích cỡ
                         </div>
                         <div className="product__info__item__list">
-                            <Radio.Group 
+                            <Radio.Group
                                 options={size}
                                 onChange={handleSizeOnClick}
                                 // value={value4}
@@ -172,11 +169,11 @@ const ProductView = (props: ProductViewProps) => {
                             Số lượng
                         </div>
                         <div>
-                            <InputNumber defaultValue={1} onChange={(value) => setQuantity(value)}/>
+                            <InputNumber defaultValue={1} onChange={(value) => setQuantity(value)} />
                         </div>
                     </div>
                     <div className="product__info__item">
-                        <Button 
+                        <Button
                             onClick={handleAddToCart}
                         >Thêm vào giỏ</Button>
                         <Button onClick={() => {
@@ -219,6 +216,20 @@ const ProductView = (props: ProductViewProps) => {
         </Row>
     )
 }
+
+function convertImageToFormatGallaryItem(images: string[]) {
+    return images.map((image) => {
+        return {
+            original: image,
+            originalHeight: 600,
+            originalWidth: 1300,
+            thumbnail: image,
+            thumbnailHeight: 120,
+            thumbnailWidth: 250,
+        }
+    })
+}
+
 type ProductViewProps = {
     id: number
 }
