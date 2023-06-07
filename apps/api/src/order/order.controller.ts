@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, Query } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { OrderService } from './order.service';
 @Controller('order')
@@ -28,6 +28,18 @@ export class OrderController {
           equals: '1'
         }
       }
+    });
+  }
+
+  @Get()
+  findByUser(@Query('user') user: string) {
+    return this.orderService.orders({
+      where: {
+        userID: {
+          equals: Number(user)
+        }
+      },
+      
     });
   }
 

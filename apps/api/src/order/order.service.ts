@@ -28,7 +28,16 @@ export class OrderService {
       take,
       orderBy,
       include:{
-        buyer: true
+        buyer: true,
+        Order_detail: {
+          include: {
+            product_item: {
+              include: {
+                product: true
+              }
+            }
+          }
+        }
       }
     });
   }

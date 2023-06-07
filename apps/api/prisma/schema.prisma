@@ -206,6 +206,7 @@ model Order_detail {
   itemID       Int
   order        Order        @relation(fields: [orderID], references: [id], onDelete: NoAction)
   orderID      Int
+  quantity     Int          @default(1)
 
   @@map("order_detail")
 }

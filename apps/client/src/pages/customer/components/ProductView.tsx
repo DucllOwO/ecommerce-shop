@@ -114,8 +114,8 @@ const ProductView = (props: ProductViewProps) => {
                 size: selectedSize
             }
             if(LocalStorage.getItem('cart') && 
-            !Array(LocalStorage.getItem('cart')).some((data: any) => {
-                JSON.stringify(data) === JSON.stringify(selectedItem)}))
+            !Array(LocalStorage.getItem('cart')).some((data: any) => 
+                JSON.stringify(data[0]) === JSON.stringify(selectedItem)))
                 LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,selectedItem]);
             else if(!LocalStorage.getItem('cart'))
                 LocalStorage.setItem('cart', [selectedItem])
