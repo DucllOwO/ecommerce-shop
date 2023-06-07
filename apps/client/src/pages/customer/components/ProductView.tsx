@@ -48,12 +48,7 @@ const ProductView = (props: ProductViewProps) => {
         fetchProduct(props.id).then((data) => {
             console.log(data.data)
             setProduct(data.data);
-            setPreviewImg(data.data?.image.map((item: string) => {
-                return {
-                    original: item ? item : "",
-                    thumbnail: item ? item : "",
-                }
-            }));
+            setPreviewImg(convertImageToFormatGallaryItem(data.data?.image));
             const colorSet = Array.from(new Set(data.data.Product_item?.map((data: any) => data.color)));
             setColor(colorSet.map((data) => {
                 return {
@@ -130,7 +125,7 @@ const ProductView = (props: ProductViewProps) => {
 
 
     return (
-        <Row>
+        <Row style={{ width: '100vw' }}>
             <Col span={13} style={{ marginTop: 20 }}>
                 <ImageGallery items={previewImg ? previewImg : images} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} />
             </Col>
@@ -222,6 +217,20 @@ const ProductView = (props: ProductViewProps) => {
         </Row>
     )
 }
+
+function convertImageToFormatGallaryItem(images: string[]) {
+    return images.map((image) => {
+        return {
+            original: image,
+            originalHeight: 600,
+            originalWidth: 1300,
+            thumbnail: image,
+            thumbnailHeight: 120,
+            thumbnailWidth: 250,
+        }
+    })
+}
+
 type ProductViewProps = {
     id: number
 }
