@@ -10,7 +10,7 @@ import Helmet from './components/Helmet'
 import CartTable from './components/table/CartTable'
 import LocalStorage from '../../helper/localStorage'
 import { useForm } from 'antd/es/form/Form'
-import { createOrder, getVoucher } from '../../api/CustomerAPI'
+import { createOrder, createReceipt, getVoucher } from '../../api/CustomerAPI'
 import Search from 'antd/es/transfer/search'
 import ColumnGroup from 'antd/es/table/ColumnGroup'
 import ErrorAlert from '../../components/Alert/ErrorAlert'
@@ -75,11 +75,30 @@ const Cart = () => {
                 }
             }
             createOrder(newOrder)
-            .then((data) => {
+            .then((response) => {
                 // SuccessAlert("Đặt hàng thành công"); 
-                LocalStorage.setItem('cart', []);
-                setCartProducts([]);
-                nav('/payment')
+                const newReceipt = {
+                    cost: totalPrice,
+                    voucher: data.voucher ? {
+                        connect: {
+                            code: data.voucher
+                        }
+                    } : undefined,
+                    order: {
+                        connect: {
+                            id: response.data.id
+                        }
+                    },
+                    paymentMethod: data.paymentMethod
+                }
+                createReceipt(newReceipt).then(()=> {
+                    LocalStorage.setItem('cart', []);
+                    setCartProducts([]);
+                    nav('/payment')
+                }).catch((error) => {
+                    console.log(error);
+                    throw new Error();
+                })
             })
             .catch((error) => console.log(error));    
         }) 

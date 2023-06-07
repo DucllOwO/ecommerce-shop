@@ -29,7 +29,7 @@ export class ReceiptService {
       take,
       orderBy,
       include:{
-        buyer: true
+        order: true
       }
     });
   }

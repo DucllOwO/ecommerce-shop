@@ -29,12 +29,11 @@ model User {
   product_viewed String[]
   account        Account    @relation(fields: [email], references: [email])
   email          String     @db.VarChar(256)
-  logged_date    DateTime   @default(now()) @db.Timestamptz()
+  logged_date    DateTime   @default(now()) @db.Timestamptz(6)
   Feedback       Feedback[]
   Review         Review[]
   Cart           Cart[]
   Order          Order[]
-  Receipt        Receipt[]
 
   @@map("user")
 }
@@ -124,16 +123,15 @@ model Voucher {
 }
 
 model Receipt {
-  id          Int      @id @default(autoincrement())
-  date        DateTime @default(now()) @db.Timestamptz()
-  cost        Int      @default(0)
-  status      String   @default("0") @db.Char(1)
-  voucher     Voucher? @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
-  voucherCode String?  @db.Char(6)
-  buyer       User     @relation(fields: [userID], references: [id], onDelete: NoAction)
-  userID      Int
-  order       Order    @relation(fields: [orderID], references: [id], onDelete: NoAction)
-  orderID     Int
+  id            Int      @id @default(autoincrement())
+  date          DateTime @default(now()) @db.Timestamptz(6)
+  cost          Int      @default(0)
+  status        String   @default("0") @db.Char(1)
+  paymentMethod String   @db.VarChar(100)
+  voucher       Voucher? @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
+  voucherCode   String?  @db.Char(6)
+  order         Order    @relation(fields: [orderID], references: [id], onDelete: NoAction)
+  orderID       Int
 
   @@map("receipt")
 }
@@ -187,7 +185,7 @@ model Cart_detail {
 
 model Order {
   id           Int            @id @default(autoincrement())
-  date         DateTime       @default(now()) @db.Timestamptz()
+  date         DateTime       @default(now()) @db.Timestamptz(6)
   total_cost   Int            @default(0)
   status       String         @default("0") @db.Char(1)
   firstname    String         @db.VarChar(50)
@@ -198,7 +196,7 @@ model Order {
   userID       Int
   Order_detail Order_detail[]
   Receipt      Receipt[]
-  
+
   @@map("order")
 }
 
@@ -250,7 +248,7 @@ model Daily_report {
 
 model Importing {
   id           Int             @id @default(autoincrement())
-  date         DateTime        @default(now()) @db.Timestamptz()
+  date         DateTime        @default(now()) @db.Timestamptz(6)
   ImportDetail Import_detail[]
 
   @@map("importing")

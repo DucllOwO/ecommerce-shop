@@ -21,5 +21,9 @@ export function getVoucher(voucherCode: string, isActive: boolean = true){
 }
 
 export function createReceipt(newReceipt: any){
-  return http.get(`/receipt`, newReceipt);
+  return http.post(`/receipt`, newReceipt);
+}
+
+export function updateUser(newUser: any, userID: number){
+  return http.patch(`/user/${userID}`, newUser)
 }
