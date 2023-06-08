@@ -20,3 +20,5 @@ export const ACTION_EDIT = 'ACTION_EDIT'
 export const SET_ACTION = 'SET_ACTION'
 
 export const BUCKET_URL = 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/product/'
+
+export const DISCOUNT_RULE_TOOLTIP = "Khuyến mãi có độ ưu tiên như sau:\n 1.Khuyến mãi trực tiếp trên sản phẩm\n 2.Khuyến mãi của bộ sưu tập 3.Khuyến mãi trên thẻ"

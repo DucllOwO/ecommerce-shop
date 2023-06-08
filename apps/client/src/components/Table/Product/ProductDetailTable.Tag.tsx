@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Table, Image, Space, Typography, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { TABLE_HEIGHT } from '../../../constant/styles';
-import { ITag } from '../../../interface/Tag';
-import { fetchTag } from '../../../api/admin/ProductAPI';
-import { IProduct } from '../../../interface/Product';
+import { fetchTag } from '../../../api/admin/tagAPI';
+import ITag from '../../../interface/Tag';
 
 const { Text } = Typography;
 
@@ -16,15 +14,6 @@ interface DataType {
   image: string;
   tag: string[];
 }
-
-// const data = [
-//   {
-//     id: 1,
-//     name: 'Ao vang khe',
-//     image: 'https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png',
-//     tag: ['shirt', 'hoodie', 'winter',]
-//   },
-// ]
 
 const columns: ColumnsType<DataType> = [
   {
@@ -62,12 +51,12 @@ const ProductTagDetailTable = (props: TagDetailProps) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    if(props.selectedTag)
+    if (props.selectedTag)
       fetchTag(props.selectedTag.id).then((data) => {
         console.log(data.data)
         setData(data.data.Product);
       })
-  },[props])
+  }, [props])
 
   return (
     <Table columns={columns} dataSource={data} pagination={{ pageSize: 5 }} />

@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from 'react'
 import { ModalProps } from '../../interface/ModalProps'
 import ProductInventoryTable from '../Table/Product/ProductInventoryTable'
 import ITag from '../../interface/Tag'
-import { fetchAllCollection, fetchAllTag, postProduct, updateProduct, uploadImage } from '../../api/admin/ProductAPI'
+import { fetchAllCollection, postProduct, updateProduct, uploadImage } from '../../api/admin/ProductAPI'
 import ICollection from '../../interface/Collection'
 import { fetchAllDiscounts } from '../../api/admin/DiscountAPI'
 import IDiscount from '../../interface/Discount'
@@ -14,6 +14,7 @@ import { ACTION_CREATE, ACTION_EDIT, ACTION_READ, BUCKET_URL } from '../../const
 import ProductCreateForm from '../Form/ProductCreateForm'
 import ProductEditForm from '../Form/ProductEditForm'
 import slugify from 'slugify'
+import { fetchAllTag } from '../../api/admin/tagAPI'
 
 interface ProductModalProps extends ModalProps {
   action: string,

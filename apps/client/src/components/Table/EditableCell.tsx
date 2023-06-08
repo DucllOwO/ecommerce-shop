@@ -13,6 +13,8 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   index: number;
   children: React.ReactNode;
   rules: Rule[];
+  tooltip: string;
+  initData: any;
 }
 
 const getComponentByType = (type: string) => {
@@ -39,18 +41,19 @@ const EditableCell: React.FC<EditableCellProps> = ({
   record,
   index,
   children,
-  rules,
+  rules = [],
+  tooltip = '',
   ...restProps
 }) => {
   const inputNode = getComponentByType(inputType)
-  console.log(rules)
   return (
     <td {...restProps}>
       {editing ? (
         <Form.Item
           name={dataIndex}
           style={{ margin: 0 }}
-          rules={rules ? rules : []}
+          rules={rules}
+          tooltip={tooltip}
         >
           {inputNode}
         </Form.Item>

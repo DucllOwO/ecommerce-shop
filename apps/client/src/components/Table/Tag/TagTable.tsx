@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { Button, Space, Table, Typography, Form, InputNumber, Input, Popconfirm } from 'antd';
+import { Button, Space, Table, Typography, Popconfirm, Select, Form } from 'antd';
 import TagModal from '../../Modal/TagModal';
 import { isClickOnATableCell } from '../../../helper/checkEventClick';
 import {
@@ -10,23 +10,23 @@ import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
 import { INPUT, SELECT } from '../../../constant/constant';
 import ITag from '../../../interface/Tag';
-
-// export interface TagType {
-//   id: string;
-//   name: string;
-//   discount: number;
-// }
+import { updateTag } from '../../../api/admin/tagAPI';
+import SuccessAlert from '../../Alert/SuccessAlert';
+import IDiscount from '../../../interface/Discount';
 
 interface TagTableProps extends TableProps {
   data?: ITag[],
+  discounts?: IDiscount[]
 }
 
-const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
+const TagTable: FC<TagTableProps> = ({ form, data, setData, discounts }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
   const [selectedTag, setSelectedTag] = useState<ITag>();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const isEditing = (record: ITag) => record.id.toString() === editingKey;
 
@@ -46,7 +46,16 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
       title: 'Giảm giá',
       key: 'discount',
       dataIndex: 'discount',
-      editable: true,
+      width: "30%",
+      render: (_: any, record: ITag) => {
+        const editing = isEditing(record);
+        if (editing)
+          return <Form.Item name={'discountID'} style={{ marginBottom: 0 }}>
+            <Select allowClear style={{ width: '100%' }} options={discounts} placeholder="Chọn mã giảm giá áp dụng cho nhãn" />
+          </Form.Item>
+        else
+          return record.discount ? <p>{`${record.discount?.name} - ${record.discount?.discount}%`}</p> : 'Không áp dụng khuyến mãi'
+      }
     },
     {
       title: 'Thao tác',
@@ -56,7 +65,7 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
-            <Typography.Link onClick={() => save(record.id.toString())} style={{ marginRight: 8 }}>
+            <Typography.Link onClick={() => save(record.id)} style={{ marginRight: 8 }}>
               Lưu
             </Typography.Link>
             <Popconfirm title="Thông tin sẽ không được lưu bạn có chắc chắn muốn hủy?" onConfirm={cancel}>
@@ -86,28 +95,27 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData }) => {
     setEditingKey('');
   };
 
-  const save = async (id: string) => {
-    try {
-      const row = (await form?.validateFields()) as ITag;
-
+  const save = async (id: number) => {
+    const tag = form?.getFieldsValue();
+    setIsLoading(true)
+    console.log(tag)
+    updateTag({ ...tag, id: id }).then(({ data: dataRes }) => {
       const newData = data ? [...data] : [];
-      const index = newData.findIndex((item) => id === item.id.toString());
+      const index = newData.findIndex((item) => id == item.id);
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
           ...item,
-          ...row,
+          ...dataRes,
         });
-        setData && setData(newData);
         setEditingKey('');
       } else {
-        newData.push(row);
-        setData && setData(newData);
+        newData.push(dataRes);
         setEditingKey('');
       }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
+      setData && setData(newData)
+      SuccessAlert('Cập nhật thành công');
+    }).catch((err) => console.log(err)).finally(() => setIsLoading(false))
   };
 
   const mergedColumns = columns.map((col) => {

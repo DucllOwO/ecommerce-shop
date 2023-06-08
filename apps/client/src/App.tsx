@@ -17,7 +17,6 @@ import Tag from './pages/admin/Tag.js';
 import Receipt from './pages/admin/Receipt.js';
 import Discount from './pages/admin/Discount.js';
 import Policy from './pages/admin/Policy.js';
-import Information from './pages/admin/Information.js';
 import Feedback from './pages/admin/Feedback.js';
 import Voucher from './pages/admin/Voucher.js';
 import CustomerManagement from './pages/admin/CustomerManagement.js';

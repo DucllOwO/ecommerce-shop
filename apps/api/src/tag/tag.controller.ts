@@ -1,7 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { TagService } from './tag.service';
 import { Prisma } from '@prisma/client';
-
 
 @Controller('tag')
 export class TagController {
@@ -14,19 +21,20 @@ export class TagController {
 
   @Get()
   findAll() {
-    return this.tagService.tags({});
+    return this.tagService.tags({ include: { discount: true } });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.tagService.tag({id: Number(id)});
+    return this.tagService.tag({ id: Number(id) });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTagDto: Prisma.TagCreateInput) {
+  update(@Param('id') id: string, @Body() updateTagDto: Prisma.TagUpdateInput) {
     return this.tagService.updateTag({
-      where: {id: Number(id)}, 
-      data: updateTagDto});
+      where: { id: Number(id) },
+      data: updateTagDto,
+    });
   }
 
   @Delete(':id')
