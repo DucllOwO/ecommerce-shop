@@ -27,6 +27,7 @@ import OrderDetail from './pages/customer/OrderDetail.js';
 import { useContext } from 'react';
 import { AppContext } from './context/AppContext.js';
 import Payment from './pages/customer/Payment.js';
+import ReturnPolicy from './pages/customer/ReturnPolicy.js';
 
 
 function App() {
@@ -71,6 +72,7 @@ function App() {
           </Route>
           <Route key={'order-detail'} path='orders/:id' element={<OrderDetail />} />
           <Route key={'payment'} path='payment' element={<Payment />} />
+          <Route key={'return-policy'} path='return-policy' element={<ReturnPolicy />} />
         </Route>
 
       </Routes>

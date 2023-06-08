@@ -14,32 +14,12 @@ const footerAboutLinks = [
         display: "Liên hệ",
         path: "/about"
     },
-    {
-        display: "Tuyển dụng",
-        path: "/about"
-    },
-    {
-        display: "Tin tức",
-        path: "/about"
-    },
-    {
-        display: "Hệ thống cửa hàng",
-        path: "/about"
-    }
 ]
 
 const footerCustomerLinks = [
     {
         display: "Chính sách đổi trả",
-        path: "/about"
-    },
-    {
-        display: "Chính sách bảo hành",
-        path: "/about"
-    },
-    {
-        display: "Chính sách hoàn tiền",
-        path: "/about"
+        path: "/return-policy"
     }
 ]
 const FooterCustom = () => {
