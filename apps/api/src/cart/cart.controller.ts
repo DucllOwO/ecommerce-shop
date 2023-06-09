@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { CartService } from './cart.service';
 
@@ -11,10 +11,16 @@ export class CartController {
     return this.cartService.createCart(createCartDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   return this.cartService.carts({});
-  // }
+  @Get()
+  findAllByUser(@Query('userID') userID: string) {
+    return this.cartService.carts({
+      where: {
+        userID: {
+          equals: Number(userID)
+        }
+      }
+    });
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {

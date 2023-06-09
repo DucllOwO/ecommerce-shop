@@ -15,20 +15,21 @@ export class CartService {
     });
   }
 
-  // async carts(params: {
-  //   skip?: number;
-  //   take?: number;
-  //   cursor?: Prisma.CartWhereUniqueInput;
-  //   where?: Prisma.CartWhereInput;
-  //   orderBy?: Prisma.CartOrderByWithRelationInput;
-  // }): Promise<Cart[]> {
-  //   const { skip, take, orderBy } = params;
-  //   return this.prisma.cart.findMany({
-  //     skip,
-  //     take,
-  //     orderBy,
-  //   });
-  // }
+  async carts(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.CartWhereUniqueInput;
+    where?: Prisma.CartWhereInput;
+    orderBy?: Prisma.CartOrderByWithRelationInput;
+  }): Promise<Cart[]> {
+    const { skip, take, orderBy, where } = params;
+    return this.prisma.cart.findMany({
+      where,
+      skip,
+      take,
+      orderBy,
+    });
+  }
   
   async createCart(data: Prisma.CartCreateInput) : Promise<Cart>{
     return this.prisma.cart.create({

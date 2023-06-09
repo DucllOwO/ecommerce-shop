@@ -1,9 +1,12 @@
 import ICart_detail from "./CartDetail";
+import IProduct_item from "./ProductItem";
 import IUser from "./User";
 
 export default interface ICart {
   id: number;
   owner: IUser;
   userID: string;
-  Cart_detail: ICart_detail[];
+  quantity: number;
+  itemID: string;
+  Product_item: IProduct_item;
 }

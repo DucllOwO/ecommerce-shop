@@ -13,6 +13,7 @@ const Collection = () => {
 
   useEffect(() => {
     fetchAllCollection().then((data) => {
+      console.log(data.data)
       setData(data.data);
     }).finally(() => setIsLoading(false))
   }, [])

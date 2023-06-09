@@ -3,6 +3,7 @@ import { Card, Table, Image, Space, Typography, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { fetchTag } from '../../../api/admin/tagAPI';
 import ITag from '../../../interface/Tag';
+import { IHaveTag } from '../../../interface/HaveTag';
 
 const { Text } = Typography;
 
@@ -15,7 +16,7 @@ interface DataType {
   tag: string[];
 }
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<IHaveTag> = [
   {
     title: 'ID',
     dataIndex: 'id',
@@ -27,8 +28,8 @@ const columns: ColumnsType<DataType> = [
     key: 'name_image',
     render: (text, record) => {
       return <Space direction='horizontal'>
-        <Image width={100} height={150} alt="example" src={record.image[0]} />
-        <Text>{record.name}</Text>
+        <Image width={100} height={150} alt="example" src={record.product.image[0]} />
+        <Text>{record.product.name}</Text>
       </Space>
     },
   },
@@ -48,13 +49,13 @@ const columns: ColumnsType<DataType> = [
 
 const ProductTagDetailTable = (props: TagDetailProps) => {
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ITag[]>();
 
   useEffect(() => {
     if (props.selectedTag)
       fetchTag(props.selectedTag.id).then((data) => {
         console.log(data.data)
-        setData(data.data.Product);
+        setData(data.data.HaveTag);
       })
   }, [props])
 

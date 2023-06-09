@@ -1,4 +1,5 @@
 import IDiscount from "./Discount";
+import { IHaveTag } from "./HaveTag";
 import IProduct from "./Product";
 
 
@@ -7,5 +8,5 @@ export default interface ITag {
   name: string;
   discount?: IDiscount;
   discountID?: number;
-  Product: IProduct[];
+  HaveTag: IHaveTag
 }

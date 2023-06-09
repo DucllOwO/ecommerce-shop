@@ -156,31 +156,22 @@ model Product_item {
   image        String[]
   product      Product         @relation(fields: [productID], references: [id], onDelete: NoAction)
   productID    Int
-  Cart_detail  Cart_detail[]
   Order_detail Order_detail[]
   ImportDetail Import_detail[]
+  Cart         Cart[]
 
   @@map("product_item")
 }
 
 model Cart {
-  id          Int           @id @default(autoincrement())
-  owner       User          @relation(fields: [userID], references: [id], onDelete: NoAction)
-  userID      Int
-  Cart_detail Cart_detail[]
-
-  @@map("cart")
-}
-
-model Cart_detail {
   id           Int          @id @default(autoincrement())
   quantity     Int          @default(1)
-  cart         Cart         @relation(fields: [cartID], references: [id], onDelete: Cascade)
-  cartID       Int
-  product_item Product_item @relation(fields: [itemID], references: [id], onDelete: NoAction)
+  product_item Product_item @relation(fields: [itemID], references: [id], onDelete: Cascade)
   itemID       Int
+  owner        User         @relation(fields: [userID], references: [id], onDelete: Cascade)
+  userID       Int
 
-  @@map("cart_detail")
+  @@map("cart")
 }
 
 model Order {

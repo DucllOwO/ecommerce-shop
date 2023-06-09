@@ -18,6 +18,7 @@ const Tag = () => {
   useEffect(() => {
     setIsLoading(true)
     fetchAllTag().then(data => {
+      console.log(data.data)
       setData(data.data);
       fetchAllDiscounts().then((data) => {
         setDiscounts(data.data.map((item: IDiscount) => {

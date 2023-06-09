@@ -10,11 +10,12 @@ import Helmet from './components/Helmet'
 import CartTable from './components/table/CartTable'
 import LocalStorage from '../../helper/localStorage'
 import { useForm } from 'antd/es/form/Form'
-import { createOrder, createReceipt, getVoucher } from '../../api/CustomerAPI'
+import { createOrder, createReceipt, getCart, getVoucher } from '../../api/CustomerAPI'
 import Search from 'antd/es/transfer/search'
 import ColumnGroup from 'antd/es/table/ColumnGroup'
 import ErrorAlert from '../../components/Alert/ErrorAlert'
 import SuccessAlert from '../../components/Alert/SuccessAlert'
+import ICart from '../../interface/Cart'
 
 const paymentMethods = [
     { value: 'cod', label: 'Thanh toán khi nhận hàng' },
@@ -40,6 +41,10 @@ const Cart = () => {
     const [form] = useForm();
 
     useEffect(()=> {
+        if(currentUser)
+            getCart(currentUser.id).then((data) => {
+                setCartProducts(data.data);
+            })
         setTotalPrice(getTotalPrice())
     }, [cartProducts])
 

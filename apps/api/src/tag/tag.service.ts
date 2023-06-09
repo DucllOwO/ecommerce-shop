@@ -12,6 +12,11 @@ export class TagService {
       where: tagWhereUniqueInput,
       include: {
         discount: true,
+        HaveTag: {
+          include: {
+            product: true
+          }
+        }
       },
     });
   }

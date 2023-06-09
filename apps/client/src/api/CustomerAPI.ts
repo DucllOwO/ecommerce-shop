@@ -35,3 +35,7 @@ export function getOrdersByUserID(userID: any){
 export function getOrder(id: string){
   return http.get(`/order/${id}`);
 }
+
+export function getCart(userID: string){
+  return http.get(`/cart/?userID=${userID}`);
+}

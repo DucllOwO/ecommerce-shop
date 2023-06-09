@@ -21,7 +21,9 @@ export class TagController {
 
   @Get()
   findAll() {
-    return this.tagService.tags({ include: { discount: true } });
+    return this.tagService.tags({ include: { 
+      discount: true
+    } });
   }
 
   @Get(':id')
