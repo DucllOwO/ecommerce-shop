@@ -4,7 +4,7 @@ import Title from 'antd/es/typography/Title';
 import IOrder from '../../interface/Order';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { getOrder } from '../../api/CustomerAPI';
+import { getOrdersByUserID } from '../../api/CustomerAPI';
 import LocalStorage from '../../helper/localStorage';
 
 // const data = Array.from({ length: 5 }).map((_, i) => ({
@@ -28,11 +28,12 @@ const Order = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getOrder(LocalStorage.getItem('user').id).then((data) => {
+    getOrdersByUserID(LocalStorage.getItem('user').id).then((data) => {
       console.log(data.data)
       setData(data.data)
     })
   },[])
+
   return (
     <Space className='svgBg' style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
       <Space direction='vertical' style={{ gap: 20, margin: '20px 0px' }}>
@@ -40,9 +41,9 @@ const Order = () => {
           bordered
           header={<Space style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
             <Title level={2}>Đơn hàng {i+1}</Title>
-            <Button type='primary' onClick={() => navigate(`/orders/${i}`)}>Xem chi tiết</Button>
+            <Button type='primary' onClick={() => navigate(`/orders/${item.id}`)}>Xem chi tiết</Button>
           </Space>}
-          footer={<Title level={4} style={{ textAlign: 'end' }}> Tổng giá trị: 900000000</Title>}
+          footer={<Title level={4} style={{ textAlign: 'end' }}> Tổng giá trị: {item.total_cost}</Title>}
           style={{ width: '60vw', background: 'white' }}
           itemLayout="vertical"
           size="default"
@@ -59,13 +60,13 @@ const Order = () => {
               }
             >
               <List.Item.Meta
-                title={detail.title}
+                title={detail.product_item.product.name}
               />
               <Row>
-                {`Số lượng: ${detail.product_item.quantity}`}
+                {`Số lượng: ${detail?.quantity}`}
               </Row>
               <Row>{`${detail.product_item.color} ${detail.product_item.size}`}</Row>
-              <Row>{}</Row>
+              <Row>{detail.product_item.product.price}</Row>
             </List.Item>
           )}
         />)}
