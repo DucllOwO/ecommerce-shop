@@ -22,10 +22,13 @@ export class UserController {
     return this.userService.user({id: Number(id)});
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.userService.update(+id, updateUserDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateUserDto: Prisma.UserUpdateInput) {
+    return this.userService.updateUser({
+      where: {id: Number(id)},
+      data: updateUserDto
+    });
+  }
 
   // @Delete(':id')
   // remove(@Param('id') id: string) {

@@ -11,6 +11,18 @@ export class OrderService {
   ): Promise<Order | null> {
     return this.prisma.order.findUnique({
       where: orderWhereUniqueInput,
+      include:{
+        buyer: true,
+        Order_detail: {
+          include: {
+            product_item: {
+              include: {
+                product: true
+              }
+            }
+          }
+        }
+      }
     });
   }
 
@@ -28,7 +40,16 @@ export class OrderService {
       take,
       orderBy,
       include:{
-        buyer: true
+        buyer: true,
+        Order_detail: {
+          include: {
+            product_item: {
+              include: {
+                product: true
+              }
+            }
+          }
+        }
       }
     });
   }

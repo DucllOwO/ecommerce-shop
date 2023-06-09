@@ -1,5 +1,6 @@
 import { Card, Table, Image, Space, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import IOrder_detail from '../../../interface/OrderDetail';
 
 const { Text } = Typography;
 
@@ -54,20 +55,20 @@ const data = [
   },
 ]
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType<IOrder_detail> = [
   {
     title: 'ID',
     dataIndex: 'id',
     key: 'id',
-    render: (text) => <p>{text}</p>,
+    render: (text, record) => <p>{record.id}</p>,
   },
   {
     title: 'Sản phẩm',
     key: 'name_image',
     render: (text, record) => {
       return <Space direction='horizontal'>
-        <Image width={100} height={150} alt="example" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />
-        <Text>{record.name}</Text>
+        <Image width={100} height={150} alt="example" src={record.product_item.product.image[0]} />
+        <Text>{record.product_item.product.name}</Text>
       </Space>
     },
   },
@@ -75,29 +76,33 @@ const columns: ColumnsType<DataType> = [
     title: 'Màu',
     dataIndex: 'color',
     key: 'color',
-    render: (text) => <p>{text}</p>,
+    render: (text, record) => <p>{record.product_item.color}</p>,
   },
   {
     title: 'Kích cỡ',
     dataIndex: 'size',
     key: 'size',
-    render: (text) => <p>{text}</p>,
+    render: (text, record) => <p>{record.product_item.size}</p>,
   },
   {
     title: 'Số lượng',
     dataIndex: 'quantity',
     key: 'quantity',
-    render: (text) => <p>{text}</p>,
+    render: (text, record) => <p>{record.quantity}</p>,
   },
   {
     title: 'Gía',
     dataIndex: 'price',
     key: 'price',
-    render: (text) => <p>{text}</p>,
+    render: (text, record) => <p>{record.product_item.product.price}</p>,
   },
 ];
 
-const ProductOrderDetailTable = () => {
+type OrderDetailTableProps = {
+  data?: IOrder_detail[]
+}
+
+const ProductOrderDetailTable = ({data} : OrderDetailTableProps) => {
   return (
     <Table columns={columns} dataSource={data} pagination={{ pageSize: 4 }} />
   )

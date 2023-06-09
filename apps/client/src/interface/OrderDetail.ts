@@ -6,5 +6,6 @@ export default interface IOrder_detail {
   product_item: IProduct_item;
   itemID: number;
   order: IOrder;
+  quantity: number;
   orderID: number;
 }

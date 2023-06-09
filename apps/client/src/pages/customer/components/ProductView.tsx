@@ -110,12 +110,11 @@ const ProductView = (props: ProductViewProps) => {
                 color: selectedColor,
                 size: selectedSize
             }
-            if (LocalStorage.getItem('cart') &&
-                !Array(LocalStorage.getItem('cart')).some((data) => 
-                    JSON.stringify(data[0]) === JSON.stringify(selectedItem)
-                ))
-                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), selectedItem]);
-            else if (!LocalStorage.getItem('cart'))
+            if(LocalStorage.getItem('cart') && 
+            !Array(LocalStorage.getItem('cart')).some((data: any) => 
+                JSON.stringify(data[0]) === JSON.stringify(selectedItem)))
+                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,selectedItem]);
+            else if(!LocalStorage.getItem('cart'))
                 LocalStorage.setItem('cart', [selectedItem])
         }
         else {
