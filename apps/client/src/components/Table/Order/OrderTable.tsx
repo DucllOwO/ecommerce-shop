@@ -1,63 +1,62 @@
 import React, { useEffect, useState } from 'react'
-import { Space, Table, Tag } from 'antd';
+import { Button, Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
 import OrderModal from '../../Modal/OrderModal';
 import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
-import { fetchWaitingOrders, fetchCompletedOrders } from '../../../api/admin/OrderAPI';
+import { fetchWaitingOrders, fetchCompletedOrders, finishOrder } from '../../../api/admin/OrderAPI';
 import IOrder from '../../../interface/Order';
 import dayjs from 'dayjs';
-
-// interface DataType {
-//   key?: string;
-//   id: number;
-//   date: string;
-//   customer_name: string;
-//   total_amount: number;
-// }
-
-// const data = [
-//   {
-//     id: 1,
-//     date: '2018-04-24 18:00:00',
-//     customer_name: 'Nguyen tri Duck',
-//     total_amount: 1000000000,
-//   },
-// ]
-
-const columns: ColumnsType<IOrder> = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Ngày tạo',
-    dataIndex: 'date',
-    key: 'date',
-    render: (_, record) => <p>{dayjs(record.date).format("HH:mm:ss DD/MM/YYYY")}</p>
-  },
-  {
-    title: 'Khách hàng',
-    dataIndex: 'customer_name',
-    key: 'customer_name',
-    render: (_, record) => <p>{`${record.buyer.lastname} ${record.buyer.firstname}`}</p>
-  },
-  {
-    title: 'Tổng tiền',
-    key: 'total_cost',
-    dataIndex: 'total_cost',
-    render: (text) => (
-      text
-    ),
-  },
-];
+import SuccessAlert from '../../Alert/SuccessAlert';
 
 const OrderTable = (props: OrderProps) => {
+  const columns: ColumnsType<IOrder> = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text) => <a>{text}</a>,
+    },
+    {
+      title: 'Ngày tạo',
+      dataIndex: 'date',
+      key: 'date',
+      render: (_, record) => <p>{dayjs(record.date).format("HH:mm:ss DD/MM/YYYY")}</p>
+    },
+    {
+      title: 'Khách hàng',
+      dataIndex: 'customer_name',
+      key: 'customer_name',
+      render: (_, record) => <p>{`${record.buyer.lastname} ${record.buyer.firstname}`}</p>
+    },
+    {
+      title: 'Tổng tiền',
+      key: 'total_cost',
+      dataIndex: 'total_cost',
+      render: (text) => (
+        text
+      ),
+    },
+    props.state === "waiting" ? {
+      title: 'Thao tác',
+      key: 'Action',
+      render: (_, record) => <Button 
+        onClick={() => handleOnClick(record)}
+      >Hoàn thành</Button>,
+    } : {}
+  
+  ];
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<IOrder>();
   const [data, setData] = useState<IOrder[]>();
+
+  const handleOnClick = (item: IOrder) => {
+    finishOrder(item.id).then((dataRes) => {
+      setData(prev => prev?.filter((data) => data.id !== item.id));
+      SuccessAlert("Hoàn thành đơn hàng");
+    })
+  }
 
   useEffect(()=> {
     console.log(data)

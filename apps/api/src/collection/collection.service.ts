@@ -30,6 +30,9 @@ export class CollectionService {
       skip,
       take,
       orderBy,
+      include: {
+        discount: true
+      }
     });
   }
 
@@ -48,7 +51,8 @@ export class CollectionService {
     const {where, data} = params;
     return this.prisma.collection.update({
       where,
-      data
+      data,
+      include: { discount: true },
     });
   }
 

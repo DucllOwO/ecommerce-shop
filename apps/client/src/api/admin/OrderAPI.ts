@@ -7,3 +7,7 @@ export function fetchWaitingOrders(){
 export function fetchCompletedOrders(){
   return http.get(`/order/completed`);
 };
+
+export function finishOrder(id: number){
+  return http.patch(`/order/${id}`, {status: '1'});
+};

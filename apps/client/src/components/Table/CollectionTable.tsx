@@ -8,6 +8,8 @@ import EditableCell from './EditableCell';
 import { INPUT, SELECT } from '../../constant/constant';
 import ICollection from '../../interface/Collection';
 import IDiscount from '../../interface/Discount';
+import { updateCollection } from '../../api/admin/collectionAPI';
+import SuccessAlert from '../Alert/SuccessAlert';
 
 interface CollectionTableProps extends TableProps {
   data?: ICollection[],
@@ -20,6 +22,8 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData, discou
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
   const [selectedItem, setSelectedItem] = useState<ICollection>();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const isEditing = (record: ICollection) => record.id.toString() === editingKey;
 
@@ -40,17 +44,16 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData, discou
       title: 'Giảm giá',
       key: 'discount',
       dataIndex: 'discount',
-      editable: true,
+      width: "30%",
       render: (_: any, record: ICollection) => {
         const editing = isEditing(record);
         if (editing)
           return <Form.Item name={'discountID'} style={{ marginBottom: 0 }}>
-            <Select allowClear style={{ width: '100%' }} placeholder="Chọn mã giảm giá áp dụng cho nhãn" options={discounts} />
+            <Select allowClear style={{ width: '100%' }} options={discounts} placeholder="Chọn mã giảm giá áp dụng cho nhãn" />
           </Form.Item>
         else
-        {
           return record.discount ? <p>{`${record.discount?.name} - ${record.discount?.discount}%`}</p> : 'Không áp dụng khuyến mãi'
-      }}
+      }
     },
     {
       title: 'Thao tác',
@@ -60,7 +63,7 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData, discou
         const editable = isEditing(record);
         return <Space>
           {editable ? <>
-            <Typography.Link onClick={() => save(record.id.toString())} style={{ marginRight: 8 }}>
+            <Typography.Link onClick={() => save(record.id)} style={{ marginRight: 8 }}>
               Lưu
             </Typography.Link>
             <Popconfirm title="Bạn có chắc muốn hủy bỏ chỉnh sửa?" onConfirm={cancel}>
@@ -90,28 +93,27 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData, discou
     setEditingKey('');
   };
 
-  const save = async (id: string) => {
-    try {
-      const row = (await form?.validateFields()) as ICollection;
-
+  const save = async (id: number) => {
+    const collection = form?.getFieldsValue();
+    setIsLoading(true)
+    console.log(collection)
+    updateCollection({ ...collection, id: id }).then(({ data: dataRes }) => {
       const newData = data ? [...data] : [];
-      const index = newData.findIndex((item) => id === item.id.toString());
+      const index = newData.findIndex((item) => id == item.id);
       if (index > -1) {
         const item = newData[index];
         newData.splice(index, 1, {
           ...item,
-          ...row,
+          ...dataRes,
         });
-        setData && setData(newData);
         setEditingKey('');
       } else {
-        newData.push(row);
-        setData && setData(newData);
+        newData.push(dataRes);
         setEditingKey('');
       }
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo);
-    }
+      setData && setData(newData)
+      SuccessAlert('Cập nhật thành công');
+    }).catch((err) => console.log(err)).finally(() => setIsLoading(false))
   };
 
   const mergedColumns = columns.map((col) => {
