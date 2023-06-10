@@ -26,11 +26,14 @@ export class AccountService {
     });
   }
 
-  update(id: number, updateAccountDto: Prisma.AccountUpdateInput) {
-    return `This action updates a #${id} account`;
-  }
+  // update(email: string, updateAccountDto: Prisma.AccountUpdateInput) {
+  //   return this.prisma.account.update({
+  //     where: {email: email},
+  //     data: updateAccountDto
+  //   });
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} account`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} account`;
+  // }
 }

@@ -21,13 +21,13 @@ export class AccountController {
     return this.accountService.findOne({ email });
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAccountDto: Prisma.AccountUpdateInput) {
-    return this.accountService.update(+id, updateAccountDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateAccountDto: Prisma.AccountUpdateInput) {
+  //   return this.accountService.update(+id, updateAccountDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.accountService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.accountService.remove(+id);
+  // }
 }

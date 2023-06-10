@@ -6,6 +6,7 @@ import OrderModal from '../../Modal/OrderModal';
 import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
 import { fetchWaitingOrders, fetchCompletedOrders } from '../../../api/admin/OrderAPI';
 import IOrder from '../../../interface/Order';
+import dayjs from 'dayjs';
 
 // interface DataType {
 //   key?: string;
@@ -35,6 +36,7 @@ const columns: ColumnsType<IOrder> = [
     title: 'Ngày tạo',
     dataIndex: 'date',
     key: 'date',
+    render: (_, record) => <p>{dayjs(record.date).format("HH:mm:ss DD/MM/YYYY")}</p>
   },
   {
     title: 'Khách hàng',

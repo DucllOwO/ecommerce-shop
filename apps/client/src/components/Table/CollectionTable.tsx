@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react'
-import { Button, Popconfirm, Space, Table, Typography } from 'antd';
+import { Button, Form, Popconfirm, Select, Space, Table, Typography } from 'antd';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
 import CollectionModal from '../Modal/CollectionModal';
 import { isClickOnATableCell } from '../../helper/checkEventClick';
@@ -7,12 +7,14 @@ import { TableProps } from '../../interface/TableProps';
 import EditableCell from './EditableCell';
 import { INPUT, SELECT } from '../../constant/constant';
 import ICollection from '../../interface/Collection';
+import IDiscount from '../../interface/Discount';
 
 interface CollectionTableProps extends TableProps {
   data?: ICollection[],
+  discounts?: IDiscount[]
 }
 
-const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
+const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData, discounts }) => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const [editingKey, setEditingKey] = useState<string | undefined>('');
@@ -37,8 +39,18 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData }) => {
     {
       title: 'Giảm giá',
       key: 'discount',
-      dataIndex: 'discountID',
+      dataIndex: 'discount',
       editable: true,
+      render: (_: any, record: ICollection) => {
+        const editing = isEditing(record);
+        if (editing)
+          return <Form.Item name={'discountID'} style={{ marginBottom: 0 }}>
+            <Select allowClear style={{ width: '100%' }} placeholder="Chọn mã giảm giá áp dụng cho nhãn" options={discounts} />
+          </Form.Item>
+        else
+        {
+          return record.discount ? <p>{`${record.discount?.name} - ${record.discount?.discount}%`}</p> : 'Không áp dụng khuyến mãi'
+      }}
     },
     {
       title: 'Thao tác',

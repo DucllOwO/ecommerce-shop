@@ -27,10 +27,19 @@ import OrderDetail from './pages/customer/OrderDetail.js';
 import { useContext } from 'react';
 import { AppContext } from './context/AppContext.js';
 import Payment from './pages/customer/Payment.js';
+import LocalStorage from './helper/localStorage.js';
+import { updateUser } from './api/CustomerAPI.js';
+import dayjs from 'dayjs';
 
 
 function App() {
   const appCtx = useContext(AppContext);
+  const currentUser = LocalStorage.getItem('user');
+  console.log(currentUser);
+  if(currentUser)
+  {
+    updateUser({logged_date: dayjs(Date.now())}, currentUser.id)
+  }
   return (
     <BrowserRouter>
       <Routes>

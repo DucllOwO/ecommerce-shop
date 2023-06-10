@@ -9,7 +9,7 @@ const OrderManagement = ({ state }: OrderProps) => {
   console.log(state)
   return (
     <div>
-      <OrderTable />
+      <OrderTable state={state} />
     </div>
   )
 }

@@ -7,6 +7,8 @@ import { login } from '../../api/authAPI'
 import { REQUIRED_RULE } from '../../constant/formRules'
 import { AppContext } from '../../context/AppContext'
 import LocalStorage from '../../helper/localStorage'
+import { updateUser } from '../../api/CustomerAPI'
+import dayjs from 'dayjs'
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -20,6 +22,7 @@ const Login = () => {
       const data = await login(values.email, values.password);
       LocalStorage.setItem('access_token', data.data.access_token)
       LocalStorage.setItem('user', data.data.user)
+      const updateData = await updateUser({logged_date: dayjs(Date.now())}, data.data.user.id)
       appCtx?.setUser(data.data.user)
       if (data.data.user.is_admin) {
         nav('/admin/dashboard');

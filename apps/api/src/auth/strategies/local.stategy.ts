@@ -32,6 +32,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     //get user information to create payload
     const { password: removedPassword, User, ...accountRemaining } = account;
 
+
     return {
       access_token: this.jwtService.sign(accountRemaining),
       user: {...User[0], ...accountRemaining}
