@@ -1,3 +1,4 @@
+import IOrder from "./Order";
 import IReceiptDetail from "./ReceiptDetail";
 import IUser from "./User";
 import IVoucher from "./Voucher";
@@ -9,7 +10,7 @@ export default interface IReceipt {
   status: string;
   voucher?: IVoucher | null;
   voucherCode?: string | null;
-  buyer: IUser;
-  userID: string;
-  ReceiptDetail: IReceiptDetail[];
+  order: IOrder;
+  orderID: number;
+  paymentMethod: string;
 }

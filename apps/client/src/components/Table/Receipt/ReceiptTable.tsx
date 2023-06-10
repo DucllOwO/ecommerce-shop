@@ -35,7 +35,7 @@ const columns: ColumnsType<IReceipt> = [
     title: 'Tên khách hàng',
     dataIndex: 'customer_name',
     key: 'customer_name',
-    render: (_, record) => <p>{`${record.buyer.lastname} ${record.buyer.firstname}`}</p>,
+    render: (_, record) => <p>{`${record.order.lastname} ${record.order.firstname}`}</p>,
   },
   {
     title: 'Ngày',

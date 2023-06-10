@@ -68,7 +68,7 @@ const OrderTable = (props: OrderProps) => {
 
   return (
     <>
-      <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedOrder={selectedItem} />
       <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record : IOrder, rowIndex) => {
         return {
           onClick: (event) => {
