@@ -24,37 +24,39 @@ import dayjs from 'dayjs';
 //   }
 // ]
 
-const columns: ColumnsType<IReceipt> = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-    render: (text) => <p>{text}</p>,
-  },
-  {
-    title: 'Tên khách hàng',
-    dataIndex: 'customer_name',
-    key: 'customer_name',
-    render: (_, record) => <p>{`${record.order.lastname} ${record.order.firstname}`}</p>,
-  },
-  {
-    title: 'Ngày',
-    dataIndex: 'date',
-    key: 'date',
-    render: (text) => <p>{dayjs(text).format("HH:mm DD/MM/YYYY")}</p>,
-  },
-  {
-    title: 'Tổng tiền',
-    dataIndex: 'cost',
-    key: 'cost',
-    render: (text) => <p>{text}</p>,
-  },
-];
 
 const ReceiptTable = (props: ReceiptTableProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState<IReceipt[]>();
+  const [selectedReceipt, setSelectedReceipt] = useState<IReceipt>();
 
+  const columns: ColumnsType<IReceipt> = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+      render: (text) => <p>{text}</p>,
+    },
+    {
+      title: 'Tên khách hàng',
+      dataIndex: 'customer_name',
+      key: 'customer_name',
+      render: (_, record) => <p>{`${record.order.lastname} ${record.order.firstname}`}</p>,
+    },
+    {
+      title: 'Ngày',
+      dataIndex: 'date',
+      key: 'date',
+      render: (text) => <p>{dayjs(text).format("HH:mm DD/MM/YYYY")}</p>,
+    },
+    {
+      title: 'Tổng tiền',
+      dataIndex: 'cost',
+      key: 'cost',
+      render: (text) => <p>{text}</p>,
+    },
+  ];
+  
   useEffect(()=> {
     // console.log(props.state);
     if(props.state === 'paid')
@@ -65,7 +67,7 @@ const ReceiptTable = (props: ReceiptTableProps) => {
 
   return (
     <>
-      <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedOrder={selectedReceipt?.order}/>
       <Table
         columns={columns}
         dataSource={data}
@@ -73,7 +75,10 @@ const ReceiptTable = (props: ReceiptTableProps) => {
           return {
             onClick: (event) => {
               if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event)))
+              {  
+                setSelectedReceipt(record)
                 setIsModalOpen(prev => !prev)
+              }
             }, // click row
           };
         }}

@@ -154,8 +154,8 @@ model Product_item {
   size         String          @db.Char(4)
   quantity     Int
   image        String[]
-  product      Product         @relation(fields: [productID], references: [id], onDelete: NoAction)
-  productID    Int
+  product      Product         @relation(fields: [product_id], references: [id], onDelete: NoAction)
+  product_id    Int             
   Order_detail Order_detail[]
   ImportDetail Import_detail[]
   Cart         Cart[]
@@ -166,8 +166,8 @@ model Product_item {
 model Cart {
   id           Int          @id @default(autoincrement())
   quantity     Int          @default(1)
-  product_item Product_item @relation(fields: [itemID], references: [id], onDelete: Cascade)
-  itemID       Int
+  product_item Product_item @relation(fields: [item_id], references: [id], onDelete: Cascade)
+  item_id      Int
   owner        User         @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID       Int
 

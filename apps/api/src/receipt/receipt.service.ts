@@ -29,7 +29,19 @@ export class ReceiptService {
       take,
       orderBy,
       include:{
-        order: true
+        order: {
+          include: {
+            Order_detail: {
+              include: {
+                product_item: {
+                  include: {
+                    product: true
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     });
   }
