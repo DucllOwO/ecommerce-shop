@@ -12,7 +12,7 @@ export class ProductService {
     return this.prisma.product.findUnique({
       where: productWhereUniqueInput,
       include: {
-        Product_item: true,
+        product_item: true,
       },
     });
   }
@@ -31,7 +31,7 @@ export class ProductService {
       orderBy,
       where,
       include: {
-        Product_item: true,
+        product_item: true,
         HaveTag: {
           include: {
             tag: true,

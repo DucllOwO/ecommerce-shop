@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -20,20 +17,20 @@ model Account {
 }
 
 model User {
-  id             Int        @id @default(autoincrement())
   firstname      String     @db.VarChar(50)
   lastname       String?    @db.VarChar(50)
   phone_number   String?    @db.Char(10)
   address        String?    @db.VarChar(150)
   avatar         String     @default("https://lggcxbdwmetbsvmtuctl.supabase.co/storage/v1/object/public/avatar/default.png")
   product_viewed String[]
-  account        Account    @relation(fields: [email], references: [email])
   email          String     @db.VarChar(256)
   logged_date    DateTime   @default(now()) @db.Timestamptz(6)
-  Feedback       Feedback[]
-  Review         Review[]
+  id             Int        @id @default(autoincrement())
   Cart           Cart[]
+  Feedback       Feedback[]
   Order          Order[]
+  Review         Review[]
+  account        Account    @relation(fields: [email], references: [email])
 
   @@map("user")
 }
@@ -42,19 +39,19 @@ model Feedback {
   id       Int     @id @default(autoincrement())
   content  String?
   rate     Float
-  author   User?   @relation(fields: [authorID], references: [id], onDelete: NoAction)
   authorID Int?
+  author   User?   @relation(fields: [authorID], references: [id], onDelete: NoAction)
 
   @@map("feedback")
 }
 
 model Discount {
   id         Int          @id @default(autoincrement())
-  name       String       @default("")
   discount   Float        @default(0)
-  Tag        Tag[]
+  name       String       @default("")
   Collection Collection[]
   Product    Product[]
+  Tag        Tag[]
 
   @@map("discount")
 }
@@ -62,19 +59,19 @@ model Discount {
 model Tag {
   id         Int       @id @default(autoincrement())
   name       String    @db.VarChar(150)
-  discount   Discount? @relation(fields: [discountID], references: [id], onDelete: SetNull)
   discountID Int?
   HaveTag    HaveTag[]
+  discount   Discount? @relation(fields: [discountID], references: [id])
 
   @@map("tag")
 }
 
 model HaveTag {
   id        Int     @id @default(autoincrement())
-  tag       Tag     @relation(fields: [tagID], references: [id], onDelete: Cascade)
   tagID     Int
-  product   Product @relation(fields: [productID], references: [id], onDelete: Cascade)
   productID Int
+  product   Product @relation(fields: [productID], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagID], references: [id], onDelete: Cascade)
 
   @@map("have_tag")
 }
@@ -82,8 +79,8 @@ model HaveTag {
 model Collection {
   id         Int       @id @default(autoincrement())
   name       String    @db.VarChar(150)
-  discount   Discount? @relation(fields: [discountID], references: [id], onDelete: SetNull)
   discountID Int?
+  discount   Discount? @relation(fields: [discountID], references: [id])
   Product    Product[]
 
   @@map("collection")
@@ -95,17 +92,17 @@ model Product {
   price        Int
   description  String?
   image        String[]
-  slug         String         @unique @default("")
   view         Int            @default(0)
   sold         Int            @default(0)
   isActive     Boolean        @default(true)
-  discount     Discount?      @relation(fields: [discountID], references: [id], onDelete: SetNull)
   discountID   Int?
-  collection   Collection?    @relation(fields: [collectionID], references: [id], onDelete: SetNull)
   collectionID Int?
-  Review       Review[]
-  Product_item Product_item[]
+  slug         String         @unique @default("")
   HaveTag      HaveTag[]
+  collection   Collection?    @relation(fields: [collectionID], references: [id])
+  discount     Discount?      @relation(fields: [discountID], references: [id])
+  product_item Product_item[]
+  Review       Review[]
 
   @@map("product")
 }
@@ -116,8 +113,8 @@ model Voucher {
   discount    Float     @default(0)
   description String?
   due         DateTime  @db.Date
-  Receipt     Receipt[]
   isActive    Boolean   @default(true)
+  Receipt     Receipt[]
 
   @@map("voucher")
 }
@@ -127,11 +124,11 @@ model Receipt {
   date          DateTime @default(now()) @db.Timestamptz(6)
   cost          Int      @default(0)
   status        String   @default("0") @db.Char(1)
-  paymentMethod String   @db.VarChar(100)
-  voucher       Voucher? @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
   voucherCode   String?  @db.Char(6)
-  order         Order    @relation(fields: [orderID], references: [id], onDelete: NoAction)
   orderID       Int
+  paymentMethod String   @db.VarChar(100)
+  order         Order    @relation(fields: [orderID], references: [id], onDelete: NoAction)
+  voucher       Voucher? @relation(fields: [voucherCode], references: [code], onDelete: NoAction)
 
   @@map("receipt")
 }
@@ -140,10 +137,10 @@ model Review {
   id        Int     @id @default(autoincrement())
   comment   String?
   rate      Float
-  author    User    @relation(fields: [authorID], references: [id], onDelete: NoAction)
-  authorID  Int
-  product   Product @relation(fields: [productID], references: [id], onDelete: NoAction)
   productID Int
+  authorID  Int
+  author    User    @relation(fields: [authorID], references: [id], onDelete: NoAction)
+  product   Product @relation(fields: [productID], references: [id], onDelete: NoAction)
 
   @@map("review")
 }
@@ -154,22 +151,22 @@ model Product_item {
   size         String          @db.Char(4)
   quantity     Int
   image        String[]
-  product      Product         @relation(fields: [product_id], references: [id], onDelete: NoAction)
-  product_id    Int             
-  Order_detail Order_detail[]
+  product_id   Int
+  cart         Cart[]
   ImportDetail Import_detail[]
-  Cart         Cart[]
+  order_detail Order_detail[]
+  product      Product         @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("product_item")
 }
 
 model Cart {
   id           Int          @id @default(autoincrement())
-  quantity     Int          @default(1)
-  product_item Product_item @relation(fields: [item_id], references: [id], onDelete: Cascade)
-  item_id      Int
-  owner        User         @relation(fields: [userID], references: [id], onDelete: Cascade)
   userID       Int
+  itemID       Int
+  quantity     Int          @default(1)
+  product_item Product_item @relation(fields: [itemID], references: [id], onDelete: Cascade)
+  owner        User         @relation(fields: [userID], references: [id], onDelete: Cascade)
 
   @@map("cart")
 }
@@ -179,12 +176,12 @@ model Order {
   date         DateTime       @default(now()) @db.Timestamptz(6)
   total_cost   Int            @default(0)
   status       String         @default("0") @db.Char(1)
+  userID       Int
+  address      String?        @db.VarChar(150)
   firstname    String         @db.VarChar(50)
   lastname     String?        @db.VarChar(50)
   phone_number String?        @db.Char(10)
-  address      String?        @db.VarChar(150)
   buyer        User           @relation(fields: [userID], references: [id], onDelete: NoAction)
-  userID       Int
   Order_detail Order_detail[]
   Receipt      Receipt[]
 
@@ -193,11 +190,11 @@ model Order {
 
 model Order_detail {
   id           Int          @id @default(autoincrement())
-  product_item Product_item @relation(fields: [itemID], references: [id], onDelete: NoAction)
-  itemID       Int
-  order        Order        @relation(fields: [orderID], references: [id], onDelete: NoAction)
+  item_id      Int
   orderID      Int
   quantity     Int          @default(1)
+  product_item Product_item @relation(fields: [item_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  order        Order        @relation(fields: [orderID], references: [id], onDelete: NoAction)
 
   @@map("order_detail")
 }
@@ -219,9 +216,9 @@ model Monthly_report {
   outcome       Int            @default(0)
   profit        Int            @default(0)
   sold_quantity Int            @default(0)
-  yearly_report Yearly_report  @relation(fields: [year], references: [year], onDelete: NoAction)
   year          DateTime       @db.Date
   Daily_report  Daily_report[]
+  yearly_report Yearly_report  @relation(fields: [year], references: [year], onDelete: NoAction)
 
   @@map("monthly_report")
 }
@@ -232,8 +229,8 @@ model Daily_report {
   outcome        Int            @default(0)
   profit         Int            @default(0)
   sold_quantity  Int            @default(0)
-  monthly_report Monthly_report @relation(fields: [month], references: [month], onDelete: NoAction)
   month          DateTime       @db.Date
+  monthly_report Monthly_report @relation(fields: [month], references: [month], onDelete: NoAction)
 
   @@map("daily_report")
 }
@@ -248,13 +245,13 @@ model Importing {
 
 model Import_detail {
   id           Int          @id @default(autoincrement())
-  Product_item Product_item @relation(fields: [item], references: [id], onDelete: NoAction)
   item         Int
   quantity     Int          @default(0)
   price        Int          @default(0)
-  import       Importing    @relation(fields: [importID], references: [id], onDelete: NoAction)
   importID     Int
   total_cost   Int          @default(0)
+  import       Importing    @relation(fields: [importID], references: [id], onDelete: NoAction)
+  Product_item Product_item @relation(fields: [item], references: [id], onDelete: NoAction)
 
   @@map("import_detail")
 }
