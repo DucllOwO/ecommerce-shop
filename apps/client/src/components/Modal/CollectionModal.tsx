@@ -4,7 +4,7 @@ import { ModalProps } from '../../interface/ModalProps';
 import ProductCollectionDetailTable from '../Table/Product/ProductDetailTable.Collection';
 import { ICollection } from '../../interface/Collection';
 import { IProduct } from '../../interface/Product';
-import { fetchCollection } from '../../api/admin/ProductAPI';
+import { fetchCollection } from '../../api/admin/productAPI';
 
 interface CollectionModalProps extends ModalProps {
   selectedItem?: ICollection

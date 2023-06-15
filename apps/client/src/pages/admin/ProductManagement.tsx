@@ -3,7 +3,7 @@ import { SetStateAction, useEffect, useReducer, useState } from 'react'
 import ProductModal from '../../components/Modal/ProductModal';
 import ProductTable from '../../components/Table/Product/ProductTable';
 import IProduct from '../../interface/Product';
-import { fetchAllProducts } from '../../api/admin/ProductAPI';
+import { fetchAllProducts } from '../../api/admin/productAPI';
 import { ACTION_READ, SET_ACTION, ACTION_CREATE, ACTION_EDIT } from '../../constant/constant';
 
 

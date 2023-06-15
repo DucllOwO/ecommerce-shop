@@ -2,7 +2,7 @@ import { Button, Form, Space, Spin } from 'antd';
 import { useEffect, useState } from 'react'
 import CollectionTable from '../../components/Table/CollectionTable'
 import ICollection from '../../interface/Collection';
-import { fetchAllCollection } from '../../api/admin/ProductAPI';
+import { fetchAllCollection } from '../../api/admin/productAPI';
 import CollectionCreateModal from '../../components/Modal/CollectionCreateModal';
 import { fetchAllDiscounts } from '../../api/admin/DiscountAPI';
 import IDiscount from '../../interface/Discount';
