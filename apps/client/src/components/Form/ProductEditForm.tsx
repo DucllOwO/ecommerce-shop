@@ -140,7 +140,6 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
               style={FORM_NO_BOTTOM_MARGIN}
             >
               <Upload
-                accept='.png, .jpg'
                 name="avatar"
                 listType="picture-card"
                 fileList={fileList}

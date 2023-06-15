@@ -17,11 +17,11 @@ export function createTag({ name, discountID }: ITag) {
 export function updateTag({ id, name, discountID }: ITag) {
   return http.patch(`/tag/${id}`, {
     name,
-    discount: {
+    discount: discountID ? {
       connect: {
         id: discountID
       }
-    },
+    } : undefined,
   })
 }
 

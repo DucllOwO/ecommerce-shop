@@ -30,12 +30,12 @@ const Collection = () => {
   return (
     <Spin spinning={isLoading}>
       <Space direction='vertical' style={{ width: '100%' }}>
-        <Button type="primary">Thêm mới</Button>
+        <Button type="primary" onClick={() => setIsModalOpen(true)}>Thêm mới</Button>
         <Form form={form} component={false}>
           <CollectionTable form={form} data={data} setData={setData} discounts={discounts}/>
         </Form>
       </Space>
-      <CollectionCreateModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <CollectionCreateModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} setDataState={setData} discounts={discounts} />
     </Spin>
   )
 }

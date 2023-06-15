@@ -1,5 +1,5 @@
 import { Button, Form, Space } from 'antd';
-import { useEffect, useReducer, useState } from 'react'
+import { SetStateAction, useEffect, useReducer, useState } from 'react'
 import ProductModal from '../../components/Modal/ProductModal';
 import ProductTable from '../../components/Table/Product/ProductTable';
 import IProduct from '../../interface/Product';
@@ -38,24 +38,24 @@ const ProductManagement = () => {
             setIsModalOpen(true);
             dispatch({ type: SET_ACTION, payload: ACTION_CREATE})
           }}>Thêm mới</Button>
-        {renderModal(isModalOpen, setIsModalOpen, state.action, selectedItem)}
+        {renderModal(isModalOpen, setIsModalOpen, state.action, setData, selectedItem)}
         <ProductTable data={data} setSelectedItem={setSelectedItem} dispatch={dispatch} setIsModalOpen={setIsModalOpen} />
       </Space>
     </>
   )
 }
 
-function renderModal(isOpen: boolean, setIsModalOpen: Function, action: string, selectedItem?: IProduct)  {
+function renderModal(isOpen: boolean, setIsModalOpen: Function, action: string, setData: SetStateAction<any>, selectedItem?: IProduct, )  {
   if (isOpen === false)
     return null;
     // console.log(selectedItem)
     switch (action) {
       case ACTION_CREATE:
-        return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} action={ACTION_CREATE}/>
+        return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} action={ACTION_CREATE} setDataState={setData}/>
       case ACTION_EDIT:
-        return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} action={ACTION_EDIT} selectedItem={selectedItem}/>
+        return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} action={ACTION_EDIT} selectedItem={selectedItem} setDataState={setData}/>
       case ACTION_READ:
-        return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} action={ACTION_READ} selectedItem={selectedItem}/>
+        return <ProductModal isOpen={isOpen} setIsModalOpen={setIsModalOpen} action={ACTION_READ} selectedItem={selectedItem} setDataState={setData}/>
     }
 }
 

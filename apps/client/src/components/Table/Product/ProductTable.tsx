@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 
 import { Button, Image, Space, Table, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -28,6 +28,10 @@ interface ProductTableProps extends TableProps {
 const ProductTable: FC<ProductTableProps> = ({ data, setSelectedItem, dispatch, setIsModalOpen }) => {
 
   const [editingKey, setEditingKey] = useState<string | undefined>('');
+
+  useEffect(()=> {
+
+  },[data])
 
   const columns = [
     {
@@ -81,7 +85,7 @@ const ProductTable: FC<ProductTableProps> = ({ data, setSelectedItem, dispatch, 
           onClick: (event) => {
             if (isClickOnATableCell(event)) {
               dispatch({ type: SET_ACTION, payload: ACTION_READ})
-              setIsModalOpen((prev: boolean) => !prev)
+              setIsModalOpen((prev: boolean) => !prev);
               setSelectedItem(record)
             }
           },

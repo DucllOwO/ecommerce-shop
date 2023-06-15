@@ -77,7 +77,7 @@ const ProductCreateForm: FC<ProductCreateProps> = ({ form, tagInit, collectionIn
             </Form.Item>
           </Descriptions.Item>
           <Descriptions.Item label="Trạng thái" span={3}>
-            <Form.Item name={'collection'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+            <Form.Item name={'collection'} style={FORM_NO_BOTTOM_MARGIN}>
               <Switch defaultChecked />
             </Form.Item>
           </Descriptions.Item>
@@ -89,7 +89,6 @@ const ProductCreateForm: FC<ProductCreateProps> = ({ form, tagInit, collectionIn
               style={FORM_NO_BOTTOM_MARGIN}
             >
               <Upload
-                accept='.png, .jpg'
                 name="avatar"
                 listType="picture-card"
                 beforeUpload={file => {

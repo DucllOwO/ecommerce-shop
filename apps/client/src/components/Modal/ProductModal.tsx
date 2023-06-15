@@ -15,13 +15,14 @@ import ProductCreateForm from '../Form/ProductCreateForm'
 import ProductEditForm from '../Form/ProductEditForm'
 import slugify from 'slugify'
 import { fetchAllTag } from '../../api/admin/tagAPI'
+import SuccessAlert from '../Alert/SuccessAlert'
 
 interface ProductModalProps extends ModalProps {
   action: string,
   selectedItem?: IProduct
 }
 
-const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, selectedItem }) => {
+const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, selectedItem, setDataState }) => {
   const [form] = useForm();
 
   const [tag, setTag] = useState([]);
@@ -54,6 +55,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
 
   const handleOKModal = () => {
     form.validateFields().then((data) => {
+      console.log(data)
       const slugString = slugify(data.name);
       if (action == ACTION_CREATE) {
         const newProduct = {
@@ -80,15 +82,17 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
               id: data.collection
             }
           } : undefined,
-          Product_item: {
+          product_item: {
             createMany: {
               data: getProductItem(data.inventory),
               skipDuplicates: true
             }
           }
         }
-        postProduct(newProduct).then(() => {
+        postProduct(newProduct).then((data) => {
           uploadImageFunc(imageList, slugString);
+          // setDataState((prev) => [...prev, data]);
+          SuccessAlert("Thêm sản phẩm thành công");
         }).catch((error) => {
           console.log(error);
           throw new Error;
@@ -118,10 +122,10 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
           },
           collection: data.collection ? {
             connect: {
-              id: data.collection.value
+              id: data.collection
             }
           } : undefined,
-          Product_item: {
+          product_item: {
             createMany: {
               data: getProductItem(data.inventory),
               skipDuplicates: true
@@ -129,8 +133,10 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
           }
         };
         console.log(newProduct);
-        updateProduct(newProduct, selectedItem.id).then(() => {
+        updateProduct(newProduct, selectedItem.id).then((data) => {
           updateImageFunc(imageList, slugString);
+          SuccessAlert("Chỉnh sửa sản phầm thành công");
+          
         }).catch((error) => console.log(error))
       }
     });
@@ -191,6 +197,7 @@ function uploadImageFunc(imageList: UploadFile[], slugString: string) {
     })
   })
 }
+
 function updateImageFunc(imageList: UploadFile[], slugString: string) {
   console.log(imageList);
   imageList.forEach((item: any, index: number) => {
@@ -276,7 +283,7 @@ function renderModalContent(action: string, form: FormInstance<any>, tags: ITag[
           <Descriptions.Item label="Tổng giá" span={3}>{selectedItem?.price}</Descriptions.Item>
         </Descriptions>
         <Divider />
-        <ProductInventoryTable data={selectedItem?.Product_item} />
+        <ProductInventoryTable data={selectedItem?.product_item} />
       </Space>
     default:
       break;

@@ -44,13 +44,13 @@ const SignUp = () => {
           >
             <Space>
               <Form.Item
-                name="firstname"
+                name="lastname"
                 rules={[REQUIRED_RULE]}
               >
                 <Input prefix={<UserOutlined />} placeholder="Họ " />
               </Form.Item>
               <Form.Item
-                name="lastname"
+                name="firstname"
                 rules={[REQUIRED_RULE]}
               >
                 <Input prefix={<UserOutlined />} placeholder="Tên" />

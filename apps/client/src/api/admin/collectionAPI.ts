@@ -2,12 +2,16 @@ import { http } from "..";
 import ICollection from "../../interface/Collection";
 
 export function updateCollection({ id, name, discountID }: ICollection) {
-    return http.patch(`/collection/${id}`, {
-      name,
-      discount: {
-        connect: {
-          id: discountID
-        }
-      },
-    })
-  }
+  return http.patch(`/collection/${id}`, {
+    name,
+    discount: discountID ? {
+      connect: {
+        id: discountID
+      }
+    } : undefined,
+  })
+}
+
+export function createCollection({ name, discountID }: ICollection) {
+  return http.post(`/collection`, { name, discountID });
+}
