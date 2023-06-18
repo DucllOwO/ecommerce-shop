@@ -3,7 +3,7 @@ import AntdImgCrop from 'antd-img-crop'
 import React, { FC, useState } from 'react'
 import { REQUIRED_RULE } from '../../constant/formRules'
 import { FORM_NO_BOTTOM_MARGIN } from '../../constant/styles'
-import ProductInventoryForm from './ProductInventoryForm'
+import ProductInventoryCreateForm from './ProductInventoryCreateForm'
 import ProductFormProps from '../../interface/ProductFormProps'
 
 interface ProductCreateProps extends ProductFormProps {
@@ -127,7 +127,7 @@ const ProductCreateForm: FC<ProductCreateProps> = ({ form, tagInit, collectionIn
           </Descriptions.Item>
         </Descriptions>
         <Divider />
-        <ProductInventoryForm form={form} />
+        <ProductInventoryCreateForm form={form} />
       </Space>
     </Form>
   )

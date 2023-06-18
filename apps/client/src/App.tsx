@@ -20,7 +20,6 @@ import Policy from './pages/admin/Policy.js';
 import Feedback from './pages/admin/Feedback.js';
 import Voucher from './pages/admin/Voucher.js';
 import CustomerManagement from './pages/admin/CustomerManagement.js';
-import Importing from './pages/admin/Importing.js';
 import UserProfileSetting from './pages/customer/UserProfileSetting.js';
 import Order from './pages/customer/Order.js';
 import OrderDetail from './pages/customer/OrderDetail.js';
@@ -30,6 +29,8 @@ import Payment from './pages/customer/Payment.js';
 import LocalStorage from './helper/localStorage.js';
 import { updateUser } from './api/CustomerAPI.js';
 import dayjs from 'dayjs';
+import ImportingList from './pages/admin/ImportingList.js';
+import Importing from './pages/admin/Importing.js';
 
 
 function App() {
@@ -65,7 +66,10 @@ function App() {
           <Route key={'voucher'} path='voucher' element={<Voucher />} />
           <Route key={'policy'} path='policy' element={<Policy />} />
           <Route key={'customer-management'} path='customer-management' element={<CustomerManagement />}></Route>
-          <Route key={'importing'} path='importing' element={<Importing />}></Route>
+          <Route key={'importing'} path='importing'>
+            <Route key={'import'} path='import' element={<Importing/>} />
+            <Route key={'list'} path='list' element={<ImportingList/>} />
+          </Route>
         </Route> : null}
 
         <Route key={'customer'} path='/' element={<Customer />}>

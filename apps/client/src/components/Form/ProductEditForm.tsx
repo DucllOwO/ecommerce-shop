@@ -3,7 +3,7 @@ import AntdImgCrop from 'antd-img-crop'
 import React, { FC, useEffect, useState } from 'react'
 import { REQUIRED_RULE } from '../../constant/formRules'
 import { FORM_NO_BOTTOM_MARGIN } from '../../constant/styles'
-import ProductInventoryForm from './ProductInventoryForm'
+import ProductInventoryCreateForm from './ProductInventoryCreateForm'
 import ProductFormProps from '../../interface/ProductFormProps'
 import IProduct from '../../interface/Product'
 import { deleteImage, updateProduct } from '../../api/admin/productAPI'
@@ -195,7 +195,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
               </Descriptions.Item> */}
         </Descriptions>
         <Divider />
-        <ProductInventoryForm form={form} isReadOnly={true} />
+        <ProductInventoryCreateForm form={form} isReadOnly={true} />
       </Space>
     </Form>
   )

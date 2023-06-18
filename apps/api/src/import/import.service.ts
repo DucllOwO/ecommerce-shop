@@ -11,6 +11,9 @@ export class ImportService {
   ): Promise<Importing | null> {
     return this.prisma.importing.findUnique({
       where: importingWhereUniqueInput,
+      include:{
+        ImportDetail: true
+      }
     });
   }
 
@@ -27,6 +30,9 @@ export class ImportService {
       skip,
       take,
       orderBy,
+      include:{
+        ImportDetail: true
+      }
     });
   }
   async createImporting(data: Prisma.ImportingCreateInput): Promise<Importing> {

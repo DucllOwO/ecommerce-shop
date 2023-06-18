@@ -7,7 +7,7 @@ export class ImportController {
   constructor(private readonly orderService: ImportService) {}
 
   @Post()
-  create(@Body() createOrderDto: Prisma.OrderCreateInput) {
+  create(@Body() createOrderDto: Prisma.ImportingCreateInput) {
     return this.orderService.createImporting(createOrderDto);
   }
 
