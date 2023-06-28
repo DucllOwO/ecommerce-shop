@@ -20,7 +20,7 @@ interface ProductSizeProps {
 const ProductInventoryTable = (props: ProductSizeProps) => {
   const columns = [
     {
-      title: 'Color',
+      title: 'Màu',
       dataIndex: 'color',
       key: 'color',
       render: (text: string, record: IProduct_item, index: number) => {
@@ -45,18 +45,18 @@ const ProductInventoryTable = (props: ProductSizeProps) => {
       key: 'size',
     },
     {
-      title: 'Quantity',
+      title: 'Số lượng tồn kho',
       dataIndex: 'quantity',
       key: 'quantity',
     },
-    {
-      title: 'Giá nhập',
-      dataIndex: 'cost',
-      key: 'cost',
-    },
-    {
-      title: 'Giá bán',
-    },
+    // {
+    //   title: 'Giá nhập',
+    //   dataIndex: 'cost',
+    //   key: 'cost',
+    // },
+    // {
+    //   title: 'Giá bán',
+    // },
   ];
 
   return (

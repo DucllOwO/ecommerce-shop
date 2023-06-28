@@ -112,7 +112,17 @@ const menu: MenuProps['items'] = [
   {
     key: 'importing',
     label: 'Nhập hàng',
-    icon: generateImageIcon(InventoryIcon)
+    icon: generateImageIcon(InventoryIcon),
+    children: [
+      {
+        key: 'importing/list',
+        label: 'Lịch sử nhập hàng'
+      },
+      {
+        key: 'importing/import',
+        label: 'Nhập hàng'
+      }
+    ]
   }
 ]
 

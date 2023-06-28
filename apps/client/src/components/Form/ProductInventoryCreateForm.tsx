@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Form, FormInstance, Input, InputNumber, Row, Space, Typography } from 'antd';
 import { SIZES } from '../../constant/constant';
-import IProduct from '../../interface/Product';
 
 const inventoryData = [
   {
@@ -27,51 +26,23 @@ const inventoryData = [
   },
 ];
 
+const initialValues = {
+  import_price: '',
+  actual_price: '',
+  inventory: inventoryData.map((item, index) => ({
+    ...item,
+    key: index
+  }))
+};
 
-
-interface ProductInventoryFormProps {
+interface ProductInventoryCreateFormProps {
   isReadOnly?: boolean;
-  form: FormInstance<any>;
-  selectedItem: IProduct
+  form: FormInstance<any>
 }
 
-const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly = false, form, selectedItem }) => {
-    const [initialValue, setInitialValue] = useState<any>({
-        import_price: '',
-        actual_price: '',
-        inventory: colorSet.map((item, index) => ({
-            item,
-            amount: {
-                S: 0,
-                M: 0,
-                L: 0,
-                XL: 0,
-                XXL: 0,
-            },
-            key: index
-        })),
-    })
-    useEffect(() => {
-    const colorSet = Array.from(new Set(selectedItem.product_item.map(item => item.color)));
-    form.resetFields();
-    setInitialValue({
-        import_price: '',
-        actual_price: '',
-        inventory: colorSet.map((item, index) => ({
-        item,
-        amount: {
-            S: 0,
-            M: 0,
-            L: 0,
-            XL: 0,
-            XXL: 0,
-        },
-        key: index
-        })),
-      })
-    //   console.log(initialValue)
-      console.log(selectedItem);
-  },[selectedItem])
+const ProductInventoryCreateForm: React.FC<ProductInventoryCreateFormProps> = ({ isReadOnly = false, form }) => {
+  // const [form] = Form.useForm();
+
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);
 
@@ -83,16 +54,19 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
       onFinish={onFinish}
       autoComplete="off"
       style={{ width: '100%' }}
-      initialValues={initialValue}
+      initialValues={initialValues}
       disabled={isReadOnly}
     >
       <Space direction='vertical' style={{ width: '100%' }}>
         <Row>
           <Form.List name="inventory">
-            {(fields, {add, remove}) => {
-                console.log(fields)
-                return (
+            {(fields, { add, remove }) => (
               <Space direction='vertical' style={{ marginBottom: 5, width: '100%' }}>
+                <Form.Item>
+                  <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                    Thêm màu
+                  </Button>
+                </Form.Item>
                 <Space wrap style={{ justifyContent: 'space-evenly', rowGap: 20, width: '100%' }}>
                   {fields.map((field) => (
                     <Space direction='vertical'>
@@ -100,6 +74,7 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
                         <Form.Item name={[field.name, `color`]} label="Màu sắc" style={{ marginBottom: 0 }}>
                           <Input />
                         </Form.Item>
+                        <MinusCircleOutlined onClick={() => remove(field.name)} disabled={isReadOnly}/>
                       </Space>
                       {
                         SIZES.map(size => <Row align={'middle'}>
@@ -122,7 +97,7 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
                   ))}
                 </Space>
               </Space>
-            )}}
+            )}
           </Form.List>
         </Row>
       </Space>
@@ -130,4 +105,4 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
   );
 };
 
-export default ProductInventoryForm;
+export default ProductInventoryCreateForm;

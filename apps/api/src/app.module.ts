@@ -24,6 +24,7 @@ import { ImageModule } from './image/image.module';
 import * as cors from 'cors';
 import { HelperModule } from './helper/helper.module';
 import { RecommenderModule } from './recommender/recommender.module';
+import { ImportModule } from './import/import.module';
 
 @Module({
   imports: [
@@ -48,7 +49,8 @@ import { RecommenderModule } from './recommender/recommender.module';
     DiscountModule,
     HelperModule,
     RecommenderModule,
-    ImageModule
+    ImageModule,
+    ImportModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

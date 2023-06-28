@@ -1,13 +1,10 @@
 import React, { FC, useState } from 'react'
-import { Space, Table, Typography, Image, Button } from 'antd';
+import { Table } from 'antd';
 import { TableProps } from '../../interface/TableProps';
 import { isClickOnATableCell } from '../../helper/checkEventClick';
 import EditableCell from './EditableCell';
 import { IImporting } from '../../interface/Importing';
 import dayjs from 'dayjs'
-import IProduct from '../../interface/Product';
-import { EditFilled } from '@ant-design/icons';
-import IProduct_item from '../../interface/ProductItem';
 
 // export interface ImportingType {
 //   id: string;
@@ -19,14 +16,13 @@ import IProduct_item from '../../interface/ProductItem';
 interface ImportingTableProps extends TableProps {
   data: IImporting[],
   setIsModalOpen: Function,
-  setIsReadOnly: Function,
-  setSelectedItem: Function
+  setIsReadOnly: Function
 }
 
-const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsReadOnly, setSelectedItem }) => {
+const ImportingListTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsReadOnly }) => {
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
-  const isEditing = (record: IProduct_item) => record.id.toString() === editingKey;
+  const isEditing = (record: IImporting) => record.id.toString() === editingKey;
 
   const columns = [
     {
@@ -35,41 +31,23 @@ const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsRe
       key: 'id',
     },
     {
-      title: 'Sản phẩm',
-      key: 'name_image',
-      render: (text: string, record: IProduct) => <Space direction='horizontal'>
-        <Image width={100} height={150} alt="example" src={record?.image[0]} />
-        <Typography.Text>{record.name}</Typography.Text>
-      </Space>,
+      title: 'Ngày nhập',
+      dataIndex: 'date',
+      key: 'date',
+      render: (_: any, record: IImporting) => (<p>{dayjs(record.date).format('HH:mm:ss DD/MM/YYYY')}</p>)
     },
     {
-      title: 'Gía',
-      dataIndex: 'price',
-      key: 'price',
+      title: 'Tổng số lượng nhập',
+      dataIndex: 'total_amount',
+      key: 'total_amount',
     },
     {
-      title: 'Lượt xem',
-      dataIndex: 'view',
-      key: 'view',
-    },
-    {
-      title: 'Bán',
-      dataIndex: 'sold',
-      key: 'sold',
-    },
-    {
-      title: 'Thao tác',
-      key: 'action',
-      width: '10%',
-      render: (_: any, record: IProduct) => <Space>
-        <Button
-          onClick={() => {
-            setSelectedItem(record)
-            setIsModalOpen(true)}
-          }>Nhập hàng</Button>
-      </Space>,
+      title: 'Tổng tiền',
+      dataIndex: 'total_cost',
+      key: 'total_cost',
     },
   ];
+
   const mergedColumns = columns.map((col) => {
     return {
       ...col,
@@ -93,9 +71,8 @@ const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsRe
           return {
             onClick: (event: React.MouseEvent) => {
               if (isClickOnATableCell(event)){
-                // setIsModalOpen((prev: boolean) => !prev)
+                setIsModalOpen((prev: boolean) => !prev)
                 setIsReadOnly(true);
-                setSelectedItem(record);
               }  
             }, // click row
           };
@@ -111,4 +88,4 @@ const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsRe
   )
 }
 
-export default ImportingTable
+export default ImportingListTable

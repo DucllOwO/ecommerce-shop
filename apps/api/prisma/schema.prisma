@@ -238,6 +238,8 @@ model Daily_report {
 model Importing {
   id           Int             @id @default(autoincrement())
   date         DateTime        @default(now()) @db.Timestamptz(6)
+  total_cost   Int
+  total_amount Int             
   ImportDetail Import_detail[]
 
   @@map("importing")

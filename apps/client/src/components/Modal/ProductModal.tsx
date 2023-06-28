@@ -4,7 +4,7 @@ import { FC, useEffect, useState } from 'react'
 import { ModalProps } from '../../interface/ModalProps'
 import ProductInventoryTable from '../Table/Product/ProductInventoryTable'
 import ITag from '../../interface/Tag'
-import { fetchAllCollection, postProduct, updateProduct, uploadImage } from '../../api/admin/ProductAPI'
+import { fetchAllCollection, postProduct, updateProduct, uploadImage } from '../../api/admin/productAPI'
 import ICollection from '../../interface/Collection'
 import { fetchAllDiscounts } from '../../api/admin/DiscountAPI'
 import IDiscount from '../../interface/Discount'
@@ -223,7 +223,7 @@ function getProductItem(inventory: any) {
           ...result, {
             color: item.color,
             size: property,
-            quantity: item.amount[property],
+            quantity: 0,
           }]
       }
       return [...result];
