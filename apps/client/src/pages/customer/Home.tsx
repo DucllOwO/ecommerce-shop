@@ -100,8 +100,6 @@ const Home = () => {
                     </Col>
                 </Row>
                 {/* end new arrival section */}
-
-
             </Space>
         </Helmet>
     )

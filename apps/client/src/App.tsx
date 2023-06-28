@@ -30,15 +30,15 @@ import Payment from './pages/customer/Payment.js';
 import LocalStorage from './helper/localStorage.js';
 import { updateUser } from './api/CustomerAPI.js';
 import dayjs from 'dayjs';
+import ReturnPolicy from './pages/customer/ReturnPolicy.js';
 
 
 function App() {
   const appCtx = useContext(AppContext);
   const currentUser = LocalStorage.getItem('user');
   console.log(currentUser);
-  if(currentUser)
-  {
-    updateUser({logged_date: dayjs(Date.now())}, currentUser.id)
+  if (currentUser) {
+    updateUser({ logged_date: dayjs(Date.now()) }, currentUser.id)
   }
   return (
     <BrowserRouter>
@@ -80,6 +80,7 @@ function App() {
           </Route>
           <Route key={'order-detail'} path='orders/:id' element={<OrderDetail />} />
           <Route key={'payment'} path='payment' element={<Payment />} />
+          <Route key={'return-policy'} path='return-policy' element={<ReturnPolicy />} />
         </Route>
 
       </Routes>
