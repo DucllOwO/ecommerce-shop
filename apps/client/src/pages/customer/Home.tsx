@@ -1,5 +1,5 @@
 import { Carousel, Col, Image, Row, Space } from 'antd'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import policy from '../../assets/fake-data/policy'
 import productData from '../../assets/fake-data/products'
@@ -11,17 +11,34 @@ import ProductCard from './components/ProductCard'
 import slider_1 from '../../assets/images/slider/slide_1.png'
 import slider_2 from '../../assets/images/slider/slider_2.png'
 import slider_3 from '../../assets/images/slider/slider_3.png'
-import best_seller_picture from '../../assets/images/slider/home_preivew_sanpham_7_image_desktop.jpg'
-import new_product_picture from '../../assets/images/home_preivew_sanpham_3_image_desktop.jpg'
 import banner from '../../assets/images/banner.png'
 import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import { LeftArrow, RightArrow } from './components/Arrow'
 import Title from 'antd/es/typography/Title'
 import { AppContext } from '../../context/AppContext'
+import { fetchTopTenBestSellers, fetchTopTenMostViewed } from '../../api/admin/ProductAPI'
+import IProduct from '../../interface/Product'
 
 const Home = () => {
     const appContext = useContext(AppContext);
+    const [bestSellers, setBestSellers] = useState<IProduct[]>([]);
+    const [mostViewed, setMostViewed] = useState<IProduct[]>([]);
 
+    useEffect(() => {
+        const fetchTopProducts = async () => {
+            const bestSellersAPI = fetchTopTenBestSellers();
+            const mostViewedAPI = fetchTopTenMostViewed();
+
+            await Promise.all([bestSellersAPI, mostViewedAPI]).then((values) => {
+                setBestSellers(values[0].data);
+                setMostViewed(values[1].data);
+            }).catch((err) => {
+                console.log("🚀 ~ file: Home.tsx:32 ~ awaitPromise.all ~ err:", err)
+            })
+        }
+
+        fetchTopProducts();
+    })
 
     return (
         <Helmet title="Trang chủ">
@@ -62,17 +79,18 @@ const Home = () => {
                 {/* best selling section */}
                 <Title level={2} style={{ color: 'var(--main-color)' }}>BÁN CHẠY NHẤT</Title>
                 <Row>
-                    <Col span={4}> <Image src={best_seller_picture} preview={false} /></Col>
-                    <Col span={20}>
+                    <Col span={24}>
                         <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow} Footer={null}>
-                            {productData.getProducts(8).map((item, index) => (
+                            {bestSellers.map((item, index) => (
                                 <ProductCard
                                     id={index}
                                     key={index}
-                                    img01={item.image01}
-                                    img02={item.image02}
-                                    name={item.title}
+                                    img01={item.image[0]}
+                                    img02={item.image[1]}
+                                    name={item.name}
                                     price={Number(item.price)}
+                                    slug={item.slug}
+                                    discount={item.discount?.discount ? item.discount?.discount : null}
                                 />
                             ))}
                         </ScrollMenu>
@@ -80,20 +98,21 @@ const Home = () => {
                 </Row>
                 {/* end best selling section */}
 
-                <Title level={2} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>HÀNG MỚI VỀ</Title>
+                <Title level={2} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>XEM NHIỀU NHẤT</Title>
                 {/* new arrival section */}
                 <Row>
-                    <Col span={4}> <Image src={new_product_picture} preview={false} /></Col>
-                    <Col span={20}>
+                    <Col span={24}>
                         <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow} Footer={null} >
-                            {productData.getProducts(8).map((item, index) => (
+                            {mostViewed.map((item, index) => (
                                 <ProductCard
                                     id={index}
                                     key={index}
-                                    img01={item.image01}
-                                    img02={item.image02}
-                                    name={item.title}
+                                    img01={item.image[0]}
+                                    img02={item.image[1]}
+                                    name={item.name}
                                     price={Number(item.price)}
+                                    slug={item.slug}
+                                    discount={item.discount?.discount ? item.discount?.discount : null}
                                 />
                             ))}
                         </ScrollMenu>

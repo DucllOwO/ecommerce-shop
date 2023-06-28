@@ -42,10 +42,10 @@ const Product = () => {
 
   return (
     <Helmet title={product ? product.name : ""}>
-      <Space>
+      <Space style={{ paddingRight: '3%' }}>
         <ProductView id={product ? product.id : 1} />
       </Space>
-      <Space direction='vertical' style={{ width: '100%', margin: '0 20px' }}>
+      <Space direction='vertical' style={{ width: '100%', margin: '0 20px', paddingRight: '3%' }}>
         <Title level={2} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>CÓ THỂ BẠN SẼ THÍCH</Title>
         <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow} Footer={null}>
           {recProduct.map((item: IProduct, index: number) => (

@@ -9,6 +9,7 @@ import IProduct from '../../../interface/Product';
 import { useNavigate } from 'react-router-dom';
 import LocalStorage from '../../../helper/localStorage';
 import ErrorAlert from '../../../components/Alert/ErrorAlert';
+import { formatNumberWithComma } from '../../../helper/utils';
 
 const images = [
     {
@@ -27,6 +28,7 @@ const images = [
 
 const ProductView = (props: ProductViewProps) => {
     const [product, setProduct] = useState<IProduct>();
+    let
 
     const [previewImg, setPreviewImg] = useState<ReactImageGalleryItem[]>();
 
@@ -110,11 +112,11 @@ const ProductView = (props: ProductViewProps) => {
                 color: selectedColor,
                 size: selectedSize
             }
-            if(LocalStorage.getItem('cart') && 
-            !Array(LocalStorage.getItem('cart')).some((data: any) => 
-                JSON.stringify(data[0]) === JSON.stringify(selectedItem)))
-                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,selectedItem]);
-            else if(!LocalStorage.getItem('cart'))
+            if (LocalStorage.getItem('cart') &&
+                !Array(LocalStorage.getItem('cart')).some((data: any) =>
+                    JSON.stringify(data[0]) === JSON.stringify(selectedItem)))
+                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), selectedItem]);
+            else if (!LocalStorage.getItem('cart'))
                 LocalStorage.setItem('cart', [selectedItem])
         }
         else {
@@ -124,7 +126,7 @@ const ProductView = (props: ProductViewProps) => {
 
 
     return (
-        <Row style={{ width: '100vw' }}>
+        <Row style={{ width: '100%' }}>
             <Col span={13} style={{ marginTop: 20 }}>
                 <ImageGallery items={previewImg ? previewImg : images} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} />
             </Col>
@@ -133,7 +135,10 @@ const ProductView = (props: ProductViewProps) => {
                     <h1 className="product__info__title">{product?.name}</h1>
                     <div className="product__info__item">
                         <span className="product__info__item__price">
-                            {product?.price}
+                            {formatNumberWithComma(product?.price)}
+                            {product?.discount?.discount && product.discount.discount > 0 ? <span className="product-card__price__old">
+                                <del>{formatNumberWithComma(product?.price)}</del>
+                            </span> : null}
                         </span>
                     </div>
                     <div className="product__info__item">
@@ -186,30 +191,6 @@ const ProductView = (props: ProductViewProps) => {
                             Chi tiết sản phẩm
                         </div>
                         <div className="product-description__content">{product?.description}</div>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                        <Button onClick={(e) => {
-                            setDescriptionExpand(prev => !prev)
-                        }}>
-                            {
-                                !descriptionExpand ? 'Thu gọn' : 'Xem thêm'
-                            }
-                        </Button>
-                    </div>
-                </div>
-                <div className={`product-description mobile ${descriptionExpand ? 'expand' : ''}`}>
-                    <div className="product-description__title">
-                        Chi tiết sản phẩm
-                    </div>
-                    <div className="product-description__content">{product?.description}</div>
-                    <div className="product-description__toggle">
-                        <Button onClick={(e) => {
-                            setDescriptionExpand(prev => !prev)
-                        }}>
-                            {
-                                descriptionExpand ? 'Thu gọn' : 'Xem thêm'
-                            }
-                        </Button>
                     </div>
                 </div>
             </Col>

@@ -5,6 +5,14 @@ export function fetchAllProducts(){
   return http.get(`/product`);
 };
 
+export function fetchTopTenBestSellers() {
+  return http.get(`/product/best-sellers`);
+}
+
+export function fetchTopTenMostViewed() {
+  return http.get(`/product/most-viewed`);
+}
+
 export function fetchAllCollection(){
   return http.get(`/collection`);
 }

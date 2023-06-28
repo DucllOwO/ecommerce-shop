@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import { Button } from 'antd'
+import { formatNumberWithComma } from '../../../helper/utils'
 
 const ProductCard = (props: ProductCardProps) => {
+    let finalPrice = props.discount && props.discount > 0 ? props.discount * props.price : props.price;
     return (
         <div className="product-card">
             <Link to={`/product/${props.slug}`}>
@@ -11,10 +13,10 @@ const ProductCard = (props: ProductCardProps) => {
                 </div>
                 <h3 className="product-card__name">{props.name}</h3>
                 <div className="product-card__price">
-                    {props.price}
-                    <span className="product-card__price__old">
-                        <del>{props.price}</del>
-                    </span>
+                    {formatNumberWithComma(finalPrice)}
+                    {props.discount && props.discount > 0 ? <span className="product-card__price__old">
+                        <del>{formatNumberWithComma(props?.price)}</del>
+                    </span> : null}
                 </div>
                 <div className="product-card__btn">
                     <Button

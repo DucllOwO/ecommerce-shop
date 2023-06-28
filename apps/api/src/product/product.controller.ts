@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Prisma } from '@prisma/client';
-import * as ContentBasedRecommender from 'content-based-recommender-ts';
 
 @Controller('product')
 export class ProductController {
@@ -25,12 +24,32 @@ export class ProductController {
   }
 
   @Get()
-  findAll(@Query() query: any) {
+  findAll(@Query() query: Prisma.ProductWhereInput) {
     return this.productService.products({
       orderBy: {
         id: 'asc',
       },
       where: query,
+    });
+  }
+
+  @Get('/best-sellers')
+  findTopTenBestSellers() {
+    return this.productService.products({
+      orderBy: {
+        sold: 'desc',
+      },
+      take: 10,
+    });
+  }
+
+  @Get('/most-viewed')
+  findBestSellers() {
+    return this.productService.products({
+      orderBy: {
+        view: 'desc',
+      },
+      take: 10,
     });
   }
 
