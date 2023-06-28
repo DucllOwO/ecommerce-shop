@@ -1,9 +1,10 @@
-import { AutoComplete, Form, Input, Modal, Select } from 'antd'
-import React, { FC, useEffect } from 'react'
+import { AutoComplete, Form, Input, InputNumber, Modal, Select } from 'antd'
+import React, { FC, useEffect, useState } from 'react'
 import { ModalProps } from '../../interface/ModalProps'
 import IProduct from '../../interface/Product'
 import { useForm } from 'antd/es/form/Form'
 import ProductInventoryForm from '../Form/ProductInventoryForm'
+import { REQUIRED_RULE } from '../../constant/formRules'
 
 interface ImportingModalProps extends ModalProps {
   setIsReadOnly?: Function,
@@ -13,6 +14,8 @@ interface ImportingModalProps extends ModalProps {
 
 const ImportingModal: FC<ImportingModalProps> = ({ isOpen, setIsModalOpen, selectedItem, isReadOnly = false, setIsReadOnly }) => {
   const [form] = useForm();
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [price, setPrice] = useState(0);
 
   const handleOkeModal = () => {
     form.validateFields().then((data) => {
@@ -21,6 +24,7 @@ const ImportingModal: FC<ImportingModalProps> = ({ isOpen, setIsModalOpen, selec
   }
   useEffect(() => {
     console.log(selectedItem)
+    form.resetFields();
   },[selectedItem])
 
   return (
@@ -37,19 +41,38 @@ const ImportingModal: FC<ImportingModalProps> = ({ isOpen, setIsModalOpen, selec
             cancelText: 'Quay lại',
             onOk: () => {
               setIsModalOpen((prev: boolean) => !prev)
+              console.log(totalAmount)
+              setPrice(0);
+              setTotalAmount(0);
             },
           });
         } 
         else{
           setIsReadOnly(false);
-          setIsModalOpen((prev: boolean) => !prev)
+          setIsModalOpen((prev: boolean) => !prev);
+          setPrice(0);
+          setTotalAmount(0);
         }
       }}>
       <Form form={form}>
         <Form.Item initialValue={selectedItem?.name} name="product" label="Nhập sản phẩm">
           <Input disabled={true}/>
         </Form.Item>
-        <ProductInventoryForm isReadOnly={isReadOnly} selectedItem={selectedItem} form={form}/>
+        <Form.Item name="price" label="Giá nhập" rules={[REQUIRED_RULE]}>
+          <InputNumber style={{width: 250}} addonAfter={"VND"} onChange={(value) => setPrice(value)}/>
+        </Form.Item>
+        <ProductInventoryForm isReadOnly={isReadOnly} selectedItem={selectedItem} form={form} setTotalAmount={setTotalAmount}/>
+        <div className="cart__info">
+          <div className="cart__info__txt">
+            <p>
+              Bạn đang có {totalAmount} sản phẩm trong giỏ hàng
+            </p>
+            <div
+              className="cart__info__txt__price">
+                <span>Thành tiền:</span> <span>{price*totalAmount}</span>
+            </div>
+          </div>
+        </div>
       </Form>
     </Modal>
   )

@@ -4,61 +4,21 @@ import { Button, Col, Divider, Form, FormInstance, Input, InputNumber, Row, Spac
 import { SIZES } from '../../constant/constant';
 import IProduct from '../../interface/Product';
 
-const inventoryData = [
-  {
-    color: 'Red',
-    amount: {
-      S: 1,
-      M: 2,
-      L: 3,
-      XL: 4,
-      XXL: 5,
-    },
-  },
-  {
-    color: 'Blue',
-    amount: {
-      S: 0,
-      M: 0,
-      L: 0,
-      XL: 0,
-      XXL: 0,
-    },
-  },
-];
-
-
 
 interface ProductInventoryFormProps {
   isReadOnly?: boolean;
   form: FormInstance<any>;
-  selectedItem: IProduct
+  selectedItem: IProduct;
+  setTotalAmount: Function;
 }
 
-const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly = false, form, selectedItem }) => {
-    const [initialValue, setInitialValue] = useState<any>({
-        import_price: '',
-        actual_price: '',
-        inventory: colorSet.map((item, index) => ({
-            item,
-            amount: {
-                S: 0,
-                M: 0,
-                L: 0,
-                XL: 0,
-                XXL: 0,
-            },
-            key: index
-        })),
-    })
-    useEffect(() => {
+const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly = false, form, selectedItem, setTotalAmount }) => {
     const colorSet = Array.from(new Set(selectedItem.product_item.map(item => item.color)));
-    form.resetFields();
-    setInitialValue({
+    const initialValue = {
         import_price: '',
         actual_price: '',
         inventory: colorSet.map((item, index) => ({
-        item,
+        color: item,
         amount: {
             S: 0,
             M: 0,
@@ -68,14 +28,24 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
         },
         key: index
         })),
-      })
+    };
     //   console.log(initialValue)
-      console.log(selectedItem);
-  },[selectedItem])
   const onFinish = (values: any) => {
     console.log('Received values of form:', values);
 
   };
+  
+  const handleOnChange = () => {
+    let totalAmount = 0;
+    const data = form.getFieldValue('inventory');
+        data.forEach((item) => {
+            for (var property in item.amount) {
+                totalAmount = totalAmount + item.amount[property];
+            }
+        })
+    console.log(totalAmount)
+    setTotalAmount(totalAmount);
+  }
 
   return (
     <Form
@@ -90,7 +60,6 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
         <Row>
           <Form.List name="inventory">
             {(fields, {add, remove}) => {
-                console.log(fields)
                 return (
               <Space direction='vertical' style={{ marginBottom: 5, width: '100%' }}>
                 <Space wrap style={{ justifyContent: 'space-evenly', rowGap: 20, width: '100%' }}>
@@ -98,7 +67,7 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
                     <Space direction='vertical'>
                       <Space direction='horizontal' align='center'>
                         <Form.Item name={[field.name, `color`]} label="Màu sắc" style={{ marginBottom: 0 }}>
-                          <Input />
+                          <Input disabled={true}/>
                         </Form.Item>
                       </Space>
                       {
@@ -112,7 +81,7 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
                               name={[field.name, 'amount', size]}
                               style={{ marginBottom: 0 }}
                             >
-                              <InputNumber />
+                              <InputNumber onChange={handleOnChange} min={0}/>
                             </Form.Item>
                           </Col>
                         </Row>)
