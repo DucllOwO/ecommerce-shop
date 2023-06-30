@@ -29,7 +29,6 @@ const images = [
 
 const ProductView = (props: ProductViewProps) => {
     const [product, setProduct] = useState<IProduct>();
-    let
 
     const [previewImg, setPreviewImg] = useState<ReactImageGalleryItem[]>();
 
