@@ -86,8 +86,8 @@ function App() {
           <Route key={'order-detail'} path='orders/:id' element={<OrderDetail />} />
 
           <Route key={'checkout'} path='checkout'>
-            <Route key={'bank'} path='bank' element={<BankPayment />} />
-            <Route key={'cash-on-delivery'} path='cash-on-delivery' element={<CashOnDeliveryPayment />} />
+            <Route key={'bank'} path='bank/:orderID' element={<BankPayment />} />
+            <Route key={'cash-on-delivery'} path='cash-on-delivery/:orderID' element={<CashOnDeliveryPayment />} />
           </Route>
           <Route key={'return-policy'} path='return-policy' element={<ReturnPolicy />} />
         </Route>

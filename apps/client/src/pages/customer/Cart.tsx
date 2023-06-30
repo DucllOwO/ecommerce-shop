@@ -19,9 +19,12 @@ import ICart from '../../interface/Cart'
 import { getVietQR } from '../../api/paymentAPI'
 import { CheckoutContext, CheckoutProvider } from '../../context/CheckoutContext'
 
+const COD = "cod";
+const BANK = "bank";
+
 const paymentMethods = [
-    { value: 'cod', label: 'Thanh toán khi nhận hàng' },
-    { value: 'bank', label: 'Chuyển tiền qua ngân hàng' },
+    { value: COD, label: 'Thanh toán khi nhận hàng' },
+    { value: BANK, label: 'Chuyển tiền qua ngân hàng' },
 ]
 
 const Cart = () => {
@@ -58,56 +61,55 @@ const Cart = () => {
     }
 
     const onFinish = (values: any) => {
-        console.log(values)
-    }
-
-    const submitOrder = () => {
-        form.validateFields().then((data) => {
-            const newOrder = {
-                firstname: data.firstname,
-                lastname: data.lastname,
-                phone_number: data.phoneNumber,
-                address: data.address,
-                total_cost: totalPrice,
-                buyer: LocalStorage.getItem('user') ? {
-                    connect: {
-                        id: LocalStorage.getItem('user').id
-                    }
-                } : null,
-                Order_detail: {
-                    createMany: {
-                        data: cartProducts.map((item) => { return { itemID: item.id } })
-                    }
+        const newOrder = {
+            firstname: values.firstname,
+            lastname: values.lastname,
+            phone_number: values.phoneNumber,
+            address: values.address,
+            total_cost: totalPrice,
+            buyer: LocalStorage.getItem('user') ? {
+                connect: {
+                    id: LocalStorage.getItem('user').id
+                }
+            } : null,
+            Order_detail: {
+                createMany: {
+                    data: cartProducts.map((item) => { return { itemID: item.id } })
                 }
             }
-            createOrder(newOrder)
-                .then((response) => {
-                    // SuccessAlert("Đặt hàng thành công"); 
-                    const newReceipt = {
-                        cost: totalPrice,
-                        voucher: data.voucher ? {
-                            connect: {
-                                code: data.voucher
-                            }
-                        } : undefined,
-                        order: {
-                            connect: {
-                                id: response.data.id
-                            }
-                        },
-                        paymentMethod: data.paymentMethod
-                    }
-                    createReceipt(newReceipt).then(() => {
-                        LocalStorage.setItem('cart', []);
-                        setCartProducts([]);
-                        nav('/payment')
-                    }).catch((error) => {
-                        console.log(error);
-                        throw new Error();
-                    })
+        }
+        createOrder(newOrder)
+            .then((response) => {
+                // SuccessAlert("Đặt hàng thành công"); 
+                const newReceipt = {
+                    cost: totalPrice,
+                    voucher: values.voucher ? {
+                        connect: {
+                            code: values.voucher
+                        }
+                    } : undefined,
+                    order: {
+                        connect: {
+                            id: response.data.id
+                        }
+                    },
+                    paymentMethod: values.paymentMethod
+                }
+                createReceipt(newReceipt).then((receiptRes) => {
+                    LocalStorage.setItem('cart', []);
+                    setCartProducts([]);
+                    checkOut?.setOrder(response.data);
+                    checkOut?.setReceipt(receiptRes.data);
+                    if (values.paymentMethod === COD)
+                        nav(`/checkout/cash-on-delivery/${response.data.id}`)
+                    else
+                        nav(`/checkout/bank/${response.data.id}`)
+                }).catch((error) => {
+                    console.log(error);
+                    throw new Error();
                 })
-                .catch((error) => console.log(error));
-        })
+            })
+            .catch((error) => console.log(error));
     }
 
     const handleOnSearch = async (voucherCode: string) => {
@@ -207,7 +209,7 @@ const Cart = () => {
                                         </div>
                                     </div>
                                     <div className="cart__info__btn">
-                                        <Button type='primary' htmlType="submit" style={{ width: '100%' }} onClick={submitOrder}>
+                                        <Button type='primary' htmlType="submit" style={{ width: '100%' }}>
                                             Đặt hàng
                                         </Button>
                                     </div>

@@ -1,21 +1,14 @@
 import { Button, Card, Col, Image, List, Result, Row, Space, Typography } from 'antd'
-
-const data = [
-  {
-    title: 'Ant Design Title 1',
-  },
-  {
-    title: 'Ant Design Title 2',
-  },
-  {
-    title: 'Ant Design Title 3',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-];
+import { useContext, useEffect } from 'react';
+import { CheckoutContext } from '../../../context/CheckoutContext'
 
 const CashOnDeliveryPayment = () => {
+  const checkout = useContext(CheckoutContext);
+  useEffect(() => {
+    console.log(checkout?.order);
+    console.log(checkout?.receipt);
+  }, [])
+
   return (
     <div className='centerflex' style={{ flexDirection: 'column', rowGap: 50, padding: '20px 0' }}>
       <Row style={{ width: '80%' }}>
@@ -40,7 +33,9 @@ const CashOnDeliveryPayment = () => {
           <Card bordered style={{ width: '100%' }} title={'Chi tiết đơn hàng'} >
             <List
               itemLayout="horizontal"
-              dataSource={data}
+              dataSource={
+                checkout?.order?.Order_detail
+              }
               renderItem={(item, index) => (
                 <List.Item>
                   <List.Item.Meta
