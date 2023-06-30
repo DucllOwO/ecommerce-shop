@@ -29,7 +29,6 @@ const images = [
 
 const ProductView = (props: ProductViewProps) => {
     const [product, setProduct] = useState<IProduct>();
-    
 
     const [previewImg, setPreviewImg] = useState<ReactImageGalleryItem[]>();
 
@@ -105,13 +104,13 @@ const ProductView = (props: ProductViewProps) => {
         const currentUser = LocalStorage.getItem('user');
         if (selectedColor && selectedSize) {
             const productItem = product?.product_item.filter((item) => item.color === selectedColor && item.size === selectedSize)
-            if(currentUser){
+            if (currentUser) {
                 createCart({
                     userID: currentUser.id,
                     itemID: productItem[0]?.id,
                     quantity: quantity,
                 }).then((data) => {
-                    const newCartItem : ICart = {
+                    const newCartItem: ICart = {
                         id: data.data.id,
                         itemID: productItem[0]?.id,
                         quantity: quantity,
@@ -122,19 +121,20 @@ const ProductView = (props: ProductViewProps) => {
                             product: product,
                         }
                     }
-                    if(LocalStorage.getItem('cart') && 
-                    !Array(LocalStorage.getItem('cart')).some((data: any) => 
-                        JSON.stringify(data[0]) === JSON.stringify(newCartItem))){
-                            LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,newCartItem]);
-                        }
-                    else if(!LocalStorage.getItem('cart'))
+                    if (LocalStorage.getItem('cart') &&
+                        !Array(LocalStorage.getItem('cart')).some((data: any) =>
+                            JSON.stringify(data[0]) === JSON.stringify(newCartItem))) {
+                        LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), newCartItem]);
+                    }
+                    else if (!LocalStorage.getItem('cart'))
                         LocalStorage.setItem('cart', [newCartItem])
                 })
-            }}
-            else {
-                ErrorAlert("Vui lòng chọn size và màu")
             }
         }
+        else {
+            ErrorAlert("Vui lòng chọn size và màu")
+        }
+    }
 
 
     return (
