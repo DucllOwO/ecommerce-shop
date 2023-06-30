@@ -8,5 +8,5 @@ export default interface ICart {
   userID: string;
   quantity: number;
   itemID: number;
-  Product_item: IProduct_item;
+  product_item: IProduct_item;
 }

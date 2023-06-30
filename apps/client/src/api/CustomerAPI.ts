@@ -1,4 +1,5 @@
 import { http } from ".";
+import ICart from "../interface/Cart";
 
 export function fetchAllProducts(){
   return http.get(`/product`);
@@ -38,4 +39,17 @@ export function getOrder(id: string){
 
 export function getCart(userID: string){
   return http.get(`/cart/?userID=${userID}`);
+}
+
+export function updateCart(cartID: number, updateFields: any){
+  return http.patch(`/cart/${cartID}`, updateFields);
+}
+
+export function createCart(newCart: any){
+  return http.post(`/cart`, newCart);
+}
+
+export function deleteCart(cartID: number){
+  // console.log(cartID)
+  return http.delete(`/cart/${cartID}`);
 }
