@@ -17,21 +17,31 @@ const ImportingModal: FC<ImportingModalProps> = ({ isOpen, setIsModalOpen, selec
   const [totalAmount, setTotalAmount] = useState(0);
   const [price, setPrice] = useState(0);
 
-  const handleOkeModal = () => {
+  const handleOkModal = () => {
     form.validateFields().then((data) => {
-      console.log(data)
+      const importDetail = data;
+      const newImport = {
+        total_cost: price,
+        total_amount: totalAmount,
+        ImportDetail: {
+          createMany: {
+            data: importDetail
+          }
+        }
+      }
     })
   }
-  useEffect(() => {
-    console.log(selectedItem)
-    form.resetFields();
-  },[selectedItem])
+  const createImportDetail = (data: any) => {
+    data.forEach((item) => {
+      
+    })
+  }
 
   return (
     <Modal
       title={'Nhập sản phẩm'}
       open={isOpen} width={'70vw'}
-      onOk={handleOkeModal}
+      onOk={handleOkModal}
       onCancel={() => {
         if(!isReadOnly){
           Modal.confirm({

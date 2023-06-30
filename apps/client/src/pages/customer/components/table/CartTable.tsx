@@ -1,9 +1,9 @@
 import { Button, Image, InputNumber, Space, Table, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react'
-import productData from '../../../../assets/fake-data/products';
 import LocalStorage from '../../../../helper/localStorage';
 import ICart from '../../../../interface/Cart';
+import { deleteCart, updateCart } from '../../../../api/CustomerAPI';
 
 export type CartItemType = {
   image01: string,
@@ -18,18 +18,15 @@ export type CartTableProps = {
   setCartList: React.SetStateAction<any>
 }
 
+const CartTable = ({ setCartList, cartList }: CartTableProps) => {
 
-
-const CartTable = ({setCartList, cartList  } : CartTableProps) => {
-  const [quantity, setQuantity] = useState();
-
-  const columns: ColumnsType<any> = [
+  const columns: ColumnsType<ICart> = [
     {
       title: 'Sản phẩm',
       key: '1',
       width: '15%',
       render: (text, record) => {
-        return <Image src={record.image} />
+        return <Image src={record.product_item.product.image[0]} />
       },
     },
     {
@@ -38,8 +35,8 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
       width: '30%',
       render: (text, record) => {
         return <Space style={{ display: 'flex', flexDirection: 'column', alignContent: 'space-between' }}>
-          <p>{`${record.name} `}</p>
-          <p>{`(${record.size.trim()} ${record.color})`}</p>
+          <p>{`${record.product_item.product.name} `}</p>
+          <p>{`(${record.product_item.size.trim()} ${record.product_item.color})`}</p>
         </Space>
       },
     },
@@ -48,7 +45,7 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
       key: '3',
       width: '15%',
       render: (text, record) => {
-        return <p>{record.price}</p>
+        return <p>{record.product_item.product.price}</p>
       },
     },
     {
@@ -57,22 +54,37 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
       width: '15%',
       dataIndex: 'tags',
       render: (_, record) => {
-        return <InputNumber defaultValue={record.quantity} onChange={(value) => {
+        return <InputNumber min={1} defaultValue={record.quantity} onChange={(value) => {
           console.log(value)
           console.log(cartList)
-          setCartList((prev: any) => prev.map((data: any) => {
-              if(data.id === record.id && data.color === record.color && data.size === record.size){
-                return {
-                  ...data,
-                  quantity: value
-                }
+          const currentUser = LocalStorage.getItem('user');
+          setCartList((prev: any) => prev.map((data: ICart) => {
+            if (data.itemID === record.itemID) {
+              if (currentUser) {
+                updateCart(data.id, { quantity: value });
               }
-              else{
-                return data;
+              return {
+                ...data,
+                quantity: value
               }
-            })
+            }
+            else {
+              return data;
+            }
+          })
           )
-        }}/>
+          LocalStorage.setItem('cart', cartList?.map((data: ICart) => {
+            if (data.itemID === record.itemID) {
+              return {
+                ...data,
+                quantity: value
+              }
+            }
+            else {
+              return data;
+            }
+          }));
+        }} />
       }
     },
     {
@@ -81,7 +93,7 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
       width: '25%',
       dataIndex: 'tags',
       render: (text, record) => {
-        return <p>{record.price*record.quantity}</p>
+        return <p>{record.product_item.product.price * record.quantity}</p>
       }
     },
     {
@@ -89,8 +101,11 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
       key: 'action',
       render: (_, record) => {
         return <Button onClick={() => {
-          LocalStorage.setItem('cart', LocalStorage.getItem('cart').filter((item: any) => JSON.stringify(item) !== JSON.stringify(record)))
-          setCartList((prev: ICart[]) => prev.filter((item) => JSON.stringify(item) !== JSON.stringify(record)));
+          console.log(record.id);
+          deleteCart(record.id).then((data) => {
+            LocalStorage.setItem('cart', LocalStorage.getItem('cart').filter((item: any) => JSON.stringify(item) !== JSON.stringify(record)))
+            setCartList((prev: ICart[]) => prev.filter((item) => JSON.stringify(item) !== JSON.stringify(record)));
+          })
         }}>Xóa</Button>
       }
     },
