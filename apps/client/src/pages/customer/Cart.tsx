@@ -10,7 +10,7 @@ import Helmet from './components/Helmet'
 import CartTable from './components/table/CartTable'
 import LocalStorage from '../../helper/localStorage'
 import { useForm } from 'antd/es/form/Form'
-import { createOrder, createReceipt, getCart, getVoucher } from '../../api/CustomerAPI'
+import { createOrder, createReceipt, deleteCart, getCart, getVoucher } from '../../api/CustomerAPI'
 import Search from 'antd/es/transfer/search'
 import ColumnGroup from 'antd/es/table/ColumnGroup'
 import ErrorAlert from '../../components/Alert/ErrorAlert'
@@ -26,7 +26,7 @@ const paymentMethods = [
 const Cart = () => {
     const nav = useNavigate();
 
-    const [cartProducts, setCartProducts] = useState(LocalStorage.getItem('cart'));
+    const [cartProducts, setCartProducts] = useState<ICart[]>(LocalStorage.getItem('cart'));
 
     const [totalProducts, setTotalProducts] = useState();
 
@@ -36,22 +36,16 @@ const Cart = () => {
 
     const [currentUser, setCurrentUser] = useState(LocalStorage.getItem('user'));
 
-    
-
     const [form] = useForm();
 
-    useEffect(()=> {
-        if(currentUser)
-            getCart(currentUser.id).then((data) => {
-                setCartProducts(data.data);
-            })
-        setTotalPrice(getTotalPrice())
-    }, [cartProducts])
+    // useEffect(()=> {
+        
+    // }, [cartProducts])
 
     const getTotalPrice = () => {
         let totalPrice = 0;
-        cartProducts.forEach((item: any)=> { 
-            totalPrice += (item.price * item.quantity);
+        cartProducts.forEach((item: ICart)=> { 
+            totalPrice += (item.product_item.product.price * item.quantity);
         });
         return totalPrice;
     }
@@ -75,7 +69,7 @@ const Cart = () => {
                 } : null,
                 Order_detail: {
                     createMany: {
-                        data: cartProducts.map((item) => {return {itemID: item.id}})
+                        data: cartProducts.map((item: ICart) => {return {itemID: item.id}})
                     }
                 }
             }
@@ -97,6 +91,10 @@ const Cart = () => {
                     paymentMethod: data.paymentMethod
                 }
                 createReceipt(newReceipt).then(()=> {
+                    if(currentUser)
+                        cartProducts.forEach((data) => {
+                            deleteCart(data.id);
+                        })
                     LocalStorage.setItem('cart', []);
                     setCartProducts([]);
                     nav('/payment')
@@ -125,8 +123,6 @@ const Cart = () => {
             console.log(error)
         })
     }
-
-
 
     return (
         <Helmet title="Giỏ hàng">

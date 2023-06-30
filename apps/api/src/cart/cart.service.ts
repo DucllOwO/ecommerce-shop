@@ -28,6 +28,13 @@ export class CartService {
       skip,
       take,
       orderBy,
+      include: {
+        product_item: {
+          include: {
+            product: true
+          }
+        }
+      }
     });
   }
   
@@ -39,12 +46,22 @@ export class CartService {
 
   async updateCart(params: {
     where: Prisma.CartWhereUniqueInput,
-    data: Prisma.CartCreateInput
+    data: Prisma.CartUpdateInput
   }): Promise<Cart> {
     const { where, data } = params;
     return this.prisma.cart.update({
       where,
       data
     });
+  }
+
+  async deleteCart(params: {
+    where: Prisma.CartWhereUniqueInput
+  }): Promise<Cart>{
+    const { where } = params;
+    // console.log(where)
+    return this.prisma.cart.delete({
+      where
+    })
   }
 }

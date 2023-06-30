@@ -29,7 +29,7 @@ const Importing = () => {
     fetchAllProducts().then((data) => {
       setData(data.data);
     })
-  }, [])
+  }, [selectedItem])
 
   return (
     <Space direction='vertical' style={{ width: '100%' }}>

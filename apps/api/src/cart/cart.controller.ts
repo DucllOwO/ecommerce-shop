@@ -34,4 +34,14 @@ export class CartController {
       data: updateCartDto
     }); 
   }
+
+  @Delete(':id')
+  delete(@Param('id') id: string){
+    console.log(id)
+    return this.cartService.deleteCart({
+      where: {
+        id: Number(id)
+      }
+    })
+  }
 }

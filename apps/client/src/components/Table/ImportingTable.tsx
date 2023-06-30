@@ -26,7 +26,7 @@ interface ImportingTableProps extends TableProps {
 const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsReadOnly, setSelectedItem }) => {
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
-  const isEditing = (record: IProduct_item) => record.id.toString() === editingKey;
+  const isEditing = (record: IImporting) => record.id.toString() === editingKey;
 
   const columns = [
     {
@@ -61,7 +61,7 @@ const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsRe
       title: 'Thao tác',
       key: 'action',
       width: '10%',
-      render: (_: any, record: IProduct) => <Space>
+      render: (_: any, record: IImporting) => <Space>
         <Button
           onClick={() => {
             setSelectedItem(record)

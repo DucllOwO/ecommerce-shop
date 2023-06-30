@@ -1,6 +1,6 @@
 import { Button, Carousel, Col, Image, InputNumber, Radio, RadioChangeEvent, Row, Space } from 'antd'
 import { useState, useEffect } from 'react'
-import { fetchProduct } from '../../../api/CustomerAPI'
+import { createCart, fetchProduct } from '../../../api/CustomerAPI'
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss'
 import ReactImageGallery from 'react-image-gallery';
@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import LocalStorage from '../../../helper/localStorage';
 import ErrorAlert from '../../../components/Alert/ErrorAlert';
 import { formatNumberWithComma } from '../../../helper/utils';
+import ICart from '../../../interface/Cart';
 
 const images = [
     {
@@ -51,7 +52,7 @@ const ProductView = (props: ProductViewProps) => {
             console.log(data.data)
             setProduct(data.data);
             setPreviewImg(convertImageToFormatGallaryItem(data.data?.image));
-            const colorSet = Array.from(new Set(data.data.Product_item?.map((data: any) => data.color)));
+            const colorSet = Array.from(new Set(data.data.product_item?.map((data: any) => data.color)));
             setColor(colorSet.map((data) => {
                 return {
                     value: data,
@@ -59,7 +60,7 @@ const ProductView = (props: ProductViewProps) => {
                     disabled: false
                 }
             }))
-            const sizeSet = Array.from(new Set(data.data.Product_item?.map((data: any) => data.size)));
+            const sizeSet = Array.from(new Set(data.data.product_item?.map((data: any) => data.size)));
             setSize(sizeSet.map((data) => {
                 return {
                     value: data,
@@ -74,7 +75,7 @@ const ProductView = (props: ProductViewProps) => {
     const handleColorOnClick = ({ target }: RadioChangeEvent) => {
         console.log(color)
         setSelectedColor(target.value)
-        const size = Array.from(new Set(product?.Product_item.filter((item) => item.color === target.value).map((data) => data.size)));
+        const size = Array.from(new Set(product?.product_item.filter((item) => item.color === target.value).map((data) => data.size)));
 
         console.log(size)
 
@@ -88,7 +89,7 @@ const ProductView = (props: ProductViewProps) => {
     }
     const handleSizeOnClick = ({ target }: RadioChangeEvent) => {
         setSelectedSize(target.value);
-        const color = Array.from(new Set(product?.Product_item.filter((item) => item.size === target.value).map((data) => data.color)));
+        const color = Array.from(new Set(product?.product_item.filter((item) => item.size === target.value).map((data) => data.color)));
 
         console.log(color)
 
@@ -101,28 +102,39 @@ const ProductView = (props: ProductViewProps) => {
         )
     }
     const handleAddToCart = () => {
+        const currentUser = LocalStorage.getItem('user');
         if (selectedColor && selectedSize) {
-            const productItem = product?.Product_item.filter((item) => item.color === selectedColor && item.size === selectedSize)
-            const selectedItem = {
-                id: productItem[0]?.id,
-                image: product?.image[0],
-                name: product?.name,
-                price: product?.price,
-                quantity: quantity,
-                color: selectedColor,
-                size: selectedSize
+            const productItem = product?.product_item.filter((item) => item.color === selectedColor && item.size === selectedSize)
+            if(currentUser){
+                createCart({
+                    userID: currentUser.id,
+                    itemID: productItem[0]?.id,
+                    quantity: quantity,
+                }).then((data) => {
+                    const newCartItem : ICart = {
+                        id: data.data.id,
+                        itemID: productItem[0]?.id,
+                        quantity: quantity,
+                        userID: LocalStorage.getItem('user') ? LocalStorage.getItem('user').id : undefined,
+                        product_item: {
+                            color: selectedColor,
+                            size: selectedSize,
+                            product: product,
+                        }
+                    }
+                    if(LocalStorage.getItem('cart') && 
+                    !Array(LocalStorage.getItem('cart')).some((data: any) => 
+                        JSON.stringify(data[0]) === JSON.stringify(newCartItem))){
+                            LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,newCartItem]);
+                        }
+                    else if(!LocalStorage.getItem('cart'))
+                        LocalStorage.setItem('cart', [newCartItem])
+                })
+            }}
+            else {
+                ErrorAlert("Vui lòng chọn size và màu")
             }
-            if (LocalStorage.getItem('cart') &&
-                !Array(LocalStorage.getItem('cart')).some((data: any) =>
-                    JSON.stringify(data[0]) === JSON.stringify(selectedItem)))
-                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), selectedItem]);
-            else if (!LocalStorage.getItem('cart'))
-                LocalStorage.setItem('cart', [selectedItem])
         }
-        else {
-            ErrorAlert("Vui lòng chọn size và màu")
-        }
-    }
 
 
     return (
