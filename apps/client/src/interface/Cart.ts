@@ -7,6 +7,6 @@ export default interface ICart {
   owner: IUser;
   userID: string;
   quantity: number;
-  itemID: string;
+  itemID: number;
   Product_item: IProduct_item;
 }

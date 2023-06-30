@@ -9,6 +9,7 @@ import IProduct from '../../../interface/Product';
 import { useNavigate } from 'react-router-dom';
 import LocalStorage from '../../../helper/localStorage';
 import ErrorAlert from '../../../components/Alert/ErrorAlert';
+import ICart from '../../../interface/Cart';
 
 const images = [
     {
@@ -49,7 +50,7 @@ const ProductView = (props: ProductViewProps) => {
             console.log(data.data)
             setProduct(data.data);
             setPreviewImg(convertImageToFormatGallaryItem(data.data?.image));
-            const colorSet = Array.from(new Set(data.data.Product_item?.map((data: any) => data.color)));
+            const colorSet = Array.from(new Set(data.data.product_item?.map((data: any) => data.color)));
             setColor(colorSet.map((data) => {
                 return {
                     value: data,
@@ -57,7 +58,7 @@ const ProductView = (props: ProductViewProps) => {
                     disabled: false
                 }
             }))
-            const sizeSet = Array.from(new Set(data.data.Product_item?.map((data: any) => data.size)));
+            const sizeSet = Array.from(new Set(data.data.product_item?.map((data: any) => data.size)));
             setSize(sizeSet.map((data) => {
                 return {
                     value: data,
@@ -72,7 +73,7 @@ const ProductView = (props: ProductViewProps) => {
     const handleColorOnClick = ({ target }: RadioChangeEvent) => {
         console.log(color)
         setSelectedColor(target.value)
-        const size = Array.from(new Set(product?.Product_item.filter((item) => item.color === target.value).map((data) => data.size)));
+        const size = Array.from(new Set(product?.product_item.filter((item) => item.color === target.value).map((data) => data.size)));
 
         console.log(size)
 
@@ -86,7 +87,7 @@ const ProductView = (props: ProductViewProps) => {
     }
     const handleSizeOnClick = ({ target }: RadioChangeEvent) => {
         setSelectedSize(target.value);
-        const color = Array.from(new Set(product?.Product_item.filter((item) => item.size === target.value).map((data) => data.color)));
+        const color = Array.from(new Set(product?.product_item.filter((item) => item.size === target.value).map((data) => data.color)));
 
         console.log(color)
 
@@ -99,26 +100,30 @@ const ProductView = (props: ProductViewProps) => {
         )
     }
     const handleAddToCart = () => {
-        if (selectedColor && selectedSize) {
-            const productItem = product?.Product_item.filter((item) => item.color === selectedColor && item.size === selectedSize)
-            const selectedItem = {
-                id: productItem[0]?.id,
-                image: product?.image[0],
-                name: product?.name,
-                price: product?.price,
-                quantity: quantity,
-                color: selectedColor,
-                size: selectedSize
+        const currentUser = LocalStorage.getItem('user');
+        if(!currentUser){
+            if (selectedColor && selectedSize) {
+                const productItem = product?.product_item.filter((item) => item.color === selectedColor && item.size === selectedSize)
+                const selectedItem : ICart = {
+                    itemID: productItem[0]?.id,
+                    quantity: quantity,
+                    userID: LocalStorage.getItem('user') ? LocalStorage.getItem('user').id : undefined,
+                    Product_item: {
+                        color: selectedColor,
+                        size: selectedSize,
+                        product: product,
+                    }
+                }
+                if(LocalStorage.getItem('cart') && 
+                !Array(LocalStorage.getItem('cart')).some((data: any) => 
+                    JSON.stringify(data[0]) === JSON.stringify(selectedItem)))
+                    LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,selectedItem]);
+                else if(!LocalStorage.getItem('cart'))
+                    LocalStorage.setItem('cart', [selectedItem])
             }
-            if(LocalStorage.getItem('cart') && 
-            !Array(LocalStorage.getItem('cart')).some((data: any) => 
-                JSON.stringify(data[0]) === JSON.stringify(selectedItem)))
-                LocalStorage.setItem('cart', [...LocalStorage.getItem('cart') ,selectedItem]);
-            else if(!LocalStorage.getItem('cart'))
-                LocalStorage.setItem('cart', [selectedItem])
-        }
-        else {
-            ErrorAlert("Vui lòng chọn size và màu")
+            else {
+                ErrorAlert("Vui lòng chọn size và màu")
+            }
         }
     }
 

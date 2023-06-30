@@ -34,6 +34,9 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
     console.log('Received values of form:', values);
 
   };
+  useEffect(() => {
+    form.resetFields();
+  },[selectedItem])
   
   const handleOnChange = () => {
     let totalAmount = 0;
@@ -43,7 +46,6 @@ const ProductInventoryForm: React.FC<ProductInventoryFormProps> = ({ isReadOnly 
                 totalAmount = totalAmount + item.amount[property];
             }
         })
-    console.log(totalAmount)
     setTotalAmount(totalAmount);
   }
 

@@ -28,6 +28,13 @@ export class CartService {
       skip,
       take,
       orderBy,
+      include: {
+        product_item: {
+          include: {
+            product: true
+          }
+        }
+      }
     });
   }
   

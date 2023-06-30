@@ -36,17 +36,11 @@ const Cart = () => {
 
     const [currentUser, setCurrentUser] = useState(LocalStorage.getItem('user'));
 
-    
-
     const [form] = useForm();
 
-    useEffect(()=> {
-        if(currentUser)
-            getCart(currentUser.id).then((data) => {
-                setCartProducts(data.data);
-            })
-        setTotalPrice(getTotalPrice())
-    }, [cartProducts])
+    // useEffect(()=> {
+        
+    // }, [cartProducts])
 
     const getTotalPrice = () => {
         let totalPrice = 0;
@@ -125,8 +119,6 @@ const Cart = () => {
             console.log(error)
         })
     }
-
-
 
     return (
         <Helmet title="Giỏ hàng">
