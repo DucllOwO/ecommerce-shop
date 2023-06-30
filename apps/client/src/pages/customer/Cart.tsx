@@ -91,9 +91,10 @@ const Cart = () => {
                     paymentMethod: data.paymentMethod
                 }
                 createReceipt(newReceipt).then(()=> {
-                    cartProducts.forEach((data) => {
-                        deleteCart(data.id);
-                    })
+                    if(currentUser)
+                        cartProducts.forEach((data) => {
+                            deleteCart(data.id);
+                        })
                     LocalStorage.setItem('cart', []);
                     setCartProducts([]);
                     nav('/payment')
