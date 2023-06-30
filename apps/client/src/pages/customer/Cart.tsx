@@ -44,13 +44,9 @@ const Cart = () => {
 
     const [form] = useForm();
 
-    useEffect(() => {
-        if (currentUser)
-            getCart(currentUser.id).then((data) => {
-                setCartProducts(data.data);
-            })
-        setTotalPrice(getTotalPrice())
-    }, [])
+    // useEffect(()=> {
+
+    // }, [cartProducts])
 
     const getTotalPrice = () => {
         let totalPrice = 0;

@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import LocalStorage from '../../../../helper/localStorage';
 import ICart from '../../../../interface/Cart';
 import { deleteCart, updateCart } from '../../../../api/CustomerAPI';
+import { formatNumberWithComma } from '../../../../helper/utils';
 
 export type CartItemType = {
   image01: string,
@@ -45,7 +46,7 @@ const CartTable = ({ setCartList, cartList }: CartTableProps) => {
       key: '3',
       width: '15%',
       render: (text, record) => {
-        return <p>{record.product_item.product.price}</p>
+        return <p>{formatNumberWithComma(record.product_item.product.price)}</p>
       },
     },
     {
@@ -93,7 +94,7 @@ const CartTable = ({ setCartList, cartList }: CartTableProps) => {
       width: '25%',
       dataIndex: 'tags',
       render: (text, record) => {
-        return <p>{record.product_item.product.price * record.quantity}</p>
+        return <p>{formatNumberWithComma(record.product_item.product.price * record.quantity)}</p>
       }
     },
     {
