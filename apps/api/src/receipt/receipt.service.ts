@@ -47,11 +47,11 @@ export class ReceiptService {
   }
 
   async createReceipt(data: Prisma.ReceiptCreateInput): Promise<Receipt> {
+    console.log(data)
     return this.prisma.receipt.create({
-      data,
+      data: data,
     });
   }
-
 
   async updateReceipt(params: {
     where: Prisma.ReceiptWhereUniqueInput,

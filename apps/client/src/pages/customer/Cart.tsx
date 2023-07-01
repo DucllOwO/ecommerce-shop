@@ -58,55 +58,61 @@ const Cart = () => {
     }
 
     const onFinish = (values: any) => {
-        const newOrder = {
-            firstname: values.firstname,
-            lastname: values.lastname,
-            phone_number: values.phoneNumber,
-            address: values.address,
-            total_cost: totalPrice,
-            buyer: LocalStorage.getItem('user') ? {
-                connect: {
-                    id: LocalStorage.getItem('user').id
-                }
-            } : null,
-            Order_detail: {
-                createMany: {
-                    data: cartProducts.map((item) => { return { itemID: item.id } })
+        console.log(values)
+    }
+
+    const submitOrder = () => {
+        form.validateFields().then((data) => {
+            const newOrder = {
+                firstname: data.firstname,
+                lastname: data.lastname,
+                phone_number: data.phoneNumber,
+                address: data.address,
+                total_cost: discountPrice,
+                buyer: LocalStorage.getItem('user') ? {
+                    connect: {
+                        id: LocalStorage.getItem('user').id
+                    }
+                } : undefined,
+                Order_detail: {
+                    createMany: {
+                        data: cartProducts.map((item: ICart) => { return { item_id: item.id } })
+                    }
                 }
             }
-        }
-        createOrder(newOrder)
-            .then((response) => {
-                // SuccessAlert("Đặt hàng thành công"); 
-                const newReceipt = {
-                    cost: totalPrice,
-                    voucher: values.voucher ? {
-                        connect: {
-                            code: values.voucher
-                        }
-                    } : undefined,
-                    order: {
-                        connect: {
-                            id: response.data.id
-                        }
-                    },
-                    paymentMethod: values.paymentMethod
-                }
-                createReceipt(newReceipt).then((receiptRes) => {
-                    LocalStorage.setItem('cart', []);
-                    setCartProducts([]);
-                    checkOut?.setOrder(response.data);
-                    checkOut?.setReceipt(receiptRes.data);
-                    if (values.paymentMethod === COD)
-                        nav(`/checkout/cash-on-delivery/${response.data.id}`)
-                    else
-                        nav(`/checkout/bank/${response.data.id}`)
-                }).catch((error) => {
-                    console.log(error);
-                    throw new Error();
+            createOrder(newOrder)
+                .then((response) => {
+                    // SuccessAlert("Đặt hàng thành công"); 
+                    const newReceipt = {
+                        cost: discountPrice,
+                        voucher: data.voucher ? {
+                            connect: {
+                                code: data.voucher
+                            }
+                        } : undefined,
+                        order: {
+                            connect: {
+                                id: response.data.id
+                            }
+                        },
+                        paymentMethod: data.paymentMethod,
+                    }
+                    console.log(newReceipt)
+                    createReceipt(newReceipt).then(() => {
+                        if (currentUser)
+                            cartProducts.forEach((data) => {
+                                deleteCart(data.id);
+                            })
+                        LocalStorage.setItem('cart', []);
+                        setCartProducts([]);
+                        nav('/payment')
+                    }).catch((error) => {
+                        console.log(error);
+                        throw new Error();
+                    })
                 })
-            })
-            .catch((error) => console.log(error));
+                .catch((error) => console.log(error));
+        })
     }
 
     const handleOnSearch = async (voucherCode: string) => {
@@ -115,6 +121,7 @@ const Cart = () => {
             console.log(data.data)
             if (data.data.length == 0) {
                 ErrorAlert("Mã giảm giá không hợp lệ");
+                form.resetFields(["voucher"])
                 setDiscountPrice(totalPrice);
             }
             else {
@@ -126,99 +133,95 @@ const Cart = () => {
         })
     }
 
-
-
     return (
-        <CheckoutProvider>
-            <Helmet title="Giỏ hàng">
-                <Row style={{ marginTop: 20 }}>
-                    <Col span={14} offset={1}>
-                        <CartTable cartList={cartProducts} setCartList={setCartProducts} />
-                    </Col>
-                    <Col span={8} offset={1}>
-                        <Space direction='vertical' style={{ width: '90%' }}>
-                            <Form onFinish={onFinish} form={form} layout='vertical' style={{ paddingTop: 20 }}>
-                                <Form.Item
-                                    label='email'
-                                    name="email"
-                                    rules={[REQUIRED_RULE, EMAIL_FORMAT_RULE]}
-                                    initialValue={currentUser.email}
-                                >
-                                    <Input placeholder='Email của bạn' disabled={currentUser ? true : false} />
-                                </Form.Item>
-                                <Form.Item
-                                    label="Họ"
-                                    name="lastname"
-                                    rules={[REQUIRED_RULE]}
-                                    initialValue={currentUser.lastname}
-                                >
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item
-                                    label="Tên"
-                                    name="firstname"
-                                    rules={[REQUIRED_RULE]}
-                                    initialValue={currentUser.firstname}
-                                >
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item
-                                    label="Địa chỉ"
-                                    name="address"
-                                    rules={[REQUIRED_RULE]}
-                                    initialValue={currentUser.address}
-                                >
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item
-                                    label="Số điện thoại"
-                                    name="phoneNumber"
-                                    rules={[REQUIRED_RULE, PHONENUMBER_FORMAT_RULE]}
-                                    initialValue={currentUser.phone_number}
-                                >
-                                    <Input />
-                                </Form.Item>
-                                <Form.Item
-                                    style={{ flexDirection: 'row' }}
-                                    label="Voucher"
-                                    name="voucher"
-                                >
-                                    <Input.Search
-                                        placeholder="Voucher code"
-                                        enterButton="Kiểm tra"
-                                        size="large"
-                                        onSearch={handleOnSearch} />
-                                </Form.Item>
-                                <Form.Item
-                                    label="Phương thức thanh toán"
-                                    name="paymentMethod"
-                                    rules={[REQUIRED_RULE]}>
-                                    <Select placeholder='Chọn phương thức thanh toán' options={paymentMethods} defaultValue={{ value: 'cod', label: 'Thanh toán khi nhận hàng' }} />
-                                </Form.Item>
-                                <div className="cart__info">
-                                    <div className="cart__info__txt">
-                                        <p>
-                                            Bạn đang có {cartProducts?.length} sản phẩm trong giỏ hàng
-                                        </p>
-                                        <div
-                                            className="cart__info__txt__price">
-                                            <span>Thành tiền:</span> <span>{formatNumberWithComma(discountPrice != 0 ? discountPrice : totalPrice)}</span>
-                                        </div>
-                                    </div>
-                                    <div className="cart__info__btn">
-                                        <Button type='primary' htmlType="submit" style={{ width: '100%' }}>
-                                            Đặt hàng
-                                        </Button>
+        <Helmet title="Giỏ hàng">
+            <Row style={{ marginTop: 20 }}>
+                <Col span={14} offset={1}>
+                    <CartTable cartList={cartProducts} setCartList={setCartProducts} />
+                </Col>
+                <Col span={8} offset={1}>
+                    <Space direction='vertical' style={{ width: '90%' }}>
+                        <Form onFinish={onFinish} form={form} layout='vertical' style={{ paddingTop: 20 }}>
+                            <Form.Item
+                                label='email'
+                                name="email"
+                                rules={[REQUIRED_RULE, EMAIL_FORMAT_RULE]}
+                                initialValue={currentUser.email}
+                            >
+                                <Input placeholder='Email của bạn' disabled={currentUser ? true : false} />
+                            </Form.Item>
+                            <Form.Item
+                                label="Họ"
+                                name="lastname"
+                                rules={[REQUIRED_RULE]}
+                                initialValue={currentUser.lastname}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                label="Tên"
+                                name="firstname"
+                                rules={[REQUIRED_RULE]}
+                                initialValue={currentUser.firstname}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                label="Địa chỉ"
+                                name="address"
+                                rules={[REQUIRED_RULE]}
+                                initialValue={currentUser.address}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                label="Số điện thoại"
+                                name="phoneNumber"
+                                rules={[REQUIRED_RULE, PHONENUMBER_FORMAT_RULE]}
+                                initialValue={currentUser.phone_number}
+                            >
+                                <Input />
+                            </Form.Item>
+                            <Form.Item
+                                style={{ flexDirection: 'row' }}
+                                label="Voucher"
+                                name="voucher"
+                            >
+                                <Input.Search
+                                    placeholder="Voucher code"
+                                    enterButton="Kiểm tra"
+                                    size="large"
+                                    onSearch={handleOnSearch} />
+                            </Form.Item>
+                            <Form.Item
+                                label="Phương thức thanh toán"
+                                name="paymentMethod"
+                                rules={[REQUIRED_RULE]}>
+                                <Select placeholder='Chọn phương thức thanh toán' options={paymentMethods} />
+                            </Form.Item>
+                            <div className="cart__info">
+                                <div className="cart__info__txt">
+                                    <p>
+                                        Bạn đang có {cartProducts?.length} sản phẩm trong giỏ hàng
+                                    </p>
+                                    <div
+                                        className="cart__info__txt__price">
+                                        <span>Thành tiền:</span> <span>{discountPrice !== 0 ? discountPrice : totalPrice}</span>
                                     </div>
                                 </div>
-                            </Form>
-                        </Space>
-                    </Col>
-                </Row>
+                                <div className="cart__info__btn">
+                                    <Button type='primary' htmlType="submit" style={{ width: '100%' }} onClick={submitOrder}>
+                                        Đặt hàng
+                                    </Button>
+                                </div>
+                            </div>
+                        </Form>
+                    </Space>
+                </Col>
+            </Row>
 
 
-            </Helmet>
-        </CheckoutProvider>
+        </Helmet>
     )
 }
 
