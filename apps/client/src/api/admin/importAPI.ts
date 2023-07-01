@@ -5,5 +5,5 @@ export function getAllImport(){
 }
 
 export function createImport(newImport: any){
-    return http.post(`/importing`, newImport)
+    return http.post(`/import`, newImport)
 }

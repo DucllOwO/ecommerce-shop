@@ -40,6 +40,7 @@ const Cart = () => {
 
     useEffect(()=> {
         setTotalPrice(getTotalPrice());
+        setDiscountPrice(getTotalPrice());
     }, [cartProducts])
 
     const getTotalPrice = () => {

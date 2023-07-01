@@ -62,12 +62,6 @@ END;
 $$;
 
 --Create trigger
-CREATE OR REPLACE TRIGGER trg_afterinsert_importdetail
-   AFTER INSERT
-   ON import_detail
-   FOR EACH ROW 
-       EXECUTE PROCEDURE f_insert_importDetail();
-
 
 --Create function
 CREATE OR REPLACE FUNCTION f_before_insert_dailyReport() 

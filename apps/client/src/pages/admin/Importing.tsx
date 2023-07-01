@@ -35,7 +35,7 @@ const Importing = () => {
     <Space direction='vertical' style={{ width: '100%' }}>
       <ImportingTable data={data} setIsModalOpen={setIsImportModalOpen} setIsReadOnly={setIsReadModalOpen} setSelectedItem={setSelectedItem}/>
       <ImportingModal isOpen={isImportModalOpen} setIsModalOpen={setIsImportModalOpen} selectedItem={selectedItem} />
-      {isReadModalOpen && <ImportingReadModal isOpen={isReadModalOpen} setIsModalOpen={setIsReadModalOpen} data={selectedItem?.product_item} />}
+      <ImportingReadModal isOpen={isReadModalOpen} setIsModalOpen={setIsReadModalOpen} data={selectedItem?.product_item} />
     </Space>
   )
 }

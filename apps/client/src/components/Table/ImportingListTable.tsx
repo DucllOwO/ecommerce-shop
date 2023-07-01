@@ -16,10 +16,11 @@ import dayjs from 'dayjs'
 interface ImportingTableProps extends TableProps {
   data: IImporting[],
   setIsModalOpen: Function,
-  setIsReadOnly: Function
+  setIsReadOnly: Function,
+  setSelectedItem: Function
 }
 
-const ImportingListTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsReadOnly }) => {
+const ImportingListTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsReadOnly, setSelectedItem }) => {
   const [editingKey, setEditingKey] = useState<string | undefined>('');
 
   const isEditing = (record: IImporting) => record.id.toString() === editingKey;
@@ -73,6 +74,7 @@ const ImportingListTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, set
               if (isClickOnATableCell(event)){
                 setIsModalOpen((prev: boolean) => !prev)
                 setIsReadOnly(true);
+                setSelectedItem(record);
               }  
             }, // click row
           };
