@@ -19,6 +19,6 @@ export class PaymentController {
     if (!(query.amount && query.message))
       throw new BadRequestException('Message and amount not found!!');
 
-    return this.vietQRStrategy.createQR('Test', 100000);
+    return this.vietQRStrategy.createQR(query.message, query.amount);
   }
 }

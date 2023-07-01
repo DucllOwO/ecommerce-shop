@@ -31,8 +31,6 @@ export class VietQRStrategy {
       },
     });
 
-    //this.logger.log(qrRespond);
-
     return qrRespond.data;
   }
 }

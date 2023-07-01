@@ -41,12 +41,15 @@ const Cart = () => {
 
     const [currentUser, setCurrentUser] = useState(LocalStorage.getItem('user'));
 
+    const [submitLoading, setSubmitLoading] = useState(false)
+
 
 
     const [form] = useForm();
 
     useEffect(() => {
         setTotalPrice(getTotalPrice());
+        setDiscountPrice(getTotalPrice());
     }, [cartProducts])
 
     const getTotalPrice = () => {
@@ -62,6 +65,7 @@ const Cart = () => {
     }
 
     const submitOrder = () => {
+        setSubmitLoading(true)
         form.validateFields().then((data) => {
             const newOrder = {
                 firstname: data.firstname,
@@ -105,13 +109,19 @@ const Cart = () => {
                             })
                         LocalStorage.setItem('cart', []);
                         setCartProducts([]);
-                        nav('/payment')
+                        checkOut?.setOrder(response.data)
+                        console.log("🚀 ~ file: Cart.tsx:119 ~ createReceipt ~ response.data:", response.data)
+                        if (data.paymentMethod === COD)
+                            nav(`/checkout/cash-on-delivery/${response.data.id}`);
+                        else
+                            nav(`/checkout/bank/${response.data.id}`);
+
                     }).catch((error) => {
                         console.log(error);
                         throw new Error();
                     })
                 })
-                .catch((error) => console.log(error));
+                .catch((error) => console.log(error)).finally(() => setSubmitLoading(false));
         })
     }
 
@@ -206,11 +216,11 @@ const Cart = () => {
                                     </p>
                                     <div
                                         className="cart__info__txt__price">
-                                        <span>Thành tiền:</span> <span>{discountPrice !== 0 ? discountPrice : totalPrice}</span>
+                                        <span>Thành tiền:</span> <span>{formatNumberWithComma(discountPrice !== 0 ? discountPrice : totalPrice)}</span>
                                     </div>
                                 </div>
                                 <div className="cart__info__btn">
-                                    <Button type='primary' htmlType="submit" style={{ width: '100%' }} onClick={submitOrder}>
+                                    <Button loading={submitLoading} type='primary' htmlType="submit" style={{ width: '100%' }} onClick={submitOrder}>
                                         Đặt hàng
                                     </Button>
                                 </div>

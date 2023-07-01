@@ -112,7 +112,7 @@ const CartTable = ({ setCartList, cartList }: CartTableProps) => {
     },
   ];
   return (
-    <Table columns={columns} dataSource={cartList} scroll={{ x: '100%' }} ></Table>
+    <Table rowKey={record => record.id} columns={columns} dataSource={cartList} scroll={{ x: '100%' }} ></Table>
   )
 }
 
