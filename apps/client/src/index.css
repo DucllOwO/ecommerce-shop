@@ -1,8 +1,8 @@
-:root {
-  --main-color: #4267b2;
-  --border-color: #8d8d8d;
+.react-horizontal-scrolling-menu--scroll-container::-webkit-scrollbar {
+  display: none;
+}
 
-
-  --border-main: 10px;
-  --header-height: 70px;
+.react-horizontal-scrolling-menu--scroll-container {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

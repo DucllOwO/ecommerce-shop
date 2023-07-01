@@ -1,10 +1,10 @@
 import { Button, Image, InputNumber, Space, Table, Typography } from 'antd'
 import { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react'
-import productData from '../../../../assets/fake-data/products';
 import LocalStorage from '../../../../helper/localStorage';
 import ICart from '../../../../interface/Cart';
 import { deleteCart, updateCart } from '../../../../api/CustomerAPI';
+import { formatNumberWithComma } from '../../../../helper/utils';
 
 export type CartItemType = {
   image01: string,
@@ -19,10 +19,7 @@ export type CartTableProps = {
   setCartList: React.SetStateAction<any>
 }
 
-
-
-const CartTable = ({setCartList, cartList  } : CartTableProps) => {
-  const [quantity, setQuantity] = useState();
+const CartTable = ({ setCartList, cartList }: CartTableProps) => {
 
   const columns: ColumnsType<ICart> = [
     {
@@ -49,7 +46,7 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
       key: '3',
       width: '15%',
       render: (text, record) => {
-        return <p>{record.product_item.product.price}</p>
+        return <p>{formatNumberWithComma(record.product_item.product.price)}</p>
       },
     },
     {
@@ -58,37 +55,37 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
       width: '15%',
       dataIndex: 'tags',
       render: (_, record) => {
-        return <InputNumber defaultValue={record.quantity} onChange={(value) => {
+        return <InputNumber min={1} defaultValue={record.quantity} onChange={(value) => {
           console.log(value)
           console.log(cartList)
           const currentUser = LocalStorage.getItem('user');
           setCartList((prev: any) => prev.map((data: ICart) => {
-              if(data.itemID === record.itemID){
-                if(currentUser){
-                  updateCart(data.id, {quantity: value});
-                }
-                return {
-                  ...data,
-                  quantity: value
-                }
+            if (data.itemID === record.itemID) {
+              if (currentUser) {
+                updateCart(data.id, { quantity: value });
               }
-              else{
-                return data;
-              }
-            })
-          )
-          LocalStorage.setItem('cart', cartList?.map((data: ICart) => {
-            if(data.itemID === record.itemID){
               return {
                 ...data,
                 quantity: value
               }
             }
-            else{
+            else {
+              return data;
+            }
+          })
+          )
+          LocalStorage.setItem('cart', cartList?.map((data: ICart) => {
+            if (data.itemID === record.itemID) {
+              return {
+                ...data,
+                quantity: value
+              }
+            }
+            else {
               return data;
             }
           }));
-        }}/>
+        }} />
       }
     },
     {
@@ -97,7 +94,7 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
       width: '25%',
       dataIndex: 'tags',
       render: (text, record) => {
-        return <p>{record.product_item.product.price * record.quantity}</p>
+        return <p>{formatNumberWithComma(record.product_item.product.price * record.quantity)}</p>
       }
     },
     {
@@ -115,7 +112,7 @@ const CartTable = ({setCartList, cartList  } : CartTableProps) => {
     },
   ];
   return (
-    <Table columns={columns} dataSource={cartList} scroll={{ x: '100%' }} ></Table>
+    <Table rowKey={record => record.id} columns={columns} dataSource={cartList} scroll={{ x: '100%' }} ></Table>
   )
 }
 

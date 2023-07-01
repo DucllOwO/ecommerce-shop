@@ -1,12 +1,15 @@
 import { ShoppingCartOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons'
-import { Dropdown, MenuProps } from 'antd'
+import { AutoComplete, Dropdown, Input, MenuProps } from 'antd'
 import Search from 'antd/es/input/Search'
-import React, { useRef, useEffect, useContext } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import React, { useRef, useEffect, useContext, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { searchProductByName } from '../../../api/productAPI'
 
 import logo from '../../../assets/images/Logo-2.png'
 import { AppContext } from '../../../context/AppContext'
 import LocalStorage from '../../../helper/localStorage'
+import IProduct from '../../../interface/Product'
+import SearchOption from './SearchOption'
 
 const mainNav = [
     {
@@ -43,6 +46,21 @@ const items: MenuProps['items'] = [
 const HeaderCustom = () => {
     const { pathname } = useLocation()
     const activeNav = mainNav.findIndex(e => e.path === pathname)
+    const [searchText, setSearchText] = useState('');
+    const [searchOptions, setSearchOptions] = useState<IProduct[]>([])
+    const nav = useNavigate();
+
+    useEffect(() => {
+        const fetchProducts = setTimeout(() => {
+            if (searchText.length > 0)
+                searchProductByName(searchText).then((productsRes) => setSearchOptions(productsRes.data.map((product: IProduct) => ({ value: product.slug, label: <SearchOption imgSrc={product.image[0]} name={product.name} /> }))))
+        }, 1000)
+
+        return () => {
+            clearTimeout(fetchProducts)
+        }
+    }, [searchText])
+
 
     const headerRef = useRef(null)
 
@@ -81,18 +99,23 @@ const HeaderCustom = () => {
         }
     ]
 
+    const onSearch = (value: string) => {
+        setSearchText(value)
+    }
+
+    const onSelect = (value: string) => {
+        setSearchText('');
+        setSearchOptions([])
+        nav(`/product/${value}`)
+    };
+
     return (
         <div className="header" ref={headerRef}>
             <div className="container">
                 <div className="header__logo">
-                    <Link to="/">
-                        <img src={logo} alt="" />
-                    </Link>
+                    <img src={logo} alt="logo" />
                 </div>
                 <div className="header__menu">
-                    <div className="header__menu__mobile-toggle">
-                        <i className='bx bx-menu-alt-left'></i>
-                    </div>
                     <div className="header__menu__left" ref={menuLeft}>
                         {
                             mainNav.map((item, index) => (
@@ -109,15 +132,20 @@ const HeaderCustom = () => {
                     </div>
                     <div className="header__menu__right">
                         <div className="header__menu__item header__menu__right__item">
-                            <Search
-                                placeholder="input search text"
-                                allowClear
-                                style={{ width: 200, fontWeight: '700' }}
-                            />
+                            <AutoComplete
+                                dropdownMatchSelectWidth={252}
+                                style={{ width: 300 }}
+                                options={searchOptions}
+                                onSelect={onSelect}
+                                onSearch={onSearch}
+                                value={searchText}
+                            >
+                                <Input.Search size="middle" placeholder="Tìm kiếm sản phẩm" enterButton />
+                            </AutoComplete>
 
                         </div>
                         <div className="header__menu__item header__menu__right__item">
-                            <Link to="/cart">
+                            <Link to="cart">
                                 <ShoppingCartOutlined />
                             </Link>
                         </div>

@@ -42,6 +42,22 @@ export class ProductService {
       },
     });
   }
+  async productsNotIncludeAnyRelation(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.ProductWhereUniqueInput;
+    where?: Prisma.ProductWhereInput;
+    orderBy?: Prisma.ProductOrderByWithRelationInput;
+  }): Promise<Product[]> {
+    const { skip, take, orderBy, where } = params;
+    return this.prisma.product.findMany({
+      skip,
+      take,
+      orderBy,
+      where,
+    });
+  }
+
   async createProduct(data: Prisma.ProductCreateInput): Promise<Product> {
     console.log(data);
     return this.prisma.product.create({

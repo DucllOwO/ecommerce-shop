@@ -25,13 +25,14 @@ import Order from './pages/customer/Order.js';
 import OrderDetail from './pages/customer/OrderDetail.js';
 import { useContext } from 'react';
 import { AppContext } from './context/AppContext.js';
-import Payment from './pages/customer/Payment.js';
+import BankPayment from './pages/customer/payment/BankPayment.js';
 import LocalStorage from './helper/localStorage.js';
 import { updateUser } from './api/CustomerAPI.js';
 import dayjs from 'dayjs';
 import ReturnPolicy from './pages/customer/ReturnPolicy.js';
 import ImportingList from './pages/admin/ImportingList.js';
 import Importing from './pages/admin/Importing.js';
+import CashOnDeliveryPayment from './pages/customer/payment/CashOnDeliveryPayment.js';
 
 
 function App() {
@@ -83,7 +84,11 @@ function App() {
           <Route key={'order'} path='orders' element={<Order />}>
           </Route>
           <Route key={'order-detail'} path='orders/:id' element={<OrderDetail />} />
-          <Route key={'payment'} path='payment' element={<Payment />} />
+
+          <Route key={'checkout'} path='checkout'>
+            <Route key={'bank'} path='bank/:orderID' element={<BankPayment />} />
+            <Route key={'cash-on-delivery'} path='cash-on-delivery/:orderID' element={<CashOnDeliveryPayment />} />
+          </Route>
           <Route key={'return-policy'} path='return-policy' element={<ReturnPolicy />} />
         </Route>
 

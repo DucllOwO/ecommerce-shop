@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons'
-import { Avatar, Button, Col, Form, Input, Row, Select, Space } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Avatar, Button, Col, Form, Image, Input, Row, Select, Space } from 'antd'
+import React, { useContext, useEffect, useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
 import productData from '../../assets/fake-data/products'
@@ -16,19 +16,24 @@ import ColumnGroup from 'antd/es/table/ColumnGroup'
 import ErrorAlert from '../../components/Alert/ErrorAlert'
 import SuccessAlert from '../../components/Alert/SuccessAlert'
 import ICart from '../../interface/Cart'
+import { getVietQR } from '../../api/paymentAPI'
+import { CheckoutContext, CheckoutProvider } from '../../context/CheckoutContext'
+import { formatNumberWithComma } from '../../helper/utils'
+
+const COD = "cod";
+const BANK = "bank";
 
 const paymentMethods = [
-    { value: 'cod', label: 'Thanh toán khi nhận hàng' },
-    { value: 'momo', label: 'Chuyển tiền qua MoMo' },
-    { value: 'bank', label: 'Chuyển tiền qua ngân hàng' },
+    { value: COD, label: 'Thanh toán khi nhận hàng' },
+    { value: BANK, label: 'Chuyển tiền qua ngân hàng' },
 ]
 
 const Cart = () => {
     const nav = useNavigate();
+    const checkOut = useContext(CheckoutContext);
+
 
     const [cartProducts, setCartProducts] = useState<ICart[]>(LocalStorage.getItem('cart'));
-
-    const [totalProducts, setTotalProducts] = useState();
 
     const [totalPrice, setTotalPrice] = useState(0);
 
@@ -36,16 +41,20 @@ const Cart = () => {
 
     const [currentUser, setCurrentUser] = useState(LocalStorage.getItem('user'));
 
+    const [submitLoading, setSubmitLoading] = useState(false)
+
+
+
     const [form] = useForm();
 
-    useEffect(()=> {
+    useEffect(() => {
         setTotalPrice(getTotalPrice());
         setDiscountPrice(getTotalPrice());
     }, [cartProducts])
 
     const getTotalPrice = () => {
         let totalPrice = 0;
-        cartProducts.forEach((item: ICart)=> { 
+        cartProducts.forEach((item: any) => {
             totalPrice += (item.product_item.product.price * item.quantity);
         });
         return totalPrice;
@@ -56,6 +65,7 @@ const Cart = () => {
     }
 
     const submitOrder = () => {
+        setSubmitLoading(true)
         form.validateFields().then((data) => {
             const newOrder = {
                 firstname: data.firstname,
@@ -64,61 +74,67 @@ const Cart = () => {
                 address: data.address,
                 total_cost: discountPrice,
                 buyer: LocalStorage.getItem('user') ? {
-                    connect: { 
+                    connect: {
                         id: LocalStorage.getItem('user').id
                     }
                 } : undefined,
                 Order_detail: {
                     createMany: {
-                        data: cartProducts.map((item: ICart) => {return {item_id: item.id}})
+                        data: cartProducts.map((item: ICart) => { return { item_id: item.id } })
                     }
                 }
             }
             createOrder(newOrder)
-            .then((response) => {
-                // SuccessAlert("Đặt hàng thành công"); 
-                const newReceipt = {
-                    cost: discountPrice,
-                    voucher: data.voucher ? {
-                        connect: {
-                            code: data.voucher
-                        }
-                    } : undefined,
-                    order: {
-                        connect: {
-                            id: response.data.id
-                        }
-                    },
-                    paymentMethod: data.paymentMethod,
-                }
-                console.log(newReceipt)
-                createReceipt(newReceipt).then(()=> {
-                    if(currentUser)
-                        cartProducts.forEach((data) => {
-                            deleteCart(data.id);
-                        })
-                    LocalStorage.setItem('cart', []);
-                    setCartProducts([]);
-                    nav('/payment')
-                }).catch((error) => {
-                    console.log(error);
-                    throw new Error();
+                .then((response) => {
+                    // SuccessAlert("Đặt hàng thành công"); 
+                    const newReceipt = {
+                        cost: discountPrice,
+                        voucher: data.voucher ? {
+                            connect: {
+                                code: data.voucher
+                            }
+                        } : undefined,
+                        order: {
+                            connect: {
+                                id: response.data.id
+                            }
+                        },
+                        paymentMethod: data.paymentMethod,
+                    }
+                    console.log(newReceipt)
+                    createReceipt(newReceipt).then(() => {
+                        if (currentUser)
+                            cartProducts.forEach((data) => {
+                                deleteCart(data.id);
+                            })
+                        LocalStorage.setItem('cart', []);
+                        setCartProducts([]);
+                        checkOut?.setOrder(response.data)
+                        console.log("🚀 ~ file: Cart.tsx:119 ~ createReceipt ~ response.data:", response.data)
+                        if (data.paymentMethod === COD)
+                            nav(`/checkout/cash-on-delivery/${response.data.id}`);
+                        else
+                            nav(`/checkout/bank/${response.data.id}`);
+
+                    }).catch((error) => {
+                        console.log(error);
+                        throw new Error();
+                    })
                 })
-            })
-            .catch((error) => console.log(error));    
-        }) 
+                .catch((error) => console.log(error)).finally(() => setSubmitLoading(false));
+        })
     }
 
     const handleOnSearch = async (voucherCode: string) => {
         console.log(voucherCode)
         getVoucher(voucherCode).then((data) => {
             console.log(data.data)
-            if(data.data.length == 0){
+            if (data.data.length == 0) {
                 ErrorAlert("Mã giảm giá không hợp lệ");
                 form.resetFields(["voucher"])
                 setDiscountPrice(totalPrice);
             }
-            else{
+            else {
                 setDiscountPrice(totalPrice - totalPrice * data.data[0].discount / 100);
                 SuccessAlert("Sử dụng voucher thành công");
             }
@@ -131,7 +147,7 @@ const Cart = () => {
         <Helmet title="Giỏ hàng">
             <Row style={{ marginTop: 20 }}>
                 <Col span={14} offset={1}>
-                    <CartTable cartList={cartProducts} setCartList={setCartProducts}/>
+                    <CartTable cartList={cartProducts} setCartList={setCartProducts} />
                 </Col>
                 <Col span={8} offset={1}>
                     <Space direction='vertical' style={{ width: '90%' }}>
@@ -142,7 +158,7 @@ const Cart = () => {
                                 rules={[REQUIRED_RULE, EMAIL_FORMAT_RULE]}
                                 initialValue={currentUser.email}
                             >
-                                <Input placeholder='Email của bạn' disabled={currentUser ? true : false}/>
+                                <Input placeholder='Email của bạn' disabled={currentUser ? true : false} />
                             </Form.Item>
                             <Form.Item
                                 label="Họ"
@@ -150,7 +166,7 @@ const Cart = () => {
                                 rules={[REQUIRED_RULE]}
                                 initialValue={currentUser.lastname}
                             >
-                                <Input/>
+                                <Input />
                             </Form.Item>
                             <Form.Item
                                 label="Tên"
@@ -158,7 +174,7 @@ const Cart = () => {
                                 rules={[REQUIRED_RULE]}
                                 initialValue={currentUser.firstname}
                             >
-                                <Input/>
+                                <Input />
                             </Form.Item>
                             <Form.Item
                                 label="Địa chỉ"
@@ -166,7 +182,7 @@ const Cart = () => {
                                 rules={[REQUIRED_RULE]}
                                 initialValue={currentUser.address}
                             >
-                                <Input/>
+                                <Input />
                             </Form.Item>
                             <Form.Item
                                 label="Số điện thoại"
@@ -174,10 +190,10 @@ const Cart = () => {
                                 rules={[REQUIRED_RULE, PHONENUMBER_FORMAT_RULE]}
                                 initialValue={currentUser.phone_number}
                             >
-                                <Input/>  
+                                <Input />
                             </Form.Item>
                             <Form.Item
-                                style={{flexDirection: 'row'}}
+                                style={{ flexDirection: 'row' }}
                                 label="Voucher"
                                 name="voucher"
                             >
@@ -185,7 +201,7 @@ const Cart = () => {
                                     placeholder="Voucher code"
                                     enterButton="Kiểm tra"
                                     size="large"
-                                    onSearch={handleOnSearch}/>
+                                    onSearch={handleOnSearch} />
                             </Form.Item>
                             <Form.Item
                                 label="Phương thức thanh toán"
@@ -200,11 +216,11 @@ const Cart = () => {
                                     </p>
                                     <div
                                         className="cart__info__txt__price">
-                                        <span>Thành tiền:</span> <span>{discountPrice !== 0 ? discountPrice : totalPrice}</span>
+                                        <span>Thành tiền:</span> <span>{formatNumberWithComma(discountPrice !== 0 ? discountPrice : totalPrice)}</span>
                                     </div>
                                 </div>
                                 <div className="cart__info__btn">
-                                    <Button type='primary' htmlType="submit" style={{ width: '100%' }} onClick={submitOrder}>
+                                    <Button loading={submitLoading} type='primary' htmlType="submit" style={{ width: '100%' }} onClick={submitOrder}>
                                         Đặt hàng
                                     </Button>
                                 </div>

@@ -25,6 +25,7 @@ import * as cors from 'cors';
 import { HelperModule } from './helper/helper.module';
 import { RecommenderModule } from './recommender/recommender.module';
 import { ImportModule } from './import/import.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -50,7 +51,8 @@ import { ImportModule } from './import/import.module';
     HelperModule,
     RecommenderModule,
     ImageModule,
-    ImportModule
+    ImportModule,
+    PaymentModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

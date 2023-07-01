@@ -4,25 +4,25 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async order(
     orderWhereUniqueInput: Prisma.OrderWhereUniqueInput,
   ): Promise<Order | null> {
     return this.prisma.order.findUnique({
       where: orderWhereUniqueInput,
-      include:{
+      include: {
         buyer: true,
         Order_detail: {
           include: {
             product_item: {
               include: {
-                product: true
-              }
-            }
-          }
-        }
-      }
+                product: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 
@@ -39,34 +39,45 @@ export class OrderService {
       skip,
       take,
       orderBy,
-      include:{
+      include: {
         buyer: true,
         Order_detail: {
           include: {
             product_item: {
               include: {
-                product: true
-              }
-            }
-          }
-        }
-      }
+                product: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
   async createOrder(data: Prisma.OrderCreateInput): Promise<Order> {
     return this.prisma.order.create({
       data,
+      include: {
+        Order_detail: {
+          include: {
+            product_item: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
 
   async updateOrder(params: {
-    where: Prisma.OrderWhereUniqueInput,
-    data: Prisma.OrderCreateInput
+    where: Prisma.OrderWhereUniqueInput;
+    data: Prisma.OrderCreateInput;
   }): Promise<Order> {
-    const { where, data } = params
+    const { where, data } = params;
     return this.prisma.order.update({
       where,
-      data
+      data,
     });
   }
 }

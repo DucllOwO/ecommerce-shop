@@ -11,18 +11,22 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/vi'; // Import the Vietnamese locale
 import { ConfigProvider, DatePicker } from 'antd'
 import locale from 'antd/lib/locale/vi_VN';
+import { CheckoutProvider } from './context/CheckoutContext'
 dayjs.locale('vi'); // Set the locale to Vietnamese
 
 
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <AppProvider>
-      <ConfigProvider locale={locale}>
-        <ErrorBoundary fallback={<ErrorResult />}>
-          <App />
-        </ErrorBoundary>
-      </ConfigProvider>
-    </AppProvider>
+    <ErrorBoundary fallback={<ErrorResult />}>
+      <AppProvider>
+        <ConfigProvider locale={locale}>
+          <CheckoutProvider>
+
+            <App />
+          </CheckoutProvider>
+        </ConfigProvider>
+      </AppProvider>
+    </ErrorBoundary>
   </React.StrictMode>,
 )
