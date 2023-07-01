@@ -5,13 +5,13 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Logger,
-  Req,
   Query,
+  BadRequestException,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Prisma } from '@prisma/client';
+import { nfd } from 'unorm';
 
 @Controller('product')
 export class ProductController {
@@ -21,6 +21,29 @@ export class ProductController {
   @Post()
   create(@Body() createProductDto: Prisma.ProductCreateInput) {
     return this.productService.createProduct(createProductDto);
+  }
+
+  @Get('search')
+  async searchProductByName(@Query('name') name: string) {
+    if (!name) return [];
+
+    const searchTokens = name
+      .split(' ')
+      .map((token) => nfd(token.normalize('NFD')).toLowerCase());
+
+    const filters = searchTokens.map((token) => ({
+      name: {
+        contains: token,
+        mode: Prisma.QueryMode.insensitive,
+      },
+    }));
+    const products = await this.productService.productsNotIncludeAnyRelation({
+      where: {
+        OR: filters,
+      },
+    });
+
+    return products;
   }
 
   @Get()

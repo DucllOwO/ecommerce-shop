@@ -2,7 +2,6 @@ import { Carousel, Col, Image, Row, Space } from 'antd'
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import policy from '../../assets/fake-data/policy'
-import productData from '../../assets/fake-data/products'
 
 import Helmet from './components/Helmet'
 import PolicyCard from './components/PolicyCard'
@@ -16,8 +15,9 @@ import { ScrollMenu } from 'react-horizontal-scrolling-menu';
 import { LeftArrow, RightArrow } from './components/Arrow'
 import Title from 'antd/es/typography/Title'
 import { AppContext } from '../../context/AppContext'
-import { fetchTopTenBestSellers, fetchTopTenMostViewed } from '../../api/admin/ProductAPI'
 import IProduct from '../../interface/Product'
+import { fetchTopTenBestSellers, fetchTopTenMostViewed } from '../../api/productAPI'
+import '../../index.css';
 
 const Home = () => {
     const appContext = useContext(AppContext);
@@ -101,7 +101,7 @@ const Home = () => {
                 <Title level={2} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>XEM NHIỀU NHẤT</Title>
                 {/* new arrival section */}
                 <Row>
-                    <Col span={24}>
+                    <Col span={24} style={{ overflowX: 'hidden' }}>
                         <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow} Footer={null} >
                             {mostViewed.map((item, index) => (
                                 <ProductCard

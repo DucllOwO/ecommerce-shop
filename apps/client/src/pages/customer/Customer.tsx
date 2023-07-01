@@ -11,7 +11,7 @@ const Customer = () => {
       width: "100%",
       overflowX: 'hidden'
     }}>
-      <Header style={{ height: 'var(--header-height)' }}>
+      <Header>
         <HeaderCustom />
       </Header>
       <Content>

@@ -125,6 +125,7 @@ const Catalog = () => {
                                         name={item.name}
                                         price={item.price}
                                         slug={item.slug}
+                                        discount={item.discount?.discount ? item.discount?.discount : null}
                                     />
                                 </List.Item>
                             )}

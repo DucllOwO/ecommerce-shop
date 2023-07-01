@@ -11,6 +11,7 @@ import LocalStorage from '../../../helper/localStorage';
 import ErrorAlert from '../../../components/Alert/ErrorAlert';
 import { formatNumberWithComma } from '../../../helper/utils';
 import ICart from '../../../interface/Cart';
+import SuccessAlert from '../../../components/Alert/SuccessAlert';
 
 const images = [
     {
@@ -128,6 +129,8 @@ const ProductView = (props: ProductViewProps) => {
                     }
                     else if (!LocalStorage.getItem('cart'))
                         LocalStorage.setItem('cart', [newCartItem])
+
+                    SuccessAlert('Thêm vào giỏ hàng thành công.')
                 })
             }
         }

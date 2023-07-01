@@ -18,6 +18,7 @@ import SuccessAlert from '../../components/Alert/SuccessAlert'
 import ICart from '../../interface/Cart'
 import { getVietQR } from '../../api/paymentAPI'
 import { CheckoutContext, CheckoutProvider } from '../../context/CheckoutContext'
+import { formatNumberWithComma } from '../../helper/utils'
 
 const COD = "cod";
 const BANK = "bank";
@@ -44,14 +45,14 @@ const Cart = () => {
 
     const [form] = useForm();
 
-    // useEffect(()=> {
-
-    // }, [cartProducts])
+    useEffect(() => {
+        setTotalPrice(getTotalPrice());
+    }, [cartProducts])
 
     const getTotalPrice = () => {
         let totalPrice = 0;
         cartProducts.forEach((item: any) => {
-            totalPrice += (item.price * item.quantity);
+            totalPrice += (item.product_item.product.price * item.quantity);
         });
         return totalPrice;
     }
@@ -201,7 +202,7 @@ const Cart = () => {
                                         </p>
                                         <div
                                             className="cart__info__txt__price">
-                                            <span>Thành tiền:</span> <span>{discountPrice != 0 ? discountPrice : totalPrice}</span>
+                                            <span>Thành tiền:</span> <span>{formatNumberWithComma(discountPrice != 0 ? discountPrice : totalPrice)}</span>
                                         </div>
                                     </div>
                                     <div className="cart__info__btn">
