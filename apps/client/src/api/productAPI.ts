@@ -11,3 +11,7 @@ export function fetchTopTenMostViewed() {
 export function searchProductByName(name: string) {
   return http.get(`/product/search?name=${name}`);
 }
+
+export function getAllColorsVariant() {
+  return http.get('/product-item/all-colors');
+}

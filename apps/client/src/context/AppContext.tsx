@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useEffect, useState } from "react";
 import LocalStorage from "../helper/localStorage";
+import IProduct from "../interface/Product";
 import IUserLocalStorage from "../interface/UserLocalStorage";
 
 export const AppContext = createContext<AppContextProps | null>(null);
