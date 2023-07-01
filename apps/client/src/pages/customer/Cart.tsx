@@ -61,15 +61,15 @@ const Cart = () => {
                 lastname: data.lastname,
                 phone_number: data.phoneNumber,
                 address: data.address,
-                total_cost: totalPrice,
+                total_cost: discountPrice,
                 buyer: LocalStorage.getItem('user') ? {
                     connect: { 
                         id: LocalStorage.getItem('user').id
                     }
-                } : null,
+                } : undefined,
                 Order_detail: {
                     createMany: {
-                        data: cartProducts.map((item: ICart) => {return {itemID: item.id}})
+                        data: cartProducts.map((item: ICart) => {return {item_id: item.id}})
                     }
                 }
             }
@@ -77,7 +77,7 @@ const Cart = () => {
             .then((response) => {
                 // SuccessAlert("Đặt hàng thành công"); 
                 const newReceipt = {
-                    cost: totalPrice,
+                    cost: discountPrice,
                     voucher: data.voucher ? {
                         connect: {
                             code: data.voucher
@@ -88,8 +88,9 @@ const Cart = () => {
                             id: response.data.id
                         }
                     },
-                    paymentMethod: data.paymentMethod
+                    paymentMethod: data.paymentMethod,
                 }
+                console.log(newReceipt)
                 createReceipt(newReceipt).then(()=> {
                     if(currentUser)
                         cartProducts.forEach((data) => {
@@ -113,6 +114,7 @@ const Cart = () => {
             console.log(data.data)
             if(data.data.length == 0){
                 ErrorAlert("Mã giảm giá không hợp lệ");
+                form.resetFields(["voucher"])
                 setDiscountPrice(totalPrice);
             }
             else{
