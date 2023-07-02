@@ -1,4 +1,4 @@
-import { Space, List, Row, Button } from 'antd';
+import { Space, List, Row, Button, Image } from 'antd';
 import Title from 'antd/es/typography/Title';
 import IOrder from '../../interface/Order';
 import React, { useEffect, useState } from 'react'
@@ -29,9 +29,12 @@ const Order = () => {
     <Space className='svgBg' style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
       <Space direction='vertical' style={{ gap: 20, margin: '20px 0px' }}>
         {data?.map((item, i) => <List
+          pagination={{
+            pageSize: 3,
+          }}
           bordered
           header={<Space style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-            <Title level={2}>Đơn hàng {i + 1}</Title>
+            <Title level={2}>Đơn hàng {item.id}</Title>
             <Button type='primary' onClick={() => navigate(`/orders/${item.id}`)}>Xem chi tiết</Button>
           </Space>}
           footer={<Title level={4} style={{ textAlign: 'end' }}> Tổng giá trị: {formatNumberWithComma(item.total_cost)}</Title>}
@@ -43,10 +46,11 @@ const Order = () => {
             <List.Item
               key={detail.product_item.product.name}
               extra={
-                <img
-                  width={272}
+                <Image
+                  width={100}
                   alt="logo"
                   src={detail.product_item.product.image[0]}
+                  style={{ borderRadius: 10 }}
                 />
               }
             >
@@ -56,8 +60,8 @@ const Order = () => {
               <Row>
                 {`Số lượng: ${detail?.quantity}`}
               </Row>
-              <Row>{`${detail.product_item.color} ${detail.product_item.size}`}</Row>
-              <Row>{formatNumberWithComma(detail.product_item.product.price)}</Row>
+              <Row>{`Phân loại: ${detail.product_item.color} ${detail.product_item.size}`}</Row>
+              <Row>{`Giá tiền: ${formatNumberWithComma(detail.product_item.product.price)}`}</Row>
             </List.Item>
           )}
         />)}

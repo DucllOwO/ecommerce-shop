@@ -34,7 +34,7 @@ export function updateUser(newUser: any, userID: number){
 }
 
 export function getOrdersByUserID(userID: any){
-  return http.get(`/order/?user=${userID}`)
+  return http.get(`/order?user=${userID}`)
 }
 
 export function getOrder(id: string){

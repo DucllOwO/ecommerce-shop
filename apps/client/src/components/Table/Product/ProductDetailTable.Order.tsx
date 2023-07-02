@@ -1,5 +1,6 @@
 import { Card, Table, Image, Space, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { formatNumberWithComma } from '../../../helper/utils';
 import IOrder_detail from '../../../interface/OrderDetail';
 
 const { Text } = Typography;
@@ -67,7 +68,7 @@ const columns: ColumnsType<IOrder_detail> = [
     key: 'name_image',
     render: (text, record) => {
       return <Space direction='horizontal'>
-        <Image width={100} height={150} alt="example" src={record.product_item.product.image[0]} />
+        <Image width={100} height={150} alt="example" src={record.product_item.product.image[0]} style={{ borderRadius: 10 }} />
         <Text>{record.product_item.product.name}</Text>
       </Space>
     },
@@ -94,7 +95,7 @@ const columns: ColumnsType<IOrder_detail> = [
     title: 'Gía',
     dataIndex: 'price',
     key: 'price',
-    render: (text, record) => <p>{record.product_item.product.price}</p>,
+    render: (text, record) => <p>{formatNumberWithComma(record.product_item.product.price)}</p>,
   },
 ];
 
@@ -102,7 +103,7 @@ type OrderDetailTableProps = {
   data?: IOrder_detail[]
 }
 
-const ProductOrderDetailTable = ({data} : OrderDetailTableProps) => {
+const ProductOrderDetailTable = ({ data }: OrderDetailTableProps) => {
   return (
     <Table columns={columns} dataSource={data} pagination={{ pageSize: 4 }} />
   )
