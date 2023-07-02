@@ -101,6 +101,66 @@ const ProductView = (props: ProductViewProps) => {
         })
         )
     }
+
+    const handleBuyNow = () => {
+        const currentUser = LocalStorage.getItem('user');
+        if (selectedColor && selectedSize) {
+            const productItem = product?.product_item.filter((item) => item.color === selectedColor && item.size === selectedSize)
+            if (currentUser) {
+                createCart({
+                    userID: currentUser.id,
+                    itemID: productItem[0]?.id,
+                    quantity: quantity,
+                }).then((data) => {
+                    const newCartItem: ICart = {
+                        id: data.data.id,
+                        itemID: productItem[0]?.id,
+                        quantity: quantity,
+                        userID: LocalStorage.getItem('user') ? LocalStorage.getItem('user').id : undefined,
+                        product_item: {
+                            color: selectedColor,
+                            size: selectedSize,
+                            product: product,
+                        }
+                    }
+                    if (LocalStorage.getItem('cart') &&
+                        !Array(LocalStorage.getItem('cart')).some((data: any) =>
+                            JSON.stringify(data[0]) === JSON.stringify(newCartItem))) {
+                        LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), newCartItem]);
+                    }
+                    else if (!LocalStorage.getItem('cart'))
+                        LocalStorage.setItem('cart', [newCartItem])
+                    SuccessAlert('Thêm vào giỏ hàng thành công.');
+                    nav('/cart');
+                })
+            }
+            else {
+                const newCartItem: ICart = {
+                    itemID: productItem[0]?.id,
+                    quantity: quantity,
+                    userID: LocalStorage.getItem('user') ? LocalStorage.getItem('user').id : undefined,
+                    product_item: {
+                        color: selectedColor,
+                        size: selectedSize,
+                        product: product,
+                    }
+                }
+                if (LocalStorage.getItem('cart') &&
+                    !Array(LocalStorage.getItem('cart')).some((data: any) =>
+                        JSON.stringify(data[0]) === JSON.stringify(newCartItem))) {
+                    LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), newCartItem]);
+                }
+                else if (!LocalStorage.getItem('cart'))
+                    LocalStorage.setItem('cart', [newCartItem])
+                SuccessAlert('Thêm vào giỏ hàng thành công.');
+                nav('cart');
+            }
+        }
+        else {
+            ErrorAlert("Vui lòng chọn size và màu");
+        }
+    }
+
     const handleAddToCart = () => {
         const currentUser = LocalStorage.getItem('user');
         if (selectedColor && selectedSize) {
@@ -129,13 +189,32 @@ const ProductView = (props: ProductViewProps) => {
                     }
                     else if (!LocalStorage.getItem('cart'))
                         LocalStorage.setItem('cart', [newCartItem])
-
                     SuccessAlert('Thêm vào giỏ hàng thành công.')
                 })
             }
+            else {
+                const newCartItem: ICart = {
+                    itemID: productItem[0]?.id,
+                    quantity: quantity,
+                    userID: LocalStorage.getItem('user') ? LocalStorage.getItem('user').id : undefined,
+                    product_item: {
+                        color: selectedColor,
+                        size: selectedSize,
+                        product: product,
+                    }
+                }
+                if (LocalStorage.getItem('cart') &&
+                    !Array(LocalStorage.getItem('cart')).some((data: any) =>
+                        JSON.stringify(data[0]) === JSON.stringify(newCartItem))) {
+                    LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), newCartItem]);
+                }
+                else if (!LocalStorage.getItem('cart'))
+                    LocalStorage.setItem('cart', [newCartItem])
+                SuccessAlert('Thêm vào giỏ hàng thành công.')
+            }
         }
         else {
-            ErrorAlert("Vui lòng chọn size và màu")
+            ErrorAlert("Vui lòng chọn size và màu");
         }
     }
 
@@ -196,10 +275,7 @@ const ProductView = (props: ProductViewProps) => {
                         <Button
                             onClick={handleAddToCart}
                         >Thêm vào giỏ</Button>
-                        <Button onClick={() => {
-                            handleAddToCart();
-                            nav('/cart');
-                        }}>Mua ngay</Button>
+                        <Button onClick={handleBuyNow}>Mua ngay</Button>
                     </div>
                     <div className={`product-description ${descriptionExpand ? 'expand' : ''}`}>
                         <div className="product-description__title">
