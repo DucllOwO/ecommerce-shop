@@ -5,6 +5,9 @@ import IProduct from '../../interface/Product'
 import { useForm } from 'antd/es/form/Form'
 import ProductInventoryForm from '../Form/ProductInventoryForm'
 import { REQUIRED_RULE } from '../../constant/formRules'
+import IProduct_item from '../../interface/ProductItem'
+import { createImport } from '../../api/admin/importAPI'
+import SuccessAlert from '../Alert/SuccessAlert'
 
 interface ImportingModalProps extends ModalProps {
   setIsReadOnly?: Function,
@@ -19,22 +22,44 @@ const ImportingModal: FC<ImportingModalProps> = ({ isOpen, setIsModalOpen, selec
 
   const handleOkModal = () => {
     form.validateFields().then((data) => {
-      const importDetail = data;
+      console.log(data);
       const newImport = {
         total_cost: price,
         total_amount: totalAmount,
         ImportDetail: {
           createMany: {
-            data: importDetail
+            data: createImportDetail(data)
           }
         }
       }
+      createImport(newImport).then((data) => {
+        console.log(data.data);
+        SuccessAlert("Nhập hàng thành công");
+        setIsModalOpen((prev : boolean) => !prev)
+      })
     })
   }
   const createImportDetail = (data: any) => {
-    data.forEach((item) => {
-      
+    let result = [];
+    data.inventory.map((item: any) => {
+      for (var property in item.amount) {
+        if(item.amount[property] > 0){
+          console.log(property);
+          
+          const productItem = selectedItem?.product_item.filter((product) => product.color === item.color && product.size.trim() === property);
+          result = [
+            ...result,
+            { 
+              item: productItem[0]?.id,
+              quantity: item.amount[property],
+              price: data.price,
+              total_cost: data.price * item.amount[property],
+            }
+          ]
+        } 
+      }
     })
+    return result;
   }
 
   return (

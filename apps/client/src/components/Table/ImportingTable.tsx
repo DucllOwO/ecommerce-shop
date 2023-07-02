@@ -94,7 +94,7 @@ const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsRe
             onClick: (event: React.MouseEvent) => {
               if (isClickOnATableCell(event)){
                 // setIsModalOpen((prev: boolean) => !prev)
-                setIsReadOnly(true);
+                setIsReadOnly((prev: boolean) => !prev);
                 setSelectedItem(record);
               }  
             }, // click row

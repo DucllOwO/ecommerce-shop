@@ -38,7 +38,7 @@ const BankPayment = () => {
                     <p>Nếu có bất kì vấn đề gì cần hỗ trợ, hãy liên lạc với của hàng qua số điện thoại 0912324274</p>
                   </Space>}
                   extra={[
-                    <Button type="primary" key="console" onClick={() => nav('')}>
+                    <Button type="primary" key="console" onClick={() => nav('/')}>
                       Về trang chủ
                     </Button>
                   ]}

@@ -80,7 +80,10 @@ const Cart = () => {
                 } : undefined,
                 Order_detail: {
                     createMany: {
-                        data: cartProducts.map((item: ICart) => { return { item_id: item.id } })
+                        data: cartProducts.map((item: ICart) => { return { 
+                            item_id: item.itemID,
+                            quantity: item.quantity
+                        }})
                     }
                 }
             }
@@ -147,7 +150,7 @@ const Cart = () => {
         <Helmet title="Giỏ hàng">
             <Row style={{ marginTop: 20 }}>
                 <Col span={14} offset={1}>
-                    <CartTable cartList={cartProducts} setCartList={setCartProducts} />
+                    <CartTable cartList={cartProducts} setCartList={setCartProducts}/>
                 </Col>
                 <Col span={8} offset={1}>
                     <Space direction='vertical' style={{ width: '90%' }}>
