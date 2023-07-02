@@ -20,7 +20,7 @@ const OrderModal = ({ isOpen, setIsModalOpen, selectedOrder }: OrderModalProps) 
           {selectedOrder?.phone_number}
         </Descriptions.Item>
         <Descriptions.Item label="Trạng thái" span={3}>
-          <Tag color={'green'} title={'Hoàn thành'}>{selectedOrder?.status === "0" ? "Chưa hoàn thành" : "Hoàn thành"}</Tag>
+          <Tag color={'green'} title={'Hoàn thành'}>{selectedOrder?.status === "0" ? "Đang đợi" : selectedOrder?.status === "1" ? "Đang vận chuyển" : selectedOrder?.status === "2" ? "Hoàn thành" : "Đã huỷ"}</Tag>
         </Descriptions.Item>
         {/* <Descriptions.Item label="Ghi chú" span={3}>
         </Descriptions.Item> */}

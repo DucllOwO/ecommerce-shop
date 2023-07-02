@@ -12,7 +12,7 @@ import OrderManagement from './pages/admin/OrderManagement.js';
 import ProductManagement from './pages/admin/ProductManagement.js';
 import Collection from './pages/admin/Collection.js';
 import Delivery from './pages/admin/Delivery.js';
-import { ORDER_COMPLETED_STATE, ORDER_WAITING_STATE, RECEIPT_PAID_STATE, RECEIPT_UNPAID_STATE } from './constant/constant.js';
+import { ORDER_CANCELED_STATE, ORDER_COMPLETED_STATE, ORDER_WAITING_STATE, RECEIPT_PAID_STATE, RECEIPT_UNPAID_STATE } from './constant/constant.js';
 import Tag from './pages/admin/Tag.js';
 import Receipt from './pages/admin/Receipt.js';
 import Discount from './pages/admin/Discount.js';
@@ -50,6 +50,7 @@ function App() {
           <Route key={'order'} path='order'>
             <Route key={'order_waiting'} path='waiting' element={<OrderManagement state={ORDER_WAITING_STATE} />} />
             <Route key={'order_completed'} path='completed' element={<OrderManagement state={ORDER_COMPLETED_STATE} />} />
+            <Route key={'order_canceled'} path='canceled' element={<OrderManagement state={ORDER_CANCELED_STATE} />} />
           </Route>
           <Route key={'product'} path='product'>
             <Route key={'collection'} path='collection' element={<Collection />} />

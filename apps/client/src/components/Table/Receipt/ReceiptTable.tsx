@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import OrderModal from '../../Modal/OrderModal';
 import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
 import IReceipt from '../../../interface/Receipt';
-import { fetchPaidReceipt, fetchUnpaidReceipt } from '../../../api/admin/receiptAPI';
+import { fetchPaidReceipt, fetchUnpaidReceipt, paidReceipt } from '../../../api/admin/receiptAPI';
 import dayjs from 'dayjs';
+import SuccessAlert from '../../Alert/SuccessAlert';
+import ReceiptModal from '../../Modal/ReceiptModal';
 
 // interface DataType {
 //   id: string;
@@ -55,7 +57,23 @@ const ReceiptTable = (props: ReceiptTableProps) => {
       key: 'cost',
       render: (text) => <p>{text}</p>,
     },
+    props.state === "unpaid" ? {
+      title: 'Thao tác',
+      key: 'Action',
+      render: (_, record) => 
+        <Button 
+          style={{marginRight: 10}}
+          onClick={() => handlePaidOnClick(record)}
+        >Đã thanh toán</Button>
+    } : {}
   ];
+
+  const handlePaidOnClick = (item: IReceipt) => {
+    paidReceipt(item.id).then((dataRes) => {
+      setData(prev => prev?.filter((data) => data.id !== item.id));
+      SuccessAlert("Thanh toán thành công");
+    })
+  }
   
   useEffect(()=> {
     // console.log(props.state);
@@ -67,7 +85,7 @@ const ReceiptTable = (props: ReceiptTableProps) => {
 
   return (
     <>
-      <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedOrder={selectedReceipt?.order}/>
+      <ReceiptModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedReceipt={selectedReceipt}/>
       <Table
         columns={columns}
         dataSource={data}
@@ -76,6 +94,7 @@ const ReceiptTable = (props: ReceiptTableProps) => {
             onClick: (event) => {
               if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event)))
               {  
+                console.log(record)
                 setSelectedReceipt(record)
                 setIsModalOpen(prev => !prev)
               }
