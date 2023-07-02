@@ -9,6 +9,10 @@ export function fetchProductDetail(where: any){
   return http.get(`/product`, {params: where})
 }
 
+export function increaseViewForProduct(id: number) {
+  return http.post(`/product/viewed/${id}`);
+}
+
 export function fetchProduct(id: number){
   return http.get(`/product/${id}`)
 }
