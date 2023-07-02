@@ -1,20 +1,11 @@
-import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
-import { Space, List, Avatar, Row, Button } from 'antd';
+import { Space, List, Row, Button } from 'antd';
 import Title from 'antd/es/typography/Title';
 import IOrder from '../../interface/Order';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { getOrdersByUserID } from '../../api/CustomerAPI';
 import LocalStorage from '../../helper/localStorage';
-
-// const data = Array.from({ length: 5 }).map((_, i) => ({
-//   title: `Tên quần áo ${i}`,
-//   avatar: `https://xsgames.co/randomusers/avatar.php?g=pixel&key=${i}`,
-//   description:
-//     'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-//   content:
-//     'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-// }));
+import { formatNumberWithComma } from '../../helper/utils';
 
 const IconText = ({ icon, text }: { icon: React.FC; text: string }) => (
   <Space>
@@ -32,7 +23,7 @@ const Order = () => {
       console.log(data.data)
       setData(data.data)
     })
-  },[])
+  }, [])
 
   return (
     <Space className='svgBg' style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -40,10 +31,10 @@ const Order = () => {
         {data?.map((item, i) => <List
           bordered
           header={<Space style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-            <Title level={2}>Đơn hàng {i+1}</Title>
+            <Title level={2}>Đơn hàng {i + 1}</Title>
             <Button type='primary' onClick={() => navigate(`/orders/${item.id}`)}>Xem chi tiết</Button>
           </Space>}
-          footer={<Title level={4} style={{ textAlign: 'end' }}> Tổng giá trị: {item.total_cost}</Title>}
+          footer={<Title level={4} style={{ textAlign: 'end' }}> Tổng giá trị: {formatNumberWithComma(item.total_cost)}</Title>}
           style={{ width: '60vw', background: 'white' }}
           itemLayout="vertical"
           size="default"
@@ -66,7 +57,7 @@ const Order = () => {
                 {`Số lượng: ${detail?.quantity}`}
               </Row>
               <Row>{`${detail.product_item.color} ${detail.product_item.size}`}</Row>
-              <Row>{detail.product_item.product.price}</Row>
+              <Row>{formatNumberWithComma(detail.product_item.product.price)}</Row>
             </List.Item>
           )}
         />)}
