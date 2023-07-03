@@ -16,6 +16,7 @@ import ProductEditForm from '../Form/ProductEditForm'
 import slugify from 'slugify'
 import { fetchAllTag } from '../../api/admin/tagAPI'
 import SuccessAlert from '../Alert/SuccessAlert'
+import { formatNumberWithComma } from '../../helper/utils'
 
 interface ProductModalProps extends ModalProps {
   action: string,
@@ -48,10 +49,6 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
       }))
     });
   }, [])
-
-  // const handleChange = (value: string[]) => {
-  //   console.log(`selected ${value}`);
-  // };
 
   const handleOKModal = () => {
     form.validateFields().then((data) => {
@@ -135,8 +132,8 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
         console.log(newProduct);
         updateProduct(newProduct, selectedItem.id).then((data) => {
           updateImageFunc(imageList, slugString);
-          SuccessAlert("Chỉnh sửa sản phầm thành công");
-          
+          SuccessAlert("Chỉnh sửa sản phẩm thành công");
+
         }).catch((error) => console.log(error))
       }
     });
@@ -243,30 +240,23 @@ function renderModalContent(action: string, form: FormInstance<any>, tags: ITag[
       return selectedItem ? <ProductEditForm form={form} tagInit={tags} collectionInit={collections} discountInit={discounts} selectedItem={selectedItem} setImageList={setImageList} /> : null
     case ACTION_READ:
       return <Space direction='vertical' style={{ width: '100%' }}>
-        <Descriptions title="Thông tin sản phẩm" bordered>
+        <Descriptions bordered column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }} >
           <Descriptions.Item label="ID" span={1}>{selectedItem?.id}</Descriptions.Item>
-          <Descriptions.Item label="Bộ siêu tập" span={2}>{selectedItem?.collection?.name}</Descriptions.Item>
-          <Descriptions.Item label="Tên sản phẩm" span={3}>{selectedItem?.name}</Descriptions.Item>
+          <Descriptions.Item label="Bộ siêu tập" span={2}>{selectedItem?.collection?.name ? selectedItem?.collection?.name : 'Không thuộc bộ sưu tập'}</Descriptions.Item>
+          <Descriptions.Item label="Tên sản phẩm" span={3} style={{ minWidth: 150 }}><p>{selectedItem?.name}</p></Descriptions.Item>
           <Descriptions.Item label="Nhãn" span={3}>
             {selectedItem?.HaveTag?.map((item: IHaveTag) => <Tag>{item.tag.name}</Tag>)}
           </Descriptions.Item>
-          <Descriptions.Item label="Giá bán (đ)" span={1}>
-            {selectedItem?.price}
-          </Descriptions.Item>
-          <Descriptions.Item label="Lượt xem" span={1}>{selectedItem?.view}</Descriptions.Item>
+
+          <Descriptions.Item label="Lượt xem" span={1}>{formatNumberWithComma(selectedItem?.view)}</Descriptions.Item>
           <Descriptions.Item label="Lượt mua" span={1}>
-            {selectedItem?.sold}
+            {formatNumberWithComma(selectedItem?.sold)}
           </Descriptions.Item>
-          <Descriptions.Item label="Trạng thái" span={3}>
+          <Descriptions.Item label="Trạng thái" span={1}>
             {selectedItem?.isActive ? <Tag>Đang bán</Tag> : <Tag>Đã tạm ngừng</Tag>}
           </Descriptions.Item>
           <Descriptions.Item label="Hỉnh ảnh" span={3}>
             <AntdImage.PreviewGroup
-              preview={{
-                onVisibleChange(value, prevValue) {
-
-                },
-              }}
             >
               {selectedItem?.image.map((source) =>
                 <AntdImage width={200} src={source} />
@@ -276,11 +266,10 @@ function renderModalContent(action: string, form: FormInstance<any>, tags: ITag[
           <Descriptions.Item label="Ghi chú" span={3}>
             {selectedItem?.description}
           </Descriptions.Item>
-          <Descriptions.Item label="Giảm giá" span={3}>{selectedItem?.discount?.name}</Descriptions.Item>
-          <Descriptions.Item label="Giá nhập (đ)" span={3}>
-            {selectedItem?.price}
+          <Descriptions.Item label="Giảm giá" span={3}>{selectedItem?.discount?.name ? selectedItem?.discount?.name : 'Chưa áp dụng giảm giá'}</Descriptions.Item>
+          <Descriptions.Item label="Giá bán (đ)" span={3}>
+            {formatNumberWithComma(selectedItem?.price)}
           </Descriptions.Item>
-          <Descriptions.Item label="Tổng giá" span={3}>{selectedItem?.price}</Descriptions.Item>
         </Descriptions>
         <Divider />
         <ProductInventoryTable data={selectedItem?.product_item} />

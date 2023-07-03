@@ -1,6 +1,6 @@
-import { Button, Carousel, Col, Image, InputNumber, Radio, RadioChangeEvent, Row, Space } from 'antd'
+import { Button, Carousel, Col, Image, InputNumber, Radio, RadioChangeEvent, Row, Space, Spin, Tag, Typography } from 'antd'
 import { useState, useEffect } from 'react'
-import { createCart, fetchProduct } from '../../../api/CustomerAPI'
+import { createCart, fetchProduct, increaseViewForProduct } from '../../../api/CustomerAPI'
 import ImageGallery from 'react-image-gallery';
 import 'react-image-gallery/styles/scss/image-gallery.scss'
 import ReactImageGallery from 'react-image-gallery';
@@ -33,8 +33,6 @@ const ProductView = (props: ProductViewProps) => {
 
     const [previewImg, setPreviewImg] = useState<ReactImageGalleryItem[]>();
 
-    const [descriptionExpand, setDescriptionExpand] = useState(true);
-
     const [color, setColor] = useState<object[]>();
 
     const [size, setSize] = useState<object[]>();
@@ -44,6 +42,10 @@ const ProductView = (props: ProductViewProps) => {
     const [selectedSize, setSelectedSize] = useState();
 
     const [selectedColor, setSelectedColor] = useState();
+
+    const [loading, setLoading] = useState(true);
+
+    const [isViewedIncreasing, setIsViewedIncreasing] = useState(false)
 
     const nav = useNavigate();
 
@@ -68,7 +70,9 @@ const ProductView = (props: ProductViewProps) => {
                     disabled: false
                 }
             }))
-        })
+            if (!isViewedIncreasing)
+                increaseViewForProduct(data.data.id).then(() => { setIsViewedIncreasing(true) });
+        }).finally(() => setLoading(false))
     }, [props])
 
 
@@ -220,72 +224,86 @@ const ProductView = (props: ProductViewProps) => {
 
 
     return (
-        <Row style={{ width: '100%' }}>
-            <Col span={13} style={{ marginTop: 20 }}>
-                <ImageGallery items={previewImg ? previewImg : images} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} />
-            </Col>
-            <Col offset={1} span={10}>
-                <div className="product__info">
-                    <h1 className="product__info__title">{product?.name}</h1>
-                    <div className="product__info__item">
-                        <span className="product__info__item__price">
-                            {formatNumberWithComma(product?.price)}
-                            {product?.discount?.discount && product.discount.discount > 0 ? <span className="product-card__price__old">
-                                <del>{formatNumberWithComma(product?.price)}</del>
-                            </span> : null}
-                        </span>
+        <Spin spinning={loading}>
+
+            <Row style={{ width: '100%' }}>
+                <Col span={13} style={{ marginTop: 20 }}>
+                    <ImageGallery items={previewImg ? previewImg : images} thumbnailPosition={'left'} showPlayButton={false} showFullscreenButton={false} />
+                </Col>
+                <Col offset={1} span={10}>
+                    <div className="product__info">
+                        <h1 className="product__info__title">{product?.name}</h1>
+                        <Space>
+                            <Typography.Text type='secondary'>Lượt mua: {product?.sold}</Typography.Text>
+                            <Typography.Text type='secondary'>Lượt xem: {product?.view}</Typography.Text>
+                        </Space>
+                        <div className="product__info__item">
+                            <span className="product__info__item__price">
+                                {formatNumberWithComma(product?.price)}
+                                {product?.discount?.discount && product.discount.discount > 0 ? <span className="product-card__price__old">
+                                    <del>{formatNumberWithComma(product?.price)}</del>
+                                </span> : null}
+                            </span>
+                        </div>
+                        <div className="product__info__item">
+                            <div className="product__info__item__title">
+                                Màu sắc
+                            </div>
+                            <div className="product__info__item__list">
+                                <Radio.Group
+                                    onChange={handleColorOnClick}
+                                    options={color}
+                                    // value={value4}
+                                    optionType="button"
+                                    buttonStyle="solid"
+                                />
+                            </div>
+                        </div>
+                        <div className="product__info__item">
+                            <div className="product__info__item__title">
+                                Kích cỡ
+                            </div>
+                            <div className="product__info__item__list">
+                                <Radio.Group
+                                    options={size}
+                                    onChange={handleSizeOnClick}
+                                    // value={value4}
+                                    optionType="button"
+                                    buttonStyle="solid"
+                                />
+                            </div>
+                        </div>
+                        <div className="product__info__item">
+                            <div className="product__info__item__title">
+                                Số lượng
+                            </div>
+                            <div>
+                                <InputNumber defaultValue={1} onChange={(value) => setQuantity(value)} />
+                            </div>
+                        </div>
+                        <div className="product__info__item">
+                            <Button
+                                onClick={handleAddToCart}
+                            >Thêm vào giỏ</Button>
+                            <Button onClick={() => {
+                                handleAddToCart();
+                                nav('/cart');
+                            }}>Mua ngay</Button>
+                        </div>
+                        <div className={`product-description expand`}>
+                            <div className="product-description__title">
+                                Chi tiết sản phẩm
+                            </div>
+                            <div className="product-description__content">{product?.description}</div>
+                        </div>
+                        <Space style={{ marginTop: 15 }}>
+                            <Typography.Text>Thẻ: </Typography.Text>
+                            {product?.HaveTag ? product?.HaveTag.map((tag) => <Tag>{tag.tag.name}</Tag>) : null}
+                        </Space>
                     </div>
-                    <div className="product__info__item">
-                        <div className="product__info__item__title">
-                            Màu sắc
-                        </div>
-                        <div className="product__info__item__list">
-                            <Radio.Group
-                                onChange={handleColorOnClick}
-                                options={color}
-                                // value={value4}
-                                optionType="button"
-                                buttonStyle="solid"
-                            />
-                        </div>
-                    </div>
-                    <div className="product__info__item">
-                        <div className="product__info__item__title">
-                            Kích cỡ
-                        </div>
-                        <div className="product__info__item__list">
-                            <Radio.Group
-                                options={size}
-                                onChange={handleSizeOnClick}
-                                // value={value4}
-                                optionType="button"
-                                buttonStyle="solid"
-                            />
-                        </div>
-                    </div>
-                    <div className="product__info__item">
-                        <div className="product__info__item__title">
-                            Số lượng
-                        </div>
-                        <div>
-                            <InputNumber defaultValue={1} onChange={(value) => setQuantity(value)} />
-                        </div>
-                    </div>
-                    <div className="product__info__item">
-                        <Button
-                            onClick={handleAddToCart}
-                        >Thêm vào giỏ</Button>
-                        <Button onClick={handleBuyNow}>Mua ngay</Button>
-                    </div>
-                    <div className={`product-description ${descriptionExpand ? 'expand' : ''}`}>
-                        <div className="product-description__title">
-                            Chi tiết sản phẩm
-                        </div>
-                        <div className="product-description__content">{product?.description}</div>
-                    </div>
-                </div>
-            </Col>
-        </Row>
+                </Col>
+            </Row>
+        </Spin>
     )
 }
 

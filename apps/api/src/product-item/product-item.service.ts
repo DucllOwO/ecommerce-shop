@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ProductItemService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async productItem(
     productItemWhereUniqueInput: Prisma.Product_itemWhereUniqueInput,
@@ -29,28 +29,41 @@ export class ProductItemService {
     });
   }
 
-  async createProductItem(data : Prisma.Product_itemCreateInput) : Promise<Product_item> 
-  {
-    return this.prisma.product_item.create({
-      data,
-    })
+  async getColorVariants() {
+    const colorVariants = await this.prisma.product_item.findMany({
+      select: {
+        color: true,
+      },
+      distinct: ['color'],
+    });
+
+    return colorVariants.map((variant) => variant.color);
   }
 
-  async updateProductItem(params: {
-    where: Prisma.Product_itemWhereUniqueInput,
-    data: Prisma.Product_itemCreateInput
-  }) : Promise<Product_item>
-  {
-    const {where, data} = params;
-    return this.prisma.product_item.update({
-      where,
-      data
+  async createProductItem(
+    data: Prisma.Product_itemCreateInput,
+  ): Promise<Product_item> {
+    return this.prisma.product_item.create({
+      data,
     });
   }
 
-  async removeProductItem(where: Prisma.Product_itemWhereUniqueInput) : Promise<Product_item> {
+  async updateProductItem(params: {
+    where: Prisma.Product_itemWhereUniqueInput;
+    data: Prisma.Product_itemCreateInput;
+  }): Promise<Product_item> {
+    const { where, data } = params;
+    return this.prisma.product_item.update({
+      where,
+      data,
+    });
+  }
+
+  async removeProductItem(
+    where: Prisma.Product_itemWhereUniqueInput,
+  ): Promise<Product_item> {
     return this.prisma.product_item.delete({
-      where
+      where,
     });
   }
 }

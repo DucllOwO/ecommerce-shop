@@ -9,6 +9,7 @@ import { AppContext } from '../../context/AppContext'
 import LocalStorage from '../../helper/localStorage'
 import { getCart, updateUser } from '../../api/CustomerAPI'
 import dayjs from 'dayjs'
+import ErrorAlert from '../../components/Alert/ErrorAlert'
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -22,7 +23,7 @@ const Login = () => {
       const data = await login(values.email, values.password);
       LocalStorage.setItem('access_token', data.data.access_token)
       LocalStorage.setItem('user', data.data.user)
-      const updateData = await updateUser({logged_date: dayjs(Date.now())}, data.data.user.id);
+      const updateData = await updateUser({ logged_date: dayjs(Date.now()) }, data.data.user.id);
       getCart(data.data.user.id).then((res) => {
         LocalStorage.setItem('cart', res.data);
       });
@@ -33,7 +34,7 @@ const Login = () => {
         nav('/')
 
     } catch (error) {
-      console.log(error)
+      ErrorAlert('Tài khoản không tồn tại hoặc thông tin chưa chính xác. Xin hãy kiểm tra lại.')
     } finally {
       setLoading(false);
     }
@@ -77,10 +78,10 @@ const Login = () => {
               <a className='forgot-password-txt'>Quên mật khẩu</a>
             </div>
           </Form>
-          <Divider plain>Hoặc đăng nhập bằng</Divider>
+          {/* <Divider plain>Hoặc đăng nhập bằng</Divider>
           <Button type='link' style={{ marginBottom: 'auto' }}>
             <Image src='https://bizweb.dktcdn.net/100/438/408/themes/897269/assets/ic_btn_google.svg?1678162315584' preview={false} style={{ border: '1px solid var(--border-color)', borderRadius: 30 }} />
-          </Button>
+          </Button> */}
 
           <div className='sign-up-wrapper'>
             <span className='sign-up-wrapper-txt'>Bạn chưa có tài khoản?</span>

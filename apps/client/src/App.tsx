@@ -33,6 +33,7 @@ import ReturnPolicy from './pages/customer/ReturnPolicy.js';
 import ImportingList from './pages/admin/ImportingList.js';
 import Importing from './pages/admin/Importing.js';
 import CashOnDeliveryPayment from './pages/customer/payment/CashOnDeliveryPayment.js';
+import NotFound from './pages/customer/NotFound.js';
 
 
 function App() {
@@ -91,6 +92,8 @@ function App() {
             <Route key={'cash-on-delivery'} path='cash-on-delivery/:orderID' element={<CashOnDeliveryPayment />} />
           </Route>
           <Route key={'return-policy'} path='return-policy' element={<ReturnPolicy />} />
+          <Route key={'not-found'} path='*' element={<NotFound />} />
+
         </Route>
 
       </Routes>

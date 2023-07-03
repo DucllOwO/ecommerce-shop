@@ -23,6 +23,11 @@ export class ProductController {
     return this.productService.createProduct(createProductDto);
   }
 
+  @Post('/viewed/:id')
+  increaseView(@Param('id') id: number) {
+    return this.productService.increaseProductView(Number(id));
+  }
+
   @Get('search')
   async searchProductByName(@Query('name') name: string) {
     if (!name) return [];

@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+  Query,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { OrderService } from './order.service';
 @Controller('order')
@@ -16,8 +26,8 @@ export class OrderController {
       where: {
         status: {
           equals: '0',
-        }
-      }
+        },
+      },
     });
   }
   @Get('/delivery')
@@ -26,8 +36,18 @@ export class OrderController {
       where: {
         status: {
           equals: '1',
-        }
-      }
+        },
+      },
+    });
+  }
+  @Get('/delivery')
+  findAllDelivery() {
+    return this.orderService.orders({
+      where: {
+        status: {
+          equals: '1',
+        },
+      },
     });
   }
   @Get('/completed')
@@ -35,19 +55,9 @@ export class OrderController {
     return this.orderService.orders({
       where: {
         status: {
-          equals: '2'
-        }
-      }
-    });
-  }
-  @Get('/canceled')
-  findAllCanceled() {
-    return this.orderService.orders({
-      where: {
-        status: {
-          equals: '3'
-        }
-      }
+          equals: '1',
+        },
+      },
     });
   }
 
@@ -56,24 +66,29 @@ export class OrderController {
     return this.orderService.orders({
       where: {
         userID: {
-          equals: Number(user)
-        }
+          equals: Number(user),
+        },
       },
-      
+      orderBy: {
+        id: 'desc',
+      },
     });
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     // throw new BadRequestException();
-    return this.orderService.order({id: Number(id)});
+    return this.orderService.order({ id: Number(id) });
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: Prisma.OrderCreateInput) {
+  update(
+    @Param('id') id: string,
+    @Body() updateOrderDto: Prisma.OrderCreateInput,
+  ) {
     return this.orderService.updateOrder({
-      where: {id: Number(id)},
-      data: updateOrderDto
+      where: { id: Number(id) },
+      data: updateOrderDto,
     });
   }
 }
