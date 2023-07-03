@@ -3,11 +3,12 @@ import { Button, Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
 import OrderModal from '../../Modal/OrderModal';
-import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
+import { isClickOnAnImgTag, isClickOnAnSVGTag, isClickValidToOpenDetail } from '../../../helper/checkEventClick';
 import { fetchWaitingOrders, fetchCompletedOrders, finishOrder } from '../../../api/admin/OrderAPI';
 import IOrder from '../../../interface/Order';
 import dayjs from 'dayjs';
 import SuccessAlert from '../../Alert/SuccessAlert';
+import { formatNumberWithComma } from '../../../helper/utils';
 
 const OrderTable = (props: OrderProps) => {
   const columns: ColumnsType<IOrder> = [
@@ -30,21 +31,21 @@ const OrderTable = (props: OrderProps) => {
       render: (_, record) => <p>{`${record.buyer.lastname} ${record.buyer.firstname}`}</p>
     },
     {
-      title: 'Tổng tiền',
+      title: 'Tổng tiền (đ)',
       key: 'total_cost',
       dataIndex: 'total_cost',
       render: (text) => (
-        text
+        formatNumberWithComma(text)
       ),
     },
     props.state === "waiting" ? {
       title: 'Thao tác',
       key: 'Action',
-      render: (_, record) => <Button 
+      render: (_, record) => <Button
         onClick={() => handleOnClick(record)}
       >Hoàn thành</Button>,
     } : {}
-  
+
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -58,21 +59,21 @@ const OrderTable = (props: OrderProps) => {
     })
   }
 
-  useEffect(()=> {
+  useEffect(() => {
     console.log(data)
-    if(props.state === 'waiting')
-      fetchWaitingOrders().then(data => setData(data.data)); 
+    if (props.state === 'waiting')
+      fetchWaitingOrders().then(data => setData(data.data));
     else
       fetchCompletedOrders().then(data => setData(data.data));
-  },[props.state])
+  }, [props.state])
 
   return (
     <>
       <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedOrder={selectedItem} />
-      <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record : IOrder, rowIndex) => {
+      <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record: IOrder, rowIndex) => {
         return {
           onClick: (event) => {
-            if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event))){
+            if (isClickValidToOpenDetail(event)) {
               setIsModalOpen(prev => !prev)
               setSelectedItem(record)
             }
@@ -83,7 +84,7 @@ const OrderTable = (props: OrderProps) => {
   )
 }
 
-interface OrderProps{
+interface OrderProps {
   state: string
 }
 

@@ -5,17 +5,7 @@ import { SIZES } from '../../constant/constant';
 
 const inventoryData = [
   {
-    color: 'Red',
-    amount: {
-      S: 1,
-      M: 2,
-      L: 3,
-      XL: 4,
-      XXL: 5,
-    },
-  },
-  {
-    color: 'Blue',
+    color: '',
     amount: {
       S: 0,
       M: 0,
@@ -62,11 +52,12 @@ const ProductInventoryCreateForm: React.FC<ProductInventoryCreateFormProps> = ({
           <Form.List name="inventory">
             {(fields, { add, remove }) => (
               <Space direction='vertical' style={{ marginBottom: 5, width: '100%' }}>
-                <Form.Item>
-                  <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                    Thêm màu
-                  </Button>
-                </Form.Item>
+                {isReadOnly ? null :
+                  <Form.Item>
+                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                      Thêm màu
+                    </Button>
+                  </Form.Item>}
                 <Space wrap style={{ justifyContent: 'space-evenly', rowGap: 20, width: '100%' }}>
                   {fields.map((field) => (
                     <Space direction='vertical'>
@@ -74,8 +65,10 @@ const ProductInventoryCreateForm: React.FC<ProductInventoryCreateFormProps> = ({
                         <Form.Item name={[field.name, `color`]} label="Màu sắc" style={{ marginBottom: 0 }}>
                           <Input />
                         </Form.Item>
-                        <MinusCircleOutlined onClick={() => remove(field.name)} disabled={isReadOnly}/>
+                        {isReadOnly ? null :
+                          <MinusCircleOutlined onClick={() => remove(field.name)} disabled={isReadOnly} />}
                       </Space>
+
                       {
                         SIZES.map(size => <Row align={'middle'}>
                           <Col span={8} >

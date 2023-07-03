@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import ProductOrderDetailTable from '../../../components/Table/Product/ProductDetailTable.Order'
 import IOrder from '../../../interface/Order'
 import dayjs from 'dayjs'
-import { formatNumberWithComma } from '../../../helper/utils'
+import { formatNumberWithComma, formatToFullDate } from '../../../helper/utils'
 
 type OrderDetailProps = {
   data?: IOrder
@@ -38,7 +38,7 @@ const OrderDetailCard = ({ data }: OrderDetailProps) => {
         <Descriptions.Item label="ID" span={1}>{data?.id}</Descriptions.Item>
         <Descriptions.Item label="Họ tên" span={2}>{`${data?.firstname} ${data?.lastname}`}</Descriptions.Item>
         <Descriptions.Item label="Địa chỉ" span={3}>{data?.address}</Descriptions.Item>
-        <Descriptions.Item label="Ngày đặt hàng">{dayjs(data?.date).format('HH:mm:ss DD/MM/YYYY')}</Descriptions.Item>
+        <Descriptions.Item label="Ngày đặt hàng">{formatToFullDate(data?.date)}</Descriptions.Item>
         <Descriptions.Item label="Số điện thoại" span={2}>
           {data?.phone_number}
         </Descriptions.Item>
