@@ -42,11 +42,6 @@ const OrderTable = (props: OrderProps) => {
     props.state === "waiting" ? {
       title: 'Thao tác',
       key: 'Action',
-      render: (_, record) => <Button
-        onClick={() => handleOnClick(record)}
-      >Hoàn thành</Button>,
-    } : {}
-
       render: (_, record) => <div>
       <Button
         style={{ marginRight: 10 }}
@@ -57,14 +52,14 @@ const OrderTable = (props: OrderProps) => {
       >Huỷ</Button>
     </div>
     } : props.state === "delivery" ? {
-  title: 'Thao tác',
-  key: 'Action',
-  render: (_, record) =>
-    <Button
-      style={{ marginRight: 10 }}
-      onClick={() => handleFinishOnClick(record)}
-    >Hoàn tất</Button>
-} : {},
+      title: 'Thao tác',
+      key: 'Action',
+      render: (_, record) =>
+      <Button
+        style={{ marginRight: 10 }}
+        onClick={() => handleFinishOnClick(record)}
+      >Hoàn tất</Button>
+    } : {},
   
   ];
 
