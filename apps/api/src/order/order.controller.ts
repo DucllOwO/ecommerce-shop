@@ -16,18 +16,28 @@ export class OrderController {
       where: {
         status: {
           equals: '0',
-        }
-      }
+        },
+      },
     });
   }
-  @Get('/completed')
-  findAllCompleted() {
+  @Get('/delivery')
+  findAllDelivery() {
     return this.orderService.orders({
       where: {
         status: {
-          equals: '1'
-        }
-      }
+          equals: '1',
+        },
+      },
+    });
+  }
+  @Get('/canceled')
+  findAllCanceled() {
+    return this.orderService.orders({
+      where: {
+        status: {
+          equals: '1',
+        },
+      },
     });
   }
 

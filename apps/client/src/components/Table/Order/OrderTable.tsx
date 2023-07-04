@@ -3,8 +3,9 @@ import { Button, Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
 import OrderModal from '../../Modal/OrderModal';
-import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
-import { fetchWaitingOrders, fetchCompletedOrders, finishOrder } from '../../../api/admin/OrderAPI';
+import { fetchWaitingOrders, fetchCompletedOrders, fetchCanceledOrders, deliveryOrder, cancelOrder, fetchDeliveryOrders, finishOrder } from '../../../api/admin/OrderAPI';
+import { isClickOnAnImgTag, isClickOnAnSVGTag, isClickValidToOpenDetail } from '../../../helper/checkEventClick';
+// import { fetchWaitingOrders, fetchCompletedOrders, finishOrder } from '../../../api/admin/OrderAPI';
 import IOrder from '../../../interface/Order';
 import dayjs from 'dayjs';
 import SuccessAlert from '../../Alert/SuccessAlert';
@@ -83,7 +84,41 @@ const OrderTable = (props: OrderProps) => {
   )
 }
 
-interface OrderProps{
+useEffect(() => {
+  switch(props.state){
+    case "waiting":
+      fetchWaitingOrders().then(data => setData(data.data));
+      break;
+    case "canceled":
+      fetchCanceledOrders().then(data => setData(data.data));
+      break;
+    case "delivery":
+      fetchDeliveryOrders().then(data => setData(data.data));
+      break;
+    case "completed":
+      fetchCompletedOrders().then(data => setData(data.data));
+      break;
+  }
+}, [props.state])
+
+return (
+  <>
+    <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedOrder={selectedItem} />
+    <Table columns={columns} dataSource={data} style={{ height: TABLE_HEIGHT }} onRow={(record: IOrder, rowIndex) => {
+      return {
+        onClick: (event) => {
+          if (isClickValidToOpenDetail(event)) {
+            setIsModalOpen(prev => !prev)
+            setSelectedItem(record)
+          }
+        }, // click row
+      };
+    }} />
+  </>
+)
+}
+
+interface OrderProps {
   state: string
 }
 
