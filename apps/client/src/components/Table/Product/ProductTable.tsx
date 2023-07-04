@@ -10,6 +10,7 @@ import { TableProps } from '../../../interface/TableProps';
 import IProduct from '../../../interface/Product';
 import { ACTION_EDIT, ACTION_READ, SET_ACTION } from '../../../constant/constant';
 import { formatNumberWithComma } from '../../../helper/utils';
+import { compareNumber } from '../../../helper/tableSorter';
 
 interface ProductTableProps extends TableProps {
   data?: IProduct[],
@@ -20,11 +21,12 @@ interface ProductTableProps extends TableProps {
 
 const ProductTable: FC<ProductTableProps> = ({ data, setSelectedItem, dispatch, setIsModalOpen }) => {
 
-  const columns = [
+  const columns: ColumnsType<IProduct> = [
     {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      sorter: (a, b) => compareNumber(a.id, b.id),
     },
     {
       title: 'Sản phẩm',
@@ -39,18 +41,21 @@ const ProductTable: FC<ProductTableProps> = ({ data, setSelectedItem, dispatch, 
       title: 'Giá',
       dataIndex: 'price',
       key: 'price',
+      sorter: (a, b) => compareNumber(a.price, b.price),
       render: (text: number, record: IProduct) => <p>{formatNumberWithComma(text)}</p>
     },
     {
       title: 'Lượt xem',
       dataIndex: 'view',
       key: 'view',
+      sorter: (a, b) => compareNumber(a.view, b.view),
       render: (text: number, record: IProduct) => <p>{formatNumberWithComma(text)}</p>
     },
     {
       title: 'Bán',
       dataIndex: 'sold',
       key: 'sold',
+      sorter: (a, b) => compareNumber(a.sold, b.sold),
       render: (text: number, record: IProduct) => <p>{formatNumberWithComma(text)}</p>
     },
     {
@@ -63,7 +68,6 @@ const ProductTable: FC<ProductTableProps> = ({ data, setSelectedItem, dispatch, 
           setIsModalOpen((prev: boolean) => !prev);
           setSelectedItem(record);
         }} />
-        {/* <Button shape="circle" icon={<DeleteFilled />} /> */}
       </Space>,
     },
   ];

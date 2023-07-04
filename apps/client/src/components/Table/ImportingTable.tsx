@@ -1,20 +1,11 @@
 import React, { FC, useState } from 'react'
 import { Space, Table, Typography, Image, Button } from 'antd';
 import { TableProps } from '../../interface/TableProps';
-import { isClickOnATableCell } from '../../helper/checkEventClick';
+import { isClickOnATableCell, isClickValidToOpenDetail } from '../../helper/checkEventClick';
 import EditableCell from './EditableCell';
 import { IImporting } from '../../interface/Importing';
-import dayjs from 'dayjs'
 import IProduct from '../../interface/Product';
-import { EditFilled } from '@ant-design/icons';
-import IProduct_item from '../../interface/ProductItem';
-
-// export interface ImportingType {
-//   id: string;
-//   date: string;
-//   total_price: number;
-//   total_amount: number;
-// }
+import { formatNumberWithComma } from '../../helper/utils';
 
 interface ImportingTableProps extends TableProps {
   data: IImporting[],
@@ -43,19 +34,22 @@ const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsRe
       </Space>,
     },
     {
-      title: 'Gía',
+      title: 'Giá',
       dataIndex: 'price',
       key: 'price',
+      render: (text: number, record: IProduct) => <p>{formatNumberWithComma(text)}</p>,
     },
     {
       title: 'Lượt xem',
       dataIndex: 'view',
       key: 'view',
+      render: (text: number, record: IProduct) => <p>{formatNumberWithComma(text)}</p>,
     },
     {
       title: 'Bán',
       dataIndex: 'sold',
       key: 'sold',
+      render: (text: number, record: IProduct) => <p>{formatNumberWithComma(text)}</p>,
     },
     {
       title: 'Thao tác',
@@ -65,7 +59,8 @@ const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsRe
         <Button
           onClick={() => {
             setSelectedItem(record)
-            setIsModalOpen(true)}
+            setIsModalOpen(true)
+          }
           }>Nhập hàng</Button>
       </Space>,
     },
@@ -74,7 +69,7 @@ const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsRe
     return {
       ...col,
       onCell: (record: IImporting) => ({
-        record,
+        ...record,
         inputType: col.dataIndex === 'discount' ? 'number' : 'text',
         dataIndex: col.dataIndex,
         title: col.title,
@@ -92,11 +87,11 @@ const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsRe
         onRow={(record, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
-              if (isClickOnATableCell(event)){
+              if (isClickValidToOpenDetail(event)) {
                 // setIsModalOpen((prev: boolean) => !prev)
                 setIsReadOnly((prev: boolean) => !prev);
                 setSelectedItem(record);
-              }  
+              }
             }, // click row
           };
         }}

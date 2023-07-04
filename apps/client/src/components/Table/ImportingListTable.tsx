@@ -5,13 +5,7 @@ import { isClickOnATableCell } from '../../helper/checkEventClick';
 import EditableCell from './EditableCell';
 import { IImporting } from '../../interface/Importing';
 import dayjs from 'dayjs'
-
-// export interface ImportingType {
-//   id: string;
-//   date: string;
-//   total_price: number;
-//   total_amount: number;
-// }
+import { formatNumberWithComma, formatToFullDate } from '../../helper/utils';
 
 interface ImportingTableProps extends TableProps {
   data: IImporting[],
@@ -35,17 +29,19 @@ const ImportingListTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, set
       title: 'Ngày nhập',
       dataIndex: 'date',
       key: 'date',
-      render: (_: any, record: IImporting) => (<p>{dayjs(record.date).format('HH:mm:ss DD/MM/YYYY')}</p>)
+      render: (_: any, record: IImporting) => (<p>{formatToFullDate(record.date)}</p>)
     },
     {
       title: 'Tổng số lượng nhập',
       dataIndex: 'total_amount',
       key: 'total_amount',
+      render: (text: number) => <p>{formatNumberWithComma(text)}</p>
     },
     {
       title: 'Tổng tiền',
       dataIndex: 'total_cost',
       key: 'total_cost',
+      render: (text: number) => <p>{formatNumberWithComma(text)}</p>
     },
   ];
 
@@ -71,11 +67,11 @@ const ImportingListTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, set
         onRow={(record, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
-              if (isClickOnATableCell(event)){
+              if (isClickOnATableCell(event)) {
                 setIsModalOpen((prev: boolean) => !prev)
                 setIsReadOnly(true);
                 setSelectedItem(record);
-              }  
+              }
             }, // click row
           };
         }}

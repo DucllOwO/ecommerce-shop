@@ -13,6 +13,8 @@ import ITag from '../../../interface/Tag';
 import { updateTag } from '../../../api/admin/tagAPI';
 import SuccessAlert from '../../Alert/SuccessAlert';
 import IDiscount from '../../../interface/Discount';
+import { compareNumber } from '../../../helper/tableSorter';
+import { ColumnsType, ColumnType } from 'antd/es/table';
 
 interface TagTableProps extends TableProps {
   data?: ITag[],
@@ -35,6 +37,8 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData, discounts }) => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      defaultSortOrder: 'descend',
+      sorter: (a: ITag, b: ITag) => compareNumber(a.id, b.id),
     },
     {
       title: 'Tên nhãn',

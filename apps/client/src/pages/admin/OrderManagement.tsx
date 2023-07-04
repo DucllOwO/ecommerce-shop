@@ -6,7 +6,7 @@ interface OrderProps {
 }
 
 const OrderManagement = ({ state }: OrderProps) => {
-  console.log(state)
+
   return (
     <div>
       <OrderTable state={state} />
