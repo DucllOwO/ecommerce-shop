@@ -99,10 +99,10 @@ const OrderTable = (props: OrderProps) => {
         fetchWaitingOrders().then(data => { setData(data.data); setSearchData(data.data) }).finally(() => setLoading(false));
         break;
       case "canceled":
-        fetchCanceledOrders().then(data => setData(data.data));
+        fetchCanceledOrders().then(data => { setData(data.data); setSearchData(data.data) }).finally(() => setLoading(false));
         break;
       case "delivery":
-        fetchDeliveryOrders().then(data => setData(data.data));
+        fetchDeliveryOrders().then(data => {setData(data.data); setSearchData(data.data) }).finally(() => setLoading(false));
         break;
       case "completed":
         fetchCompletedOrders().then(data => { setData(data.data); setSearchData(data.data) }).finally(() => setLoading(false));
