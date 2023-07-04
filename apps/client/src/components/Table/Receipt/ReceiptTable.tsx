@@ -1,11 +1,13 @@
 import { useEffect, useState, ChangeEvent } from 'react'
-import { Input, Spin, Table, Tag } from 'antd';
+import { Button, Input, Spin, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import OrderModal from '../../Modal/OrderModal';
 import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
 import IReceipt from '../../../interface/Receipt';
-import { fetchPaidReceipt, fetchUnpaidReceipt } from '../../../api/admin/receiptAPI';
+import { fetchPaidReceipt, fetchUnpaidReceipt, paidReceipt } from '../../../api/admin/receiptAPI';
 import dayjs from 'dayjs';
+import SuccessAlert from '../../Alert/SuccessAlert';
+import ReceiptModal from '../../Modal/ReceiptModal';
 import { formatNumberWithComma, formatToFullDate } from '../../../helper/utils';
 import { combineAndRemoveDuplicates, compareDates, compareNumber, searchDatabyPropertyName } from '../../../helper/tableSorter';
 import ErrorAlert from '../../Alert/ErrorAlert';
@@ -53,7 +55,23 @@ const ReceiptTable = (props: ReceiptTableProps) => {
       sorter: (a, b) => compareNumber(a.cost, b.cost),
       render: (text) => <p>{formatNumberWithComma(text)}</p>,
     },
+    props.state === "unpaid" ? {
+      title: 'Thao tác',
+      key: 'Action',
+      render: (_, record) =>
+        <Button
+          style={{ marginRight: 10 }}
+          onClick={() => handlePaidOnClick(record)}
+        >Đã thanh toán</Button>
+    } : {}
   ];
+
+  const handlePaidOnClick = (item: IReceipt) => {
+    paidReceipt(item.id).then((dataRes) => {
+      setData(prev => prev?.filter((data) => data.id !== item.id));
+      SuccessAlert("Thanh toán thành công");
+    })
+  }
 
   useEffect(() => {
     if (props.state === 'paid')
@@ -81,7 +99,7 @@ const ReceiptTable = (props: ReceiptTableProps) => {
     <>
       <Spin spinning={loading}>
 
-        <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedOrder={selectedReceipt?.order} />
+        <ReceiptModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedReceipt={selectedReceipt} />
         <Input.Search value={searchText} size="middle" placeholder="Nhập tên khách hàng" enterButton style={{ width: '20%', marginBottom: 10 }} onChange={onChange} />
         <Table
           rowKey={record => record.id}
@@ -91,6 +109,7 @@ const ReceiptTable = (props: ReceiptTableProps) => {
             return {
               onClick: (event) => {
                 if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event))) {
+                  console.log(record)
                   setSelectedReceipt(record)
                   setIsModalOpen(prev => !prev)
                 }

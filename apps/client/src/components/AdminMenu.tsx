@@ -39,6 +39,10 @@ const menu: MenuProps['items'] = [
       {
         key: 'order/completed',
         label: 'Hoàn thành',
+      },
+      {
+        key: 'order/canceled',
+        label: 'Đã huỷ',
       }
     ]
 

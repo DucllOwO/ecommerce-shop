@@ -7,3 +7,7 @@ export function fetchUnpaidReceipt() {
 export function fetchPaidReceipt() {
     return http.get('/receipt/paid')
 }
+
+export function paidReceipt(id: number){
+    return http.patch(`/receipt/${id}`, {status: '1'});
+};

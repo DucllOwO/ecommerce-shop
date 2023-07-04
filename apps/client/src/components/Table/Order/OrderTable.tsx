@@ -3,8 +3,8 @@ import { Button, Input, Spin, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
 import OrderModal from '../../Modal/OrderModal';
+import { fetchWaitingOrders, fetchCompletedOrders, fetchCanceledOrders, deliveryOrder, cancelOrder, fetchDeliveryOrders, finishOrder } from '../../../api/admin/OrderAPI';
 import { isClickValidToOpenDetail } from '../../../helper/checkEventClick';
-import { fetchWaitingOrders, fetchCompletedOrders, finishOrder } from '../../../api/admin/OrderAPI';
 import IOrder from '../../../interface/Order';
 import SuccessAlert from '../../Alert/SuccessAlert';
 import { formatNumberWithComma, formatToFullDate } from '../../../helper/utils';
@@ -45,10 +45,24 @@ const OrderTable = (props: OrderProps) => {
     props.state === "waiting" ? {
       title: 'Thao tác',
       key: 'Action',
-      render: (_, record) => <Button
-        onClick={() => handleOnClick(record)}
-      >Hoàn thành</Button>,
-    } : {}
+      render: (_, record) => <div>
+        <Button
+          style={{ marginRight: 10 }}
+          onClick={() => handleDeliveryOnClick(record)}
+        >Vận chuyển</Button>
+        <Button
+          onClick={() => handleCancelOnClick(record)}
+        >Huỷ</Button>
+      </div>
+    } : props.state === "delivery" ? {
+      title: 'Thao tác',
+      key: 'Action',
+      render: (_, record) =>
+        <Button
+          style={{ marginRight: 10 }}
+          onClick={() => handleFinishOnClick(record)}
+        >Hoàn tất</Button>
+    } : {},
 
   ];
 
@@ -59,12 +73,23 @@ const OrderTable = (props: OrderProps) => {
   const [searchText, setSearchText] = useState('');
   const [searchData, setSearchData] = useState<IOrder[]>([]);
 
-  const handleOnClick = (item: IOrder) => {
-    setLoading(true)
+  const handleDeliveryOnClick = (item: IOrder) => {
+    deliveryOrder(item.id).then((dataRes) => {
+      setData(prev => prev?.filter((data) => data.id !== item.id));
+      SuccessAlert("Bắt đầu vận chuyển");
+    })
+  }
+  const handleCancelOnClick = (item: IOrder) => {
+    cancelOrder(item.id).then((dataRes) => {
+      setData(prev => prev?.filter((data) => data.id !== item.id));
+      SuccessAlert("Huỷ đơn thành công");
+    })
+  }
+  const handleFinishOnClick = (item: IOrder) => {
     finishOrder(item.id).then((dataRes) => {
       setData(prev => prev?.filter((data) => data.id !== item.id));
-      SuccessAlert("Hoàn thành đơn hàng");
-    }).finally(() => setLoading(false))
+      SuccessAlert("Hoàn tất đơn hàng");
+    })
   }
 
   useEffect(() => {

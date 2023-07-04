@@ -33,6 +33,16 @@ export class OrderController {
       },
     });
   }
+  @Get('/delivery')
+  findAllDelivery() {
+    return this.orderService.orders({
+      where: {
+        status: {
+          equals: '1',
+        },
+      },
+    });
+  }
   @Get('/completed')
   findAllCompleted() {
     return this.orderService.orders({
