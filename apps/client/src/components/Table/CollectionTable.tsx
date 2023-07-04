@@ -10,6 +10,7 @@ import ICollection from '../../interface/Collection';
 import IDiscount from '../../interface/Discount';
 import { updateCollection } from '../../api/admin/collectionAPI';
 import SuccessAlert from '../Alert/SuccessAlert';
+import { compareNumber } from '../../helper/tableSorter';
 
 interface CollectionTableProps extends TableProps {
   data?: ICollection[],
@@ -33,6 +34,7 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData, discou
       dataIndex: 'id',
       key: 'id',
       width: '15%',
+      sorter: (a: ICollection, b: ICollection) => compareNumber(a.id, b.id),
     },
     {
       title: 'Tên',
@@ -45,6 +47,14 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData, discou
       key: 'discount',
       dataIndex: 'discount',
       width: "30%",
+      sorter: (a: ICollection, b: ICollection) => {
+        if (!a.discount?.discount)
+          return compareNumber(0, b?.discount?.discount)
+        if (!b?.discount?.discount)
+          return compareNumber(a.discount?.discount, 0)
+
+        return compareNumber(a.discount?.discount, b?.discount?.discount)
+      },
       render: (_: any, record: ICollection) => {
         const editing = isEditing(record);
         if (editing)

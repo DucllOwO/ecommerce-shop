@@ -1,40 +1,30 @@
-import { useEffect, useState } from 'react'
-
-import { Table } from 'antd';
+import { useEffect, useState, ChangeEvent } from 'react'
+import { Input, Spin, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import OrderModal from '../../Modal/OrderModal';
 import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
 import IReceipt from '../../../interface/Receipt';
 import { fetchPaidReceipt, fetchUnpaidReceipt } from '../../../api/admin/receiptAPI';
 import dayjs from 'dayjs';
-
-// interface DataType {
-//   id: string;
-//   customer_name: string;
-//   total_price: number;
-//   date: string;
-// }
-
-// const data = [
-//   {
-//     id: '1',
-//     customer_name: 'ducccc',
-//     total_price: 10000000,
-//     date: '12-05-2002'
-//   }
-// ]
+import { formatNumberWithComma, formatToFullDate } from '../../../helper/utils';
+import { combineAndRemoveDuplicates, compareDates, compareNumber, searchDatabyPropertyName } from '../../../helper/tableSorter';
+import ErrorAlert from '../../Alert/ErrorAlert';
 
 
 const ReceiptTable = (props: ReceiptTableProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [data, setData] = useState<IReceipt[]>();
   const [selectedReceipt, setSelectedReceipt] = useState<IReceipt>();
+  const [loading, setLoading] = useState(true);
+  const [searchText, setSearchText] = useState('');
+  const [searchData, setSearchData] = useState<IReceipt[]>([]);
 
   const columns: ColumnsType<IReceipt> = [
     {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      sorter: (a, b) => compareNumber(a.id, b.id),
       render: (text) => <p>{text}</p>,
     },
     {
@@ -47,47 +37,84 @@ const ReceiptTable = (props: ReceiptTableProps) => {
       title: 'Ngày',
       dataIndex: 'date',
       key: 'date',
-      render: (text) => <p>{dayjs(text).format("HH:mm DD/MM/YYYY")}</p>,
+      sorter: (a, b) => compareDates(a.date, b.date),
+      render: (text) => <p>{formatToFullDate(text)}</p>,
+    },
+    {
+      title: 'Phương thức thanh toán',
+      dataIndex: 'paymentMethod',
+      key: 'paymentMethod',
+      render: (text) => renderPaymentMethodTag(text),
     },
     {
       title: 'Tổng tiền',
       dataIndex: 'cost',
       key: 'cost',
-      render: (text) => <p>{text}</p>,
+      sorter: (a, b) => compareNumber(a.cost, b.cost),
+      render: (text) => <p>{formatNumberWithComma(text)}</p>,
     },
   ];
-  
-  useEffect(()=> {
-    // console.log(props.state);
-    if(props.state === 'paid')
-      fetchPaidReceipt().then(data => setData(data.data));
-    else 
-      fetchUnpaidReceipt().then(data => setData(data.data)); 
+
+  useEffect(() => {
+    if (props.state === 'paid')
+      fetchPaidReceipt().then(data => { setData(data.data); setSearchData(data.data); }).finally(() => setLoading(false));
+    else
+      fetchUnpaidReceipt().then(data => { setData(data.data); setSearchData(data.data); }).finally(() => setLoading(false));
   }, [props.state])
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    try {
+      const text = e.target.value;
+      setSearchText(text);
+      if (text.length > 0)
+        data && setSearchData(combineAndRemoveDuplicates(searchDatabyPropertyName(data, text, 'order.firstname'), searchDatabyPropertyName(data, text, 'order.lastname')))
+      else
+        data && setSearchData(data);
+    } catch (error) {
+      console.log("🚀 ~ file: OrderTable.tsx:89 ~ onChange ~ error:", error)
+      ErrorAlert('Đã có lỗi khi tìm kiếm sản phẩm theo tên!!!')
+    }
+
+  }
 
   return (
     <>
-      <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedOrder={selectedReceipt?.order}/>
-      <Table
-        columns={columns}
-        dataSource={data}
-        onRow={(record, rowIndex) => {
-          return {
-            onClick: (event) => {
-              if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event)))
-              {  
-                setSelectedReceipt(record)
-                setIsModalOpen(prev => !prev)
-              }
-            }, // click row
-          };
-        }}
-      />
+      <Spin spinning={loading}>
+
+        <OrderModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} selectedOrder={selectedReceipt?.order} />
+        <Input.Search value={searchText} size="middle" placeholder="Nhập tên khách hàng" enterButton style={{ width: '20%', marginBottom: 10 }} onChange={onChange} />
+        <Table
+          rowKey={record => record.id}
+          columns={columns}
+          dataSource={searchData}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {
+                if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event))) {
+                  setSelectedReceipt(record)
+                  setIsModalOpen(prev => !prev)
+                }
+              }, // click row
+            };
+          }}
+        />
+      </Spin>
     </>
   )
 }
 
-interface ReceiptTableProps{
+function renderPaymentMethodTag(type: string) {
+  switch (type) {
+    case 'cod':
+      return <Tag>Thanh toán khi nhận hàng</Tag>
+    case 'bank':
+      return <Tag>Chuyển khoản ngân hàng</Tag>
+    default:
+      return;
+  }
+}
+
+interface ReceiptTableProps {
   state: string
 }
 

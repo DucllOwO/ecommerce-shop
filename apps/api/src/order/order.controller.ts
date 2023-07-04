@@ -28,6 +28,9 @@ export class OrderController {
           equals: '0',
         },
       },
+      orderBy: {
+        id: 'desc',
+      },
     });
   }
   @Get('/completed')
@@ -37,6 +40,9 @@ export class OrderController {
         status: {
           equals: '1',
         },
+      },
+      orderBy: {
+        id: 'desc',
       },
     });
   }
