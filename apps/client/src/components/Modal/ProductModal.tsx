@@ -17,6 +17,8 @@ import slugify from 'slugify'
 import { fetchAllTag } from '../../api/admin/tagAPI'
 import SuccessAlert from '../Alert/SuccessAlert'
 import { formatNumberWithComma } from '../../helper/utils'
+import IProduct_item from '../../interface/ProductItem'
+import { createImport } from '../../api/admin/importAPI'
 
 interface ProductModalProps extends ModalProps {
   action: string,
@@ -81,14 +83,15 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
           } : undefined,
           product_item: {
             createMany: {
-              data: getProductItem(data.inventory),
+              data: getProductItemCreate(data.inventory),
               skipDuplicates: true
             }
           }
         }
-        postProduct(newProduct).then((data) => {
+        postProduct(newProduct).then((response) => {
           uploadImageFunc(imageList, slugString);
-          // setDataState((prev) => [...prev, data]);
+          importProduct(response.data, data);
+          setDataState((prev: IProduct[]) => [...prev, data]);
           SuccessAlert("Thêm sản phẩm thành công");
         }).catch((error) => {
           console.log(error);
@@ -124,7 +127,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
           } : undefined,
           product_item: {
             createMany: {
-              data: getProductItem(data.inventory),
+              data: getProductItemCreate(data.inventory),
               skipDuplicates: true
             }
           }
@@ -176,6 +179,50 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
   }
 }
 
+function importProduct(productCreateResponse: IProduct, formData: any){
+  console.log(productCreateResponse);
+  console.log(formData);
+  let importDetail: any = [];
+  productCreateResponse.product_item.forEach((item: IProduct_item) => {
+    getProductItem(formData.inventory).forEach((inventory: any) => {
+      console.log(inventory)
+      if(inventory.size === item.size.trim() && inventory.color === item.color)
+        importDetail = [...importDetail, {
+          item: item.id,
+          quantity: inventory.quantity,
+          price: formData.import_price,
+          total_cost: formData.import_price * inventory.quantity,
+        }]
+    })
+
+  })
+  const newImport = {
+    total_cost: getTotalPrice(importDetail),
+    total_amount: getTotalAmount(importDetail),
+    ImportDetail: {
+      createMany: {
+        data: importDetail
+      }
+    }
+  }
+  createImport(newImport);
+}
+
+function getTotalPrice(data: any){
+  let result = 0;
+  data.forEach((item: any) => {
+    result = result + item.total_cost;
+  })
+  return result;
+}
+function getTotalAmount(data: any){
+  let result = 0;;
+  data.forEach((item: any) => {
+    result = result + item.quantity;
+  })
+  return result
+}
+
 function createImageName(imageList: any, slugString: string) {
   return imageList.map((item: any, index: number) => item.url ? item.url : `${BUCKET_URL}${slugString}-${index + 1}.${item.originFileObj.type.split('/')[1]}`)
 }
@@ -211,7 +258,7 @@ function updateImageFunc(imageList: UploadFile[], slugString: string) {
   })
 }
 
-function getProductItem(inventory: any) {
+function getProductItemCreate(inventory: any) {
   const productItemValue = inventory
     .map((item: any) => {
       let result: any = [];
@@ -221,6 +268,27 @@ function getProductItem(inventory: any) {
             color: item.color,
             size: property,
             quantity: 0,
+          }]
+      }
+      return [...result];
+    })
+  let result: any = [];
+  productItemValue.forEach((item: any) => {
+    result = [...result, ...item];
+  })
+  return result;
+}
+
+function getProductItem(inventory: any) {
+  const productItemValue = inventory
+    .map((item: any) => {
+      let result: any = [];
+      for (var property in item.amount) {
+        result = [
+          ...result, {
+            color: item.color,
+            size: property,
+            quantity: item.amount[property],
           }]
       }
       return [...result];
