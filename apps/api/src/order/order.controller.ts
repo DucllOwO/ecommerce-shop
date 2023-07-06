@@ -48,7 +48,20 @@ export class OrderController {
     return this.orderService.orders({
       where: {
         status: {
-          equals: '1',
+          equals: '2',
+        },
+      },
+      orderBy: {
+        id: 'desc',
+      },
+    });
+  }
+  @Get('/canceled')
+  findAllCanceled() {
+    return this.orderService.orders({
+      where: {
+        status: {
+          equals: '3',
         },
       },
       orderBy: {

@@ -93,12 +93,21 @@ const OrderTable = (props: OrderProps) => {
   }
 
   useEffect(() => {
-    console.log(data)
     setLoading(true)
-    if (props.state === 'waiting')
-      fetchWaitingOrders().then(data => { setData(data.data); setSearchData(data.data) }).finally(() => setLoading(false));
-    else
-      fetchCompletedOrders().then(data => { setData(data.data); setSearchData(data.data) }).finally(() => setLoading(false));
+    switch(props.state){
+      case "waiting":
+        fetchWaitingOrders().then(data => { setData(data.data); setSearchData(data.data) }).finally(() => setLoading(false));
+        break;
+      case "canceled":
+        fetchCanceledOrders().then(data => { setData(data.data); setSearchData(data.data) }).finally(() => setLoading(false));
+        break;
+      case "delivery":
+        fetchDeliveryOrders().then(data => {setData(data.data); setSearchData(data.data) }).finally(() => setLoading(false));
+        break;
+      case "completed":
+        fetchCompletedOrders().then(data => { setData(data.data); setSearchData(data.data) }).finally(() => setLoading(false));
+        break;
+    }
   }, [props.state])
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {

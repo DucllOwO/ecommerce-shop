@@ -51,7 +51,7 @@ const Collection = () => {
       <Space direction='vertical' style={{ width: '100%' }}>
         <Space direction='horizontal'>
           <Button type="primary" onClick={() => setIsModalOpen(true)}>Thêm mới</Button>
-          <Input.Search value={searchText} size="middle" placeholder="Nhập tên nhãn" enterButton style={{ width: '100%' }} onChange={onChange} />
+          <Input.Search value={searchText} size="middle" placeholder="Nhập tên bộ sưu tập" enterButton style={{ width: '100%' }} onChange={onChange} />
         </Space>
         <Form form={form} component={false}>
           <CollectionTable form={form} data={searchData} setData={setSearchData} discounts={discounts} />
