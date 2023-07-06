@@ -1,5 +1,5 @@
 import { Row, Col, Card, Avatar, Image } from 'antd'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import NumberCard from '../../components/Card/NumberCard'
 import OrderIcon from '../../assets/icon/bill_96px.png'
 import CustomerIcon from '../../assets/icon/customer_96px.png'
@@ -9,10 +9,25 @@ import LineChart from '../../components/Chart/LineChart'
 import UserIcon from '../../assets/icon/user_96px.png'
 import pic1 from '../../assets/images/products/product-01 (1).jpg'
 import FeedbackList from '../../components/List/FeedbackList'
+import IProduct from '../../interface/Product'
+import { fetchTopTenBestSellers } from '../../api/admin/dashboardAPI'
+import { fetchTopTenMostViewed } from '../../api/productAPI'
 
 const { Meta } = Card;
 
 const Dashboard = () => {
+  const [bestSaler, setBestSaler] = useState<IProduct>();
+  const [mostViewed, setMostViewed] = useState<IProduct>();
+
+  useEffect(() => {
+    fetchTopTenBestSellers().then((data) => {
+      setBestSaler(data.data[0])
+    })
+    fetchTopTenMostViewed().then((data) => {
+      setMostViewed(data.data[0])
+    })
+  }, [])
+
   return (
     <div>
       <Row gutter={24} style={{ marginBottom: 20 }}>
@@ -41,18 +56,18 @@ const Dashboard = () => {
           <Card
             hoverable
             style={{ width: 240 }}
-            cover={<Image src={pic1} />}
+            cover={<Image src={bestSaler?.image[0]} />}
           >
-            <Meta title="Bán chạy nhất" description="Aó màu cam" />
+            <Meta title="Bán chạy nhất" description={bestSaler?.name} />
           </Card>
         </Col>
         <Col span={6}>
           <Card
             hoverable
             style={{ width: 240 }}
-            cover={<Image src={pic1} />}
+            cover={<Image src={mostViewed?.image[0]} />}
           >
-            <Meta title="Xem nhiều nhất" description="Aó màu cam" />
+            <Meta title="Xem nhiều nhất" description={mostViewed?.name} />
           </Card>
         </Col>
         <Col span={12}>
