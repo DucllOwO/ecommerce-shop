@@ -100,7 +100,7 @@ const ImportingModal: FC<ImportingModalProps> = ({ isOpen, setIsModalOpen, selec
         <div className="cart__info">
           <div className="cart__info__txt">
             <p>
-              Bạn đang có {totalAmount} sản phẩm trong giỏ hàng
+              Bạn đang nhập tổng cộng {totalAmount} sản phẩm
             </p>
             <div
               className="cart__info__txt__price">

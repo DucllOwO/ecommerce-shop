@@ -40,7 +40,7 @@ const Discount = () => {
       <Space direction='vertical' style={{ width: '100%' }}>
         <Space direction='horizontal'>
           <Button type="primary" onClick={() => setisModalOpen(true)}>Thêm mới</Button>
-          <Input.Search value={searchText} size="middle" placeholder="Nhập tên nhãn" enterButton style={{ width: '100%' }} onChange={onChange} />
+          <Input.Search value={searchText} size="middle" placeholder="Nhập tên giảm giá" enterButton style={{ width: '100%' }} onChange={onChange} />
         </Space>
         <DiscountTable data={searchData} setData={setSearchData} />
       </Space>
