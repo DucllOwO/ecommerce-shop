@@ -8,7 +8,7 @@ import EditableCell from './EditableCell';
 import { INPUT, SELECT } from '../../constant/constant';
 import ICollection from '../../interface/Collection';
 import IDiscount from '../../interface/Discount';
-import { updateCollection } from '../../api/admin/collectionAPI';
+import { deleteCollection, updateCollection } from '../../api/admin/collectionAPI';
 import SuccessAlert from '../Alert/SuccessAlert';
 import { compareNumber } from '../../helper/tableSorter';
 
@@ -85,7 +85,9 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData, discou
                 disabled={editingKey !== ''}
                 onClick={() => edit(record)}
                 shape="circle" icon={<EditFilled />} />
-              <Button disabled={editingKey !== ''} shape="circle" icon={<DeleteFilled />} />
+              <Popconfirm title="Bạn có chắc chắn muốn xóa?" onConfirm={() => onDeleteCollection(record)}>
+                <Button disabled={editingKey !== ''} shape="circle" icon={<DeleteFilled />} />
+              </Popconfirm>
             </>
           }
 
@@ -93,6 +95,13 @@ const CollectionTable: FC<CollectionTableProps> = ({ data, form, setData, discou
       }
     },
   ];
+
+  const onDeleteCollection = (collection: ICollection) => {
+    deleteCollection(collection).then((res) => {
+      setData && setData((prev: ICollection[]) => prev.filter((ele) => ele.id !== collection.id))
+      SuccessAlert('Xóa sản phẩm thành công.')
+    })
+  }
 
   const edit = (record: Partial<ICollection>) => {
     form?.setFieldsValue({ name: '', discount: '', ...record });

@@ -10,7 +10,7 @@ import { TableProps } from '../../../interface/TableProps';
 import EditableCell from '../EditableCell';
 import { INPUT, SELECT } from '../../../constant/constant';
 import ITag from '../../../interface/Tag';
-import { updateTag } from '../../../api/admin/tagAPI';
+import { deleteTag, updateTag } from '../../../api/admin/tagAPI';
 import SuccessAlert from '../../Alert/SuccessAlert';
 import IDiscount from '../../../interface/Discount';
 import { compareNumber } from '../../../helper/tableSorter';
@@ -81,14 +81,22 @@ const TagTable: FC<TagTableProps> = ({ form, data, setData, discounts }) => {
                 disabled={editingKey !== ''}
                 onClick={() => edit(record)}
                 shape="circle" icon={<EditFilled />} />
-              <Button disabled={editingKey !== ''} shape="circle" icon={<DeleteFilled />} />
+              <Popconfirm title="Bạn có chắc chắn muốn xóa?" onConfirm={() => onDeleteTag(record)}>
+                <Button disabled={editingKey !== ''} shape="circle" icon={<DeleteFilled />} />
+              </Popconfirm>
             </>
           }
-
         </Space>
       }
     },
   ];
+
+  const onDeleteTag = (tag: ITag) => {
+    deleteTag(tag).then((res) => {
+      setData && setData((prev: ITag[]) => prev.filter((ele) => ele.id !== tag.id))
+      SuccessAlert('Xóa sản phẩm thành công.')
+    })
+  }
 
   const edit = (record: Partial<ITag>) => {
     form?.setFieldsValue({ name: '', discount: '', ...record });
