@@ -106,11 +106,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
           slug: slugString,
           price: data.price,
           description: data.note,
-          discount: data.discount ? {
-            connect: {
-              id: data.discount
-            }
-          } : undefined,
+          discountID: data.discount,
           image: createImageName(imageList, slugString),
           HaveTag: {
             createMany: {
@@ -120,11 +116,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
               skipDuplicates: true
             }
           },
-          collection: data.collection ? {
-            connect: {
-              id: data.collection
-            }
-          } : undefined,
+          collection: data.collection,
         };
         console.log(newProduct);
         clearHaveTag(selectedItem).then(() => {
