@@ -2,7 +2,7 @@ import { useEffect, useState, ChangeEvent } from 'react'
 import { Button, Input, Spin, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import OrderModal from '../../Modal/OrderModal';
-import { isClickOnAnImgTag, isClickOnAnSVGTag } from '../../../helper/checkEventClick';
+import { isClickOnAnImgTag, isClickOnAnSVGTag, isClickValidToOpenDetail } from '../../../helper/checkEventClick';
 import IReceipt from '../../../interface/Receipt';
 import { fetchPaidReceipt, fetchUnpaidReceipt, paidReceipt } from '../../../api/admin/receiptAPI';
 import dayjs from 'dayjs';
@@ -69,6 +69,7 @@ const ReceiptTable = (props: ReceiptTableProps) => {
   const handlePaidOnClick = (item: IReceipt) => {
     paidReceipt(item.id).then((dataRes) => {
       setData(prev => prev?.filter((data) => data.id !== item.id));
+      setSearchData(prev => prev?.filter((data) => data.id !== item.id));
       SuccessAlert("Thanh toán thành công");
     })
   }
@@ -108,7 +109,7 @@ const ReceiptTable = (props: ReceiptTableProps) => {
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
-                if (!(isClickOnAnSVGTag(event) || isClickOnAnImgTag(event))) {
+                if(isClickValidToOpenDetail(event)) {
                   console.log(record)
                   setSelectedReceipt(record)
                   setIsModalOpen(prev => !prev)

@@ -99,7 +99,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ data, setData }) => {
   const deleteVoucher = (code: string) => {
     setIsLoading(true)
     shutDownVoucher(code).then(({ data }) => {
-      setData && setData((prev: IVoucher[]) => prev.filter((value) => value.code != code))
+      // setData && setData((prev: IVoucher[]) => prev.filter((value) => value.code != code))
       SuccessAlert(`Voucher mã khuyến mãi ${code} đã bị ngưng hoạt động`);
     }).catch((err) => err).finally(() => setIsLoading(false))
   }
