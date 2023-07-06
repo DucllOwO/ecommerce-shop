@@ -1,4 +1,5 @@
-import { Module } from '@nestjs/common';
+import { RecommenderModule } from './../recommender/recommender.module';
+import { forwardRef, Module } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
 import { PrismaService } from '../prisma/prisma.service';
@@ -6,6 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 @Module({
   controllers: [ProductController],
   providers: [ProductService, PrismaService],
-  exports: [ProductService]
+  exports: [ProductService],
+  imports: [forwardRef(() => RecommenderModule)],
 })
-export class ProductModule { }
+export class ProductModule {}

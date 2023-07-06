@@ -1,3 +1,4 @@
+import { RecommenderService } from './../recommender/recommender.service';
 import {
   Controller,
   Get,
@@ -7,7 +8,7 @@ import {
   Param,
   Logger,
   Query,
-  BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Prisma } from '@prisma/client';
@@ -16,11 +17,30 @@ import { nfd } from 'unorm';
 @Controller('product')
 export class ProductController {
   private readonly logger = new Logger(ProductController.name);
-  constructor(private readonly productService: ProductService) {}
+
+  constructor(
+    private readonly productService: ProductService,
+    private readonly recommenderService: RecommenderService,
+  ) {}
 
   @Post()
-  create(@Body() createProductDto: Prisma.ProductCreateInput) {
-    return this.productService.createProduct(createProductDto);
+  async create(@Body() createProductDto: Prisma.ProductCreateInput) {
+    try {
+      const respond = await this.productService.createProduct(createProductDto);
+
+      const products = await this.productService.products({});
+
+      this.recommenderService.trainingRecommender(products);
+      console.log(
+        "🚀 ~ file: product.controller.ts:35 ~ ProductController ~ create ~ this.recommenderService.recommendForProduct('1'):",
+        this.recommenderService.recommendForProduct(respond.id.toString()),
+      );
+
+      return respond;
+    } catch (error) {
+      this.logger.error(error);
+      throw new InternalServerErrorException();
+    }
   }
 
   @Post('/viewed/:id')

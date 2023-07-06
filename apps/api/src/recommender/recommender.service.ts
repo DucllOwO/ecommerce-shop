@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Product, Prisma } from '@prisma/client';
-import ContentBasedRecommender from 'content-based-recommender-ts';
+import * as ContentBasedRecommender from 'content-based-recommender-ts';
 import IDocument from './IDocument';
 
 @Injectable()
@@ -9,6 +9,18 @@ export class RecommenderService {
 
   setRecommender(recommender: ContentBasedRecommender) {
     this.recommender = recommender;
+  }
+
+  trainingRecommender(products: Product[]) {
+    const recommender = new ContentBasedRecommender({
+      minScore: 0,
+      maxSimilarDocs: 100,
+      maxVectorSize: 50,
+      debug: false,
+    });
+
+    this.setRecommender(recommender);
+    this.train(products);
   }
 
   train(products: Product[]): void {
