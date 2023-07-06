@@ -19,7 +19,12 @@ export class OrderController {
   create(@Body() createOrderDto: Prisma.OrderCreateInput) {
     return this.orderService.createOrder(createOrderDto);
   }
-
+  
+  @Get('')
+  findAll() {
+    return this.orderService.orders({});    
+  }
+  
   @Get('/waiting')
   findAllWaiting() {
     return this.orderService.orders({

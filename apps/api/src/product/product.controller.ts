@@ -67,8 +67,17 @@ export class ProductController {
         OR: filters,
       },
     });
-
     return products;
+  }
+  @Get('/active')
+  findAllActive() {
+    return this.productService.products({
+      where:{
+        isActive: {
+          equals: true
+        }
+      }
+    });    
   }
 
   @Get()
