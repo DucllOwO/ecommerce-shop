@@ -12,7 +12,6 @@ export const createAccount = async (email: string, password: string, user: IUser
       }
     }
   });
-  console.log(response)
   return response.data;
 };
 

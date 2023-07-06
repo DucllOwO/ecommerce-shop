@@ -24,6 +24,7 @@ export class AccountController {
 
   @Post()
   async create(@Body() createAccountDto: Prisma.AccountCreateInput) {
+    console.log(createAccountDto);
     return this.accountService.create(createAccountDto);
   }
 
