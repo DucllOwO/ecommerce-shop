@@ -25,7 +25,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
 
   useEffect(() => {
     setImageList(fileList);
-  },[])
+  }, [])
   const [isOpen, setIsModalOpen] = useState(false);
 
   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
@@ -62,13 +62,14 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
 
               updateProduct({ image: newProductImageList }, selectedItem.id);
 
-              setFileList((prev: UploadFile[]) => 
-                prev.filter((file) => 
+              setFileList((prev: UploadFile[]) =>
+                prev.filter((file) =>
                   file !== item
                 ));
-              form.setFieldValue('upload', fileList.filter((file) => 
-              file !== item
-            ))})
+              form.setFieldValue('upload', fileList.filter((file) =>
+                file !== item
+              ))
+            })
             .catch((error) => {
               console.log(error)
             });
@@ -174,8 +175,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
           <Descriptions.Item label="Giá bán (đ)" span={1}>
             <Form.Item name={'price'} rules={[REQUIRED_RULE]} initialValue={selectedItem?.price} style={FORM_NO_BOTTOM_MARGIN}>
               <InputNumber
-                min={0}
-                max={100}
+                min={1000}
                 controls={false}
                 style={{ width: "100%" }}
               />

@@ -111,19 +111,19 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
           HaveTag: {
             createMany: {
               data: data.tags.map((item: number) => {
-                return { tagID: item.value ? item.value : item}
+                return { tagID: item.value ? item.value : item }
               }),
               skipDuplicates: true
             }
           },
-          collection: data.collection,
+          collectionID: data.collection,
         };
         console.log(newProduct);
         clearHaveTag(selectedItem).then(() => {
           updateProduct(newProduct, selectedItem.id).then((data) => {
             console.log(data)
             setDataState((prev: IProduct[]) => prev.map((item) => {
-              if(item.id === data.data.id)
+              if (item.id === data.data.id)
                 return data.data;
               else
                 return item;
@@ -131,7 +131,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
             setIsModalOpen((prev: boolean) => !prev)
             updateImageFunc(imageList, slugString);
             SuccessAlert("Chỉnh sửa sản phẩm thành công");
-          }).catch((error) => console.log(error));  
+          }).catch((error) => console.log(error));
         })
       }
     });
@@ -173,23 +173,23 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
     ] : null
   }
 }
-async function clearHaveTag(selectedItem: IProduct) : Promise<any> {
+async function clearHaveTag(selectedItem: IProduct): Promise<any> {
   return new Promise((resolve, reject) => {
     selectedItem.HaveTag.forEach((item: IHaveTag) => {
       deleteHaveTag(item);
-  })
-  resolve(true);
-});
+    })
+    resolve(true);
+  });
 }
 
-function importProduct(productCreateResponse: IProduct, formData: any){
+function importProduct(productCreateResponse: IProduct, formData: any) {
   console.log(productCreateResponse);
   console.log(formData);
   let importDetail: any = [];
   productCreateResponse.product_item.forEach((item: IProduct_item) => {
     getProductItem(formData.inventory).forEach((inventory: any) => {
       console.log(inventory)
-      if(inventory.size === item.size.trim() && inventory.color === item.color)
+      if (inventory.size === item.size.trim() && inventory.color === item.color)
         importDetail = [...importDetail, {
           item: item.id,
           quantity: inventory.quantity,
@@ -211,7 +211,7 @@ function importProduct(productCreateResponse: IProduct, formData: any){
   createImport(newImport);
 }
 
-function getTotalPrice(data: any){
+function getTotalPrice(data: any) {
   let result = 0;
   data.forEach((item: any) => {
     result = result + item.total_cost;
@@ -219,7 +219,7 @@ function getTotalPrice(data: any){
   return result;
 }
 
-function getTotalAmount(data: any){
+function getTotalAmount(data: any) {
   let result = 0;;
   data.forEach((item: any) => {
     result = result + item.quantity;
