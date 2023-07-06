@@ -14,7 +14,7 @@ export class AccountService {
   }
 
   async create(createAccountDto: Prisma.AccountCreateInput) {
-    const hashPassword = await this.hashPassword(createAccountDto.email);
+    const hashPassword = await this.hashPassword(createAccountDto.password);
     return this.prisma.account.create({
       data: { ...createAccountDto, password: hashPassword },
     });

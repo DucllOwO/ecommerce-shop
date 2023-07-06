@@ -20,6 +20,8 @@ const SignUp = () => {
     setLoading(true);
     try {
       const { email, password, ...userData } = values;
+      console.log("🚀 ~ file: SignUp.tsx:23 ~ onFinish ~ { email, password, ...userData }:", { email, password, ...userData })
+      console.log("🚀 ~ file: SignUp.tsx:23 ~ onFinish ~ values:", values)
       const data = await createAccount(email, password, userData);
       SuccessAlert('Tạo tài khoản thành công hãy đăng nhập!');
       nav('/login')
