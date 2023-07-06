@@ -69,8 +69,15 @@ export class ProductService {
     return this.prisma.product.create({
       data: { ...data },
       include: {
-        product_item: true
-      }
+        product_item: true,
+        HaveTag: {
+          include: {
+            tag: true,
+          },
+        },
+        collection: true,
+        discount: true,
+      },
     });
   }
 
@@ -83,6 +90,16 @@ export class ProductService {
     return this.prisma.product.update({
       data,
       where,
+      include: {
+        product_item: true,
+        HaveTag: {
+          include: {
+            tag: true,
+          },
+        },
+        collection: true,
+        discount: true,
+      },
     });
   }
 

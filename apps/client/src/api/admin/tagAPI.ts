@@ -1,3 +1,4 @@
+import { IHaveTag } from '../../interface/HaveTag';
 import ITag from '../../interface/Tag';
 import { http } from './../index';
 
@@ -28,3 +29,8 @@ export function updateTag({ id, name, discountID }: ITag) {
 export function deleteTag({ id }: ITag) {
   return http.delete(`/tag/${id}`)
 }
+
+export function deleteHaveTag({ id }: IHaveTag) {
+  return http.delete(`/tag/have_tag/${id}`)
+}
+
