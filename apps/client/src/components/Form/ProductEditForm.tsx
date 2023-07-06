@@ -14,14 +14,14 @@ interface ProductEditFormProps extends ProductFormProps {
 }
 
 const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, discountInit, tagInit, selectedItem, setImageList }) => {
-  const [fileList, setFileList] = useState<UploadFile[]>([
-    {
-      uid: '-1',
-      name: 'image.png',
+  const [fileList, setFileList] = useState<UploadFile[]>(selectedItem.image.map((item, index) => {
+    return {
+      uid: `${index}`,
+      name: item.split('/')[8],
       status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-  ]);
+      url: item,
+    }
+  }));
 
   const [isOpen, setIsModalOpen] = useState(false);
 
@@ -30,17 +30,18 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
     setImageList(newFileList);
     setFileList(newFileList);
   };
-  useEffect(() => {
-    selectedItem ? setFileList(selectedItem.image.map((item, index) => {
-      return {
-        uid: `${index}`,
-        name: item.split('/')[8],
-        status: 'done',
-        url: item,
-      }
-    })) : null;
-    console.log(fileList);
-  }, []);
+  // useEffect(() => {
+  //   // form.setFieldValue('upload', selectedItem.image.map((item, index) => {
+  //   //   return {
+  //   //     uid: index,
+  //   //     name: item.split('/')[8],
+  //   //     status: 'done',
+  //   //     url: item,
+  //   //   }
+  //   // }));
+  //   // setFileList();
+  //   console.log(fileList);
+  // }, [fileList]);
 
   const handleOnRemove = async (item: UploadFile) => {
     console.log(item);
@@ -58,8 +59,13 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
 
               updateProduct({ image: newProductImageList }, selectedItem.id);
 
-              setFileList((prev: UploadFile[]) => prev.filter((file) => file !== item));
-            })
+              setFileList((prev: UploadFile[]) => 
+                prev.filter((file) => 
+                  file !== item
+                ));
+              form.setFieldValue('upload', fileList.filter((file) => 
+              file !== item
+            ))})
             .catch((error) => {
               console.log(error)
             });
@@ -127,6 +133,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
               name="upload"
               valuePropName="fileList"
               getValueFromEvent={normFile}
+              initialValue={fileList}
               style={FORM_NO_BOTTOM_MARGIN}
             >
               <Upload
@@ -141,7 +148,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
                 }}
                 onChange={onChange}
               >
-                {fileList.length < 10 && '+ Thêm ảnh'}
+                {fileList.length < 4 && '+ Thêm ảnh'}
               </Upload>
             </Form.Item>
           </Descriptions.Item>
@@ -172,8 +179,8 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
             </Form.Item>
           </Descriptions.Item>
         </Descriptions>
-        {/* <Divider /> */}
-        {/* <ProductInventoryCreateForm form={form} isReadOnly={true} /> */}
+        {/* <Divider />
+        <ProductInventoryCreateForm form={form} isReadOnly={true} /> */}
       </Space>
     </Form>
   )

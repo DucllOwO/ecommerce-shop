@@ -43,4 +43,9 @@ export class TagController {
   remove(@Param('id') id: string) {
     return this.tagService.removeTag({ id: Number(id) });
   }
+  
+  @Delete('/have_tag/:id')
+  removeHaveTag(@Param('id') id: string) {
+    return this.tagService.removeHaveTag({ id: Number(id) });
+  }
 }

@@ -14,7 +14,7 @@ import { ACTION_CREATE, ACTION_EDIT, ACTION_READ, BUCKET_URL } from '../../const
 import ProductCreateForm from '../Form/ProductCreateForm'
 import ProductEditForm from '../Form/ProductEditForm'
 import slugify from 'slugify'
-import { fetchAllTag } from '../../api/admin/tagAPI'
+import { deleteHaveTag, fetchAllTag } from '../../api/admin/tagAPI'
 import SuccessAlert from '../Alert/SuccessAlert'
 import { formatNumberWithComma } from '../../helper/utils'
 import IProduct_item from '../../interface/ProductItem'
@@ -115,7 +115,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
           HaveTag: {
             createMany: {
               data: data.tags.map((item: number) => {
-                return { tagID: item?.value }
+                return { tagID: item }
               }),
               skipDuplicates: true
             }
@@ -125,19 +125,14 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
               id: data.collection
             }
           } : undefined,
-          product_item: {
-            createMany: {
-              data: getProductItemCreate(data.inventory),
-              skipDuplicates: true
-            }
-          }
         };
         console.log(newProduct);
-        updateProduct(newProduct, selectedItem.id).then((data) => {
-          updateImageFunc(imageList, slugString);
-          SuccessAlert("Chỉnh sửa sản phẩm thành công");
-
-        }).catch((error) => console.log(error))
+        clearHaveTag(selectedItem).then(() => {
+          updateProduct(newProduct, selectedItem.id).then((data) => {
+            updateImageFunc(imageList, slugString);
+            SuccessAlert("Chỉnh sửa sản phẩm thành công");
+          }).catch((error) => console.log(error));  
+        })
       }
     });
   }
@@ -177,6 +172,14 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
       </Button>
     ] : null
   }
+}
+async function clearHaveTag(selectedItem: IProduct) : Promise<any> {
+  return new Promise((resolve, reject) => {
+    selectedItem.HaveTag.forEach((item: IHaveTag) => {
+      deleteHaveTag(item);
+  })
+  resolve(true);
+});
 }
 
 function importProduct(productCreateResponse: IProduct, formData: any){

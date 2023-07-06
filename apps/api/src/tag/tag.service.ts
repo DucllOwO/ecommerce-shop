@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, Review, Tag, Discount } from '@prisma/client';
+import { Prisma, Review, Tag, Discount, HaveTag } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class TagService {
@@ -56,6 +56,12 @@ export class TagService {
     });
   }
 
+  async removeHaveTag(where: Prisma.HaveTagWhereUniqueInput): Promise<HaveTag> {
+  return this.prisma.haveTag.delete({
+    where,
+  });
+  }
+  
   async removeTag(where: Prisma.TagWhereUniqueInput): Promise<Tag> {
     return this.prisma.tag.delete({
       where,
