@@ -1,19 +1,26 @@
 import { UserOutlined } from '@ant-design/icons'
-import { Row, Col, Form, Avatar, Input, Button, Space } from 'antd'
+import { Row, Col, Form, Avatar, Input, Button, Space, Switch } from 'antd'
 import Title from 'antd/es/typography/Title'
 import productData from '../../assets/fake-data/products'
 import ProductCard from './components/ProductCard'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import LocalStorage from '../../helper/localStorage'
 import { useForm } from 'antd/es/form/Form'
 import { updateUser } from '../../api/CustomerAPI'
 import SuccessAlert from '../../components/Alert/SuccessAlert'
 import ErrorAlert from '../../components/Alert/ErrorAlert'
+import { updatePassword } from '../../api/accountAPI'
 
 const UserProfileSetting = () => {
   const relatedProducts = productData.getProducts(8)
   const [currentUser, setCurrentUser] = useState(LocalStorage.getItem('user'));
   const [form] = useForm();
+  const isPassWordChange = Form.useWatch('isPasswordChange', form)
+
+  useEffect(() => {
+    console.log(isPassWordChange)
+  }, [isPassWordChange])
+
 
   const handleOnClick = () => {
     form.validateFields().then((data: any) => {
@@ -24,11 +31,20 @@ const UserProfileSetting = () => {
         phone_number: data.phoneNumber,
         address: data.address
       }
-      updateUser(newUser, currentUser?.id).then(() => {
+      updateUser(newUser, currentUser?.id).then((res) => {
+        LocalStorage.setItem('user', res.data)
         SuccessAlert("Cập nhật thông tin thành công");
       }).catch(() => {
         ErrorAlert("Cập nhập thông tin không thành công");
       })
+
+      if (isPassWordChange)
+        updatePassword(data.email, data.password).then(() => {
+          SuccessAlert("Cập nhật mật khẩu thành công");
+        }).catch(() => {
+          ErrorAlert("Cập nhập mật khẩu không thành công");
+        })
+
     })
   }
   return (
@@ -38,19 +54,10 @@ const UserProfileSetting = () => {
           name="avatar"
           style={{ display: 'flex', justifyContent: 'center' }}
         >
-          <Avatar size={128} icon={<UserOutlined />} src={currentUser?.avatar}/>
-          {/* Add logic to upload and display the user's avatar */}
+          <Avatar size={128} icon={<UserOutlined />} src={currentUser?.avatar} />
         </Form.Item>
         <Form.Item
-          label="First Name"
-          name="firstName"
-          rules={[{ required: true, message: 'Please enter your first name' }]}
-          initialValue={currentUser?.firstname}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Last Name"
+          label="Họ"
           name="lastName"
           rules={[{ required: true, message: 'Please enter your last name' }]}
           initialValue={currentUser?.lastname}
@@ -58,14 +65,23 @@ const UserProfileSetting = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label="Address"
+          label="Tên"
+          name="firstName"
+          rules={[{ required: true, message: 'Please enter your first name' }]}
+          initialValue={currentUser?.firstname}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label="Địa chỉ"
           name="address"
           initialValue={currentUser?.address}
         >
           <Input />
         </Form.Item>
         <Form.Item
-          label="Phone Number"
+          label="Số điện thoại"
           name="phoneNumber"
           initialValue={currentUser?.phone_number}
         >
@@ -79,12 +95,21 @@ const UserProfileSetting = () => {
           <Input disabled />
         </Form.Item>
         <Form.Item
-          label="Password"
+          label="Bạn có muốn đổi mật khẩu"
+          tooltip={'Nếu cần đổi mật khẩu hãy bấm vào nút này.'}
+          name="isPasswordChange"
+          rules={[{ required: true, message: '' }]}
+          initialValue={false}
+        >
+          <Switch></Switch>
+        </Form.Item>
+        <Form.Item
+          label="Mật khẩu"
           name="password"
-          rules={[{ required: true, message: 'Please enter your password' }]}
+          rules={[isPassWordChange && { required: true, message: 'Vui lòng nhập mật khẩu' }]}
 
         >
-          <Input.Password />
+          <Input.Password disabled={!isPassWordChange} />
         </Form.Item>
         <Form.Item style={{ display: 'flex', justifyContent: 'center' }}>
           <Button type="primary" htmlType="submit" onClick={handleOnClick}>
@@ -92,25 +117,6 @@ const UserProfileSetting = () => {
           </Button>
         </Form.Item>
       </Form>
-
-      <Space direction='vertical' style={{ width: '30vw', padding: '20px' }}>
-        <Title level={3} style={{ color: 'var(--main-color)', margin: '20px 0 10px 0' }}>SẢN PHẨM LIÊN QUAN</Title>
-        <Space>
-          {
-            relatedProducts.map((item, index) => (
-              <ProductCard
-                id={index}
-                key={index}
-                slug={item.slug}
-                img01={item.image01}
-                img02={item.image02}
-                name={item.title}
-                price={Number(item.price)}
-              />
-            ))
-          }
-        </Space>
-      </Space>
     </Row>
   )
 }

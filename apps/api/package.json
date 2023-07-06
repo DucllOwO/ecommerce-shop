@@ -23,6 +23,7 @@
     "test:int": "dotenv -e ./config/.env.test -- jest -i --no-cache --watch --config ./test/jest-int.json"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.4.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
@@ -32,6 +33,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@supabase/supabase-js": "^2.8.0",
     "@types/bcrypt": "^5.0.0",
+    "@types/nodemailer": "^6.4.8",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
@@ -40,9 +42,11 @@
     "content-based-recommender-ts": "^2.1.0",
     "cors": "^2.8.5",
     "dayjs": "^1.11.7",
+    "nodemailer": "^6.9.3",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "pug": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
     "unorm": "^1.6.0"

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Product, Prisma } from '@prisma/client';
 import ContentBasedRecommender from 'content-based-recommender-ts';
 import IDocument from './IDocument';
+
 @Injectable()
 export class RecommenderService {
   private recommender: ContentBasedRecommender;
@@ -13,6 +14,7 @@ export class RecommenderService {
   train(products: Product[]): void {
     // Initialize the product features
     this.recommender.train(this.extractFeatures(products));
+    //console.log(this.recommender.data);
   }
 
   convertToAscii(input: string): string {

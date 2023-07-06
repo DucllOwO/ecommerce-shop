@@ -6,3 +6,9 @@ export const login = (email: string, password: string) => {
     password,
   });
 };
+
+export const sendEmailResetPassword = (email: string) => {
+  return http.post("/auth/forgot-password", {
+    email,
+  });
+};

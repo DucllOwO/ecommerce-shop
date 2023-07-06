@@ -4,7 +4,7 @@ import { User, Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async user(
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
@@ -45,6 +45,7 @@ export class UserService {
     return this.prisma.user.update({
       data,
       where,
+      include: { account: true },
     });
   }
 }

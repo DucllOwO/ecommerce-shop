@@ -75,13 +75,9 @@ const Login = () => {
                 Đăng nhập
               </Button>
 
-              <a className='forgot-password-txt'>Quên mật khẩu</a>
+              <Link to={'/forgot-password'} className='forgot-password-txt'>Quên mật khẩu</Link>
             </div>
           </Form>
-          {/* <Divider plain>Hoặc đăng nhập bằng</Divider>
-          <Button type='link' style={{ marginBottom: 'auto' }}>
-            <Image src='https://bizweb.dktcdn.net/100/438/408/themes/897269/assets/ic_btn_google.svg?1678162315584' preview={false} style={{ border: '1px solid var(--border-color)', borderRadius: 30 }} />
-          </Button> */}
 
           <div className='sign-up-wrapper'>
             <span className='sign-up-wrapper-txt'>Bạn chưa có tài khoản?</span>

@@ -7,12 +7,17 @@ import * as bcrypt from 'bcrypt';
 export class AccountService {
   private readonly logger = new Logger(AccountService.name);
   private readonly salt = 12;
-  constructor(private prisma: PrismaService) {
+  constructor(private prisma: PrismaService) {}
 
+  hashPassword(password: string) {
+    return bcrypt.hash(password, this.salt);
   }
+
   async create(createAccountDto: Prisma.AccountCreateInput) {
-    const hashPassword = await bcrypt.hash(createAccountDto.password, this.salt)
-    return this.prisma.account.create({ data: { ...createAccountDto, password: hashPassword } });
+    const hashPassword = await this.hashPassword(createAccountDto.email);
+    return this.prisma.account.create({
+      data: { ...createAccountDto, password: hashPassword },
+    });
   }
 
   findAll() {
@@ -22,16 +27,16 @@ export class AccountService {
   findOne(accountWhereInput: Prisma.AccountWhereUniqueInput) {
     return this.prisma.account.findUnique({
       where: accountWhereInput,
-      include: { User: true }
+      include: { User: true },
     });
   }
 
-  // update(email: string, updateAccountDto: Prisma.AccountUpdateInput) {
-  //   return this.prisma.account.update({
-  //     where: {email: email},
-  //     data: updateAccountDto
-  //   });
-  // }
+  update(email: string, updateAccountDto: Prisma.AccountUpdateInput) {
+    return this.prisma.account.update({
+      where: { email: email },
+      data: updateAccountDto,
+    });
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} account`;

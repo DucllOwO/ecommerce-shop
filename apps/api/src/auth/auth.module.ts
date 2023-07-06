@@ -1,3 +1,4 @@
+import { MailModule } from '../mailer/mailer.module';
 import { PrismaModule } from './../prisma/prisma.module';
 import { AccountModule } from './../account/account.module';
 import { Module } from '@nestjs/common';
@@ -11,10 +12,16 @@ import { UserService } from '../user/user.service';
 
 @Module({
   providers: [AuthService, LocalStrategy, JwtStrategy, UserService],
-  imports: [AccountModule, PassportModule, JwtModule.register({
-    secret: process.env.JWT_SECRET,
-    signOptions: { expiresIn: "7d" },
-  }), PrismaModule],
-  controllers: [AuthController]
+  imports: [
+    AccountModule,
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '7d' },
+    }),
+    PrismaModule,
+    MailModule,
+  ],
+  controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}

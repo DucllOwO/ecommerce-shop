@@ -21,10 +21,10 @@ export class RecommenderModule implements OnModuleInit {
 
   async onModuleInit() {
     const recommender = new ContentBasedRecommender({
-      minScore: 0.1,
+      minScore: 0,
       maxSimilarDocs: 100,
-      maxVectorSize: 200,
-      debug: true,
+      maxVectorSize: 50,
+      debug: false,
     });
 
     this.recommenderService.setRecommender(recommender);

@@ -8,15 +8,9 @@
       "type": "node",
       "request": "launch",
       "name": "Debug Nest Framework",
-      "args": [
-        "${workspaceFolder}/apps/api/src/main.ts"
-      ],
-      "runtimeArgs": [
-        "--nolazy",
-        "-r",
-        "ts-node/register"
-      ],
-      "sourceMaps": true,
+      "args": ["${workspaceFolder}/apps/api/src/main.ts"],
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "sourceMaps": false,
       "cwd": "${workspaceRoot}",
       "protocol": "inspector"
     },

@@ -25,7 +25,15 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(email: string, password: string): Promise<any> {
+    console.log(
+      '🚀 ~ file: local.stategy.ts:28 ~ LocalStrategy ~ validate ~ email:',
+      email,
+    );
     const account = await this.accountService.findOne({ email: email });
+    console.log(
+      '🚀 ~ file: local.stategy.ts:30 ~ LocalStrategy ~ validate ~ account:',
+      account,
+    );
 
     if (!account) {
       throw new NotFoundException();

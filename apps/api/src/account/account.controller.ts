@@ -1,14 +1,58 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete  } from '@nestjs/common';
+import {
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common/exceptions';
+import { UserService } from './../user/user.service';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { AccountService } from './account.service';
 
 @Controller('accounts')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) { }
+  constructor(
+    private readonly accountService: AccountService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post()
   async create(@Body() createAccountDto: Prisma.AccountCreateInput) {
     return this.accountService.create(createAccountDto);
+  }
+
+  @Patch('password-reset/:email')
+  async resetPassword(@Param('email') email: string) {
+    if (!email)
+      throw new BadRequestException('Đã có lỗi xảy ra bên dưới hệ thống.');
+
+    const user = await this.userService.users({
+      where: { email: { equals: email } },
+    });
+
+    if (!user[0]) throw new NotFoundException('Cập nhật mật khẩu thất bại.');
+
+    return this.accountService.update(email, {
+      password: await this.accountService.hashPassword(user[0].phone_number),
+    });
+  }
+
+  @Patch(':email')
+  async updatePassword(
+    @Param('email') email: string,
+    @Body() body: { password: string },
+  ) {
+    if (!email) throw new BadRequestException();
+
+    return this.accountService.update(email, {
+      password: await this.accountService.hashPassword(body.password),
+    });
   }
 
   @Get()
@@ -16,18 +60,8 @@ export class AccountController {
     return this.accountService.findAll();
   }
 
-  @Get(':id')
+  @Get(':email')
   findOne(@Param('email') email: string) {
     return this.accountService.findOne({ email });
   }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateAccountDto: Prisma.AccountUpdateInput) {
-  //   return this.accountService.update(+id, updateAccountDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.accountService.remove(+id);
-  // }
 }

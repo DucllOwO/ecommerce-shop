@@ -34,6 +34,8 @@ import ImportingList from './pages/admin/ImportingList.js';
 import Importing from './pages/admin/Importing.js';
 import CashOnDeliveryPayment from './pages/customer/payment/CashOnDeliveryPayment.js';
 import NotFound from './pages/customer/NotFound.js';
+import ForgotPassword from './pages/auth/ForgotPassword.js';
+import ResetPasswordSuccess from './pages/auth/ResetPasswordSuccess.js';
 
 
 function App() {
@@ -81,6 +83,10 @@ function App() {
           <Route key={'product'} path='product/:slug' element={<Product />}></Route>
           <Route key={'cart'} path='cart' element={<Cart />}></Route>
           <Route key={'login'} path='login' element={<Login />}></Route>
+          <Route key={'forgot-password'} path='forgot-password' element={<ForgotPassword />}>
+
+          </Route>
+          <Route key={'reset-password-success'} path='reset-password-success' element={<ResetPasswordSuccess />}></Route>
           <Route key={'signup'} path='signup' element={<SignUp />}></Route>
           <Route key={'user-profile-setting'} path='profile' element={<UserProfileSetting />}></Route>
           <Route key={'order'} path='orders' element={<Order />}>

@@ -1,4 +1,3 @@
-import { configuration } from './../config/configuration';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
@@ -26,6 +25,7 @@ import { HelperModule } from './helper/helper.module';
 import { RecommenderModule } from './recommender/recommender.module';
 import { ImportModule } from './import/import.module';
 import { PaymentModule } from './payment/payment.module';
+import { MailModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -52,7 +52,8 @@ import { PaymentModule } from './payment/payment.module';
     RecommenderModule,
     ImageModule,
     ImportModule,
-    PaymentModule
+    PaymentModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
