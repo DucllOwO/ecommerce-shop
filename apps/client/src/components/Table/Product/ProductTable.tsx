@@ -5,18 +5,12 @@ import type { ColumnsType } from 'antd/es/table';
 import { TABLE_HEIGHT } from '../../../constant/styles';
 import ProductModal from '../../Modal/ProductModal';
 import { DeleteFilled, EditFilled } from '@ant-design/icons';
-import { isClickOnAnImgTag, isClickOnAnSVGTag, isClickOnATableCell } from '../../../helper/checkEventClick';
+import { isClickOnAnImgTag, isClickOnAnSVGTag, isClickOnATableCell, isClickValidToOpenDetail } from '../../../helper/checkEventClick';
 import { TableProps } from '../../../interface/TableProps';
 import IProduct from '../../../interface/Product';
 import { ACTION_EDIT, ACTION_READ, SET_ACTION } from '../../../constant/constant';
-// export interface ProductType {
-//   id: string;
-//   name: string;
-//   description: string;
-//   image: string;
-//   view: number;
-//   sold: number;
-// }
+import { formatNumberWithComma } from '../../../helper/utils';
+import { compareNumber } from '../../../helper/tableSorter';
 
 interface ProductTableProps extends TableProps {
   data?: IProduct[],
@@ -27,40 +21,42 @@ interface ProductTableProps extends TableProps {
 
 const ProductTable: FC<ProductTableProps> = ({ data, setSelectedItem, dispatch, setIsModalOpen }) => {
 
-  const [editingKey, setEditingKey] = useState<string | undefined>('');
-
-  useEffect(()=> {
-
-  },[data])
-
-  const columns = [
+  const columns: ColumnsType<IProduct> = [
     {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      sorter: (a, b) => compareNumber(a.id, b.id),
     },
     {
       title: 'Sản phẩm',
       key: 'name_image',
+      width: '50%',
       render: (text: string, record: IProduct) => <Space direction='horizontal'>
-        <Image width={100} height={150} alt="example" src={record?.image[0]} />
+        <Image className='imgborder' width={100} height={130} alt="example" src={record?.image[0]} />
         <Typography.Text>{record.name}</Typography.Text>
       </Space>,
     },
     {
-      title: 'Gía',
+      title: 'Giá',
       dataIndex: 'price',
       key: 'price',
+      sorter: (a, b) => compareNumber(a.price, b.price),
+      render: (text: number, record: IProduct) => <p>{formatNumberWithComma(text)}</p>
     },
     {
       title: 'Lượt xem',
       dataIndex: 'view',
       key: 'view',
+      sorter: (a, b) => compareNumber(a.view, b.view),
+      render: (text: number, record: IProduct) => <p>{formatNumberWithComma(text)}</p>
     },
     {
       title: 'Bán',
       dataIndex: 'sold',
       key: 'sold',
+      sorter: (a, b) => compareNumber(a.sold, b.sold),
+      render: (text: number, record: IProduct) => <p>{formatNumberWithComma(text)}</p>
     },
     {
       title: 'Thao tác',
@@ -68,23 +64,21 @@ const ProductTable: FC<ProductTableProps> = ({ data, setSelectedItem, dispatch, 
       width: '10%',
       render: (_: any, record: IProduct) => <Space>
         <Button shape="circle" icon={<EditFilled />} onClick={() => {
-          dispatch({ type: SET_ACTION, payload: ACTION_EDIT})
+          dispatch({ type: SET_ACTION, payload: ACTION_EDIT })
           setIsModalOpen((prev: boolean) => !prev);
           setSelectedItem(record);
         }} />
-        {/* <Button shape="circle" icon={<DeleteFilled />} /> */}
       </Space>,
     },
   ];
 
   return (
     <>
-
       <Table columns={columns} dataSource={data} onRow={(record, rowIndex) => {
         return {
           onClick: (event) => {
-            if (isClickOnATableCell(event)) {
-              dispatch({ type: SET_ACTION, payload: ACTION_READ})
+            if (isClickValidToOpenDetail(event)) {
+              dispatch({ type: SET_ACTION, payload: ACTION_READ })
               setIsModalOpen((prev: boolean) => !prev);
               setSelectedItem(record)
             }

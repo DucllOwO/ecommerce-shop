@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { shutDownVoucher, updateVoucher } from '../../api/admin/VoucherAPI';
 import SuccessAlert from '../Alert/SuccessAlert';
 import { REQUIRED_RULE, STRING_LENGTH_RULE } from '../../constant/formRules';
+import { compareDates, compareNumber } from '../../helper/tableSorter';
 
 interface VoucherTableProps extends TableProps {
   data?: IVoucher[],
@@ -44,6 +45,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ data, setData }) => {
       key: 'discount',
       editable: true,
       rules: [REQUIRED_RULE],
+      sorter: (a: IVoucher, b: IVoucher) => compareNumber(a.discount, b.discount),
       render: (_: any, record: IVoucher) => {
         return <p>{`${record.discount}%`}</p>
       }
@@ -54,6 +56,7 @@ const VoucherTable: FC<VoucherTableProps> = ({ data, setData }) => {
       key: 'due-to',
       editable: true,
       rules: [REQUIRED_RULE],
+      sorter: (a: IVoucher, b: IVoucher) => compareDates(a.due, b.due),
       render: (_: any, record: IVoucher) => {
         return <p>{dayjs(record?.due).format("DD/MM/YYYY")}</p>
       }

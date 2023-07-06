@@ -5,7 +5,7 @@ const Delivery = () => {
   // different only status
   return (
     <div>
-      <OrderTable state='waiting' />
+      <OrderTable state='delivery' />
     </div>
   )
 }

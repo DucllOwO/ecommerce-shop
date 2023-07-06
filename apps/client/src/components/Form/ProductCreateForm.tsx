@@ -67,15 +67,7 @@ const ProductCreateForm: FC<ProductCreateProps> = ({ form, tagInit, collectionIn
               />
             </Form.Item>
           </Descriptions.Item>
-          <Descriptions.Item label="Giá bán (đ)" span={1}>
-            <Form.Item name={'price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
-              <InputNumber
-                min={1000}
-                controls={false}
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
-          </Descriptions.Item>
+
           <Descriptions.Item label="Trạng thái" span={3}>
             <Form.Item name={'collection'} style={FORM_NO_BOTTOM_MARGIN}>
               <Switch defaultChecked />
@@ -119,6 +111,15 @@ const ProductCreateForm: FC<ProductCreateProps> = ({ form, tagInit, collectionIn
             <Form.Item name={'import_price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
               <InputNumber
                 defaultValue={100}
+                min={1000}
+                controls={false}
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+          </Descriptions.Item>
+          <Descriptions.Item label="Giá bán (đ)" span={3}>
+            <Form.Item name={'price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
+              <InputNumber
                 min={1000}
                 controls={false}
                 style={{ width: "100%" }}

@@ -39,6 +39,10 @@ const menu: MenuProps['items'] = [
       {
         key: 'order/completed',
         label: 'Hoàn thành',
+      },
+      {
+        key: 'order/canceled',
+        label: 'Đã huỷ',
       }
     ]
 
@@ -84,11 +88,11 @@ const menu: MenuProps['items'] = [
       }
     ]
   },
-  {
-    key: 'feedback',
-    label: 'Đánh giá',
-    icon: generateImageIcon(ReivewIcon)
-  },
+  // {
+  //   key: 'feedback',
+  //   label: 'Đánh giá',
+  //   icon: generateImageIcon(ReivewIcon)
+  // },
   {
     key: 'discount',
     label: 'Giảm giá',

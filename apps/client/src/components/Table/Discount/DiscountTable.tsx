@@ -10,6 +10,7 @@ import { deleteDiscount, updateDiscount } from '../../../api/admin/DiscountAPI';
 import SuccessAlert from '../../Alert/SuccessAlert';
 import { REQUIRED_RULE, VALUE_MUST_BETWEEN_0_100 } from '../../../constant/formRules';
 import { DATE, INPUT, INPUT_NUMBER, TEXTAREA } from '../../../constant/constant';
+import { compareNumber } from '../../../helper/tableSorter';
 
 interface DiscountTableProps extends TableProps {
   data?: IDiscount[],
@@ -37,6 +38,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ data, setData }) => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
+      sorter: (a: IDiscount, b: IDiscount) => compareNumber(a.id, b.id),
     },
     {
       title: 'Tên khuyến mãi',
@@ -50,6 +52,7 @@ const DiscountTable: FC<DiscountTableProps> = ({ data, setData }) => {
       dataIndex: 'discount',
       key: 'discount',
       editable: true,
+      sorter: (a: IDiscount, b: IDiscount) => compareNumber(a.discount, b.discount),
       rules: [REQUIRED_RULE, VALUE_MUST_BETWEEN_0_100]
     },
     {

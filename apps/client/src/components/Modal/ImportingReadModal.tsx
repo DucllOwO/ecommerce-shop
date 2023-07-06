@@ -5,7 +5,7 @@ import ProductInventoryTable from '../Table/Product/ProductInventoryTable'
 import IProduct_item from '../../interface/ProductItem'
 
 interface ImportingModalProps extends ModalProps {
-    data?: IProduct_item
+  data?: IProduct_item[]
 }
 
 const ImportingReadModal: FC<ImportingModalProps> = ({ isOpen, setIsModalOpen, data }) => {
@@ -16,7 +16,7 @@ const ImportingReadModal: FC<ImportingModalProps> = ({ isOpen, setIsModalOpen, d
       onCancel={() => {
         setIsModalOpen((prev: boolean) => !prev)
       }}>
-        <ProductInventoryTable data={data}/>
+      <ProductInventoryTable data={data} />
     </Modal>
   )
 }

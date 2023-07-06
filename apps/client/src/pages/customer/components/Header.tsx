@@ -134,7 +134,7 @@ const HeaderCustom = () => {
                         <div className="header__menu__item header__menu__right__item">
                             <AutoComplete
                                 dropdownMatchSelectWidth={252}
-                                style={{ width: 300 }}
+                                style={{ width: "90%" }}
                                 options={searchOptions}
                                 onSelect={onSelect}
                                 onSearch={onSearch}

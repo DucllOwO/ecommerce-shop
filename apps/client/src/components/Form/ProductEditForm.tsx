@@ -94,7 +94,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
               />
             </Form.Item>
           </Descriptions.Item>
-          <Descriptions.Item label="Tên sản phẩm" span={3}>
+          <Descriptions.Item label="Tên sản phẩm" span={3} style={{ minWidth: 150 }}>
             <Form.Item name={'name'} rules={[REQUIRED_RULE]} initialValue={selectedItem?.name} style={FORM_NO_BOTTOM_MARGIN}>
               <Input style={{ width: '100%' }} />
             </Form.Item>
@@ -107,20 +107,10 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
                 style={{ width: '100%' }}
                 placeholder="Chọn nhãn cho sản phẩm"
                 options={tagInit}
-              // defaultValue={selectedItem?.HaveTag.map((item) => {return {value: item.tagID, label: item.tag.name}})}
               />
             </Form.Item>
           </Descriptions.Item>
-          <Descriptions.Item label="Giá bán (đ)" span={1}>
-            <Form.Item name={'price'} rules={[REQUIRED_RULE]} initialValue={selectedItem?.price} style={FORM_NO_BOTTOM_MARGIN}>
-              <InputNumber
-                min={0}
-                max={100}
-                controls={false}
-                style={{ width: "100%" }}
-              />
-            </Form.Item>
-          </Descriptions.Item>
+
           <Descriptions.Item label="Lượt xem" span={1}>
             {selectedItem?.view}
           </Descriptions.Item>
@@ -167,32 +157,20 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
                 style={{ width: '100%' }}
                 placeholder="Chọn mã giảm giá áp dụng cho sản phẩm"
                 options={discountInit}
-                defaultValue={selectedItem.discountID ? { value: selectedItem.discountID, label: selectedItem.discount?.name } : null}
+                defaultValue={selectedItem.discountID ? { value: selectedItem.discountID, label: `${selectedItem.discount?.name} - ${selectedItem.discount?.discount}%` } : null}
               />
             </Form.Item>
           </Descriptions.Item>
-          {/* <Descriptions.Item label="Giá nhập (đ)" span={3}>
-                <Form.Item name={'import_price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
-                  <InputNumber
-                    defaultValue={100}
-                    min={0}
-                    max={100}
-                    controls={false}
-                    style={{ width: "100%" }}
-                  />
-                </Form.Item>
-              </Descriptions.Item> */}
-          {/* <Descriptions.Item label="Giá bán (đ)" span={3}>
-                <Form.Item name={'actual_price'} rules={[REQUIRED_RULE]} style={FORM_NO_BOTTOM_MARGIN}>
-                  <InputNumber
-                    defaultValue={selectedItem.price}
-                    min={0}
-                    max={100}
-                    controls={false}
-                    style={{ width: "100%" }}
-                  />
-                </Form.Item>
-              </Descriptions.Item> */}
+          <Descriptions.Item label="Giá bán (đ)" span={1}>
+            <Form.Item name={'price'} rules={[REQUIRED_RULE]} initialValue={selectedItem?.price} style={FORM_NO_BOTTOM_MARGIN}>
+              <InputNumber
+                min={0}
+                max={100}
+                controls={false}
+                style={{ width: "100%" }}
+              />
+            </Form.Item>
+          </Descriptions.Item>
         </Descriptions>
         <Divider />
         <ProductInventoryCreateForm form={form} isReadOnly={true} />

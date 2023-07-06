@@ -127,3 +127,7 @@ img {
   @include flex(center, center);
   display: flex;
 }
+
+.imgborder {
+  border-radius: 5px;
+}

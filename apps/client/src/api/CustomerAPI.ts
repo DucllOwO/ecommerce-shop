@@ -9,6 +9,10 @@ export function fetchProductDetail(where: any){
   return http.get(`/product`, {params: where})
 }
 
+export function increaseViewForProduct(id: number) {
+  return http.post(`/product/viewed/${id}`);
+}
+
 export function fetchProduct(id: number){
   return http.get(`/product/${id}`)
 }
@@ -30,7 +34,7 @@ export function updateUser(newUser: any, userID: number){
 }
 
 export function getOrdersByUserID(userID: any){
-  return http.get(`/order/?user=${userID}`)
+  return http.get(`/order?user=${userID}`)
 }
 
 export function getOrder(id: string){
