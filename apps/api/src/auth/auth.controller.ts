@@ -1,10 +1,10 @@
+import { MailService } from 'src/Mailer/mailer.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { Controller, Body, BadRequestException } from '@nestjs/common';
 import { Post, Request, UseGuards } from '@nestjs/common/decorators';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { MailService } from 'src/mailer/mailer.service';
 
 @Controller('auth')
 export class AuthController {
