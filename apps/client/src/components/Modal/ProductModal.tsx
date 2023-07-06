@@ -88,10 +88,10 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
             }
           }
         }
-        postProduct(newProduct).then((response) => {
-          uploadImageFunc(imageList, slugString);
+        postProduct(newProduct).then(async (response) => {
+          await uploadImageFunc(imageList, slugString);
           importProduct(response.data, data);
-          setDataState((prev: IProduct[]) => [...prev, data]);
+          setDataState((prev: IProduct[]) => [...prev, response.data]);
           SuccessAlert("Thêm sản phẩm thành công");
         }).catch((error) => {
           console.log(error);
@@ -227,7 +227,7 @@ function createImageName(imageList: any, slugString: string) {
   return imageList.map((item: any, index: number) => item.url ? item.url : `${BUCKET_URL}${slugString}-${index + 1}.${item.originFileObj.type.split('/')[1]}`)
 }
 
-function uploadImageFunc(imageList: UploadFile[], slugString: string) {
+async function uploadImageFunc(imageList: UploadFile[], slugString: string) {
   console.log(imageList);
   imageList.forEach((item: any, index: number) => {
 
