@@ -23,6 +23,9 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
     }
   }));
 
+  useEffect(() => {
+    setImageList(fileList);
+  },[])
   const [isOpen, setIsModalOpen] = useState(false);
 
   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {

@@ -115,7 +115,7 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
           HaveTag: {
             createMany: {
               data: data.tags.map((item: number) => {
-                return { tagID: item }
+                return { tagID: item.value ? item.value : item}
               }),
               skipDuplicates: true
             }
@@ -129,6 +129,14 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
         console.log(newProduct);
         clearHaveTag(selectedItem).then(() => {
           updateProduct(newProduct, selectedItem.id).then((data) => {
+            console.log(data)
+            setDataState((prev: IProduct[]) => prev.map((item) => {
+              if(item.id === data.data.id)
+                return data.data;
+              else
+                return item;
+            }))
+            setIsModalOpen((prev: boolean) => !prev)
             updateImageFunc(imageList, slugString);
             SuccessAlert("Chỉnh sửa sản phẩm thành công");
           }).catch((error) => console.log(error));  
@@ -218,6 +226,7 @@ function getTotalPrice(data: any){
   })
   return result;
 }
+
 function getTotalAmount(data: any){
   let result = 0;;
   data.forEach((item: any) => {
