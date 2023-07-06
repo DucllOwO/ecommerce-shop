@@ -2,10 +2,11 @@ import { Button, Card, Col, Image, List, Result, Row, Space, Typography } from '
 import { useContext, useEffect } from 'react';
 import { CheckoutContext } from '../../../context/CheckoutContext'
 import { formatNumberWithComma } from '../../../helper/utils';
+import { useNavigate } from 'react-router-dom';
 
 const CashOnDeliveryPayment = () => {
   const checkout = useContext(CheckoutContext);
-
+  const nav = useNavigate();
   return (
     <div className='centerflex' style={{ flexDirection: 'column', rowGap: 50, padding: '20px 0' }}>
       <Row style={{ width: '80%' }}>
@@ -23,7 +24,7 @@ const CashOnDeliveryPayment = () => {
                 <p>Nếu có bất kì vấn đề gì cần hỗ trợ, hãy liên lạc với của hàng qua số điện thoại 0912324274</p>
               </Space>}
               extra={[
-                <Button type="primary" key="console">
+                <Button type="primary" key="console" onClick={() => nav("/")}>
                   Về trang chủ
                 </Button>
               ]}

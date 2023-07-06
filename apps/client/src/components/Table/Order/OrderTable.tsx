@@ -76,18 +76,21 @@ const OrderTable = (props: OrderProps) => {
   const handleDeliveryOnClick = (item: IOrder) => {
     deliveryOrder(item.id).then((dataRes) => {
       setData(prev => prev?.filter((data) => data.id !== item.id));
+      setSearchData(prev => prev?.filter((data) => data.id !== item.id));
       SuccessAlert("Bắt đầu vận chuyển");
     })
   }
   const handleCancelOnClick = (item: IOrder) => {
     cancelOrder(item.id).then((dataRes) => {
       setData(prev => prev?.filter((data) => data.id !== item.id));
+      setSearchData(prev => prev?.filter((data) => data.id !== item.id));
       SuccessAlert("Huỷ đơn thành công");
     })
   }
   const handleFinishOnClick = (item: IOrder) => {
     finishOrder(item.id).then((dataRes) => {
       setData(prev => prev?.filter((data) => data.id !== item.id));
+      setSearchData(prev => prev?.filter((data) => data.id !== item.id));
       SuccessAlert("Hoàn tất đơn hàng");
     })
   }

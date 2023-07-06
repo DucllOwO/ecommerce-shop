@@ -25,3 +25,7 @@ export function deliveryOrder(id: number){
 export function cancelOrder(id: number){
   return http.patch(`/order/${id}`, {status: '3'});
 };
+
+export function fetchAllOrders(){
+  return http.get(`/order`);
+}

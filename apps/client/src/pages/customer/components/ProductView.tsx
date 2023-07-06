@@ -132,8 +132,9 @@ const ProductView = (props: ProductViewProps) => {
                             JSON.stringify(data[0]) === JSON.stringify(newCartItem))) {
                         LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), newCartItem]);
                     }
-                    else if (!LocalStorage.getItem('cart'))
+                    else if (!LocalStorage.getItem('cart')){
                         LocalStorage.setItem('cart', [newCartItem])
+                    }
                     SuccessAlert('Thêm vào giỏ hàng thành công.');
                     nav('/cart');
                 })
@@ -154,8 +155,9 @@ const ProductView = (props: ProductViewProps) => {
                         JSON.stringify(data[0]) === JSON.stringify(newCartItem))) {
                     LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), newCartItem]);
                 }
-                else if (!LocalStorage.getItem('cart'))
+                else if (!LocalStorage.getItem('cart')){
                     LocalStorage.setItem('cart', [newCartItem])
+                }
                 SuccessAlert('Thêm vào giỏ hàng thành công.');
                 nav('cart');
             }
@@ -187,8 +189,8 @@ const ProductView = (props: ProductViewProps) => {
                         }
                     }
                     if (LocalStorage.getItem('cart') &&
-                        !Array(LocalStorage.getItem('cart')).some((data: any) =>
-                            JSON.stringify(data[0]) === JSON.stringify(newCartItem))) {
+                        !LocalStorage.getItem('cart').some((value: any) =>
+                         value.itemID === newCartItem.itemID)) {
                         LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), newCartItem]);
                     }
                     else if (!LocalStorage.getItem('cart'))
@@ -208,8 +210,8 @@ const ProductView = (props: ProductViewProps) => {
                     }
                 }
                 if (LocalStorage.getItem('cart') &&
-                    !Array(LocalStorage.getItem('cart')).some((data: any) =>
-                        JSON.stringify(data[0]) === JSON.stringify(newCartItem))) {
+                    !(LocalStorage.getItem('cart')).some((data: any) =>
+                        data.itemID === newCartItem.itemID)){
                     LocalStorage.setItem('cart', [...LocalStorage.getItem('cart'), newCartItem]);
                 }
                 else if (!LocalStorage.getItem('cart'))
@@ -285,10 +287,7 @@ const ProductView = (props: ProductViewProps) => {
                             <Button
                                 onClick={handleAddToCart}
                             >Thêm vào giỏ</Button>
-                            <Button onClick={() => {
-                                handleAddToCart();
-                                nav('/cart');
-                            }}>Mua ngay</Button>
+                            <Button onClick={handleBuyNow}>Mua ngay</Button>
                         </div>
                         <div className={`product-description expand`}>
                             <div className="product-description__title">

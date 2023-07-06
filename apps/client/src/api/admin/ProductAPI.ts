@@ -28,3 +28,7 @@ export function updateProduct(newProduct: any, id: number){
 export function deleteImage(fileURL: string){
   return http.delete(`/image/${fileURL}`);
 }
+
+export function fetchActiveProduct(){
+  return http.get(`/product/active`)
+}
