@@ -29,7 +29,7 @@ const ImportingTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsRe
       title: 'Sản phẩm',
       key: 'name_image',
       render: (text: string, record: IProduct) => <Space direction='horizontal'>
-        <Image width={100} height={150} alt="example" src={record?.image[0]} />
+        <Image className='imgborder' width={100} height={120} alt="example" src={record?.image[0]} />
         <Typography.Text>{record.name}</Typography.Text>
       </Space>,
     },

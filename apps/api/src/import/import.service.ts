@@ -4,16 +4,16 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ImportService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async importing(
     importingWhereUniqueInput: Prisma.ImportingWhereUniqueInput,
   ): Promise<Importing | null> {
     return this.prisma.importing.findUnique({
       where: importingWhereUniqueInput,
-      include:{
-        ImportDetail: true
-      }
+      include: {
+        ImportDetail: true,
+      },
     });
   }
 
@@ -30,9 +30,17 @@ export class ImportService {
       skip,
       take,
       orderBy,
-      include:{
-        ImportDetail: true
-      }
+      include: {
+        ImportDetail: {
+          include: {
+            Product_item: {
+              include: {
+                product: true,
+              },
+            },
+          },
+        },
+      },
     });
   }
   async createImporting(data: Prisma.ImportingCreateInput): Promise<Importing> {
@@ -41,14 +49,14 @@ export class ImportService {
     });
   }
 
-//   async updateImporting(params: {
-//     where: Prisma.ImportingWhereUniqueInput,
-//     data: Prisma.ImportingCreateInput
-//   }): Promise<Importing> {
-//     const { where, data } = params
-//     return this.prisma.importing.update({
-//       where,
-//       data
-//     });
-//   }
+  //   async updateImporting(params: {
+  //     where: Prisma.ImportingWhereUniqueInput,
+  //     data: Prisma.ImportingCreateInput
+  //   }): Promise<Importing> {
+  //     const { where, data } = params
+  //     return this.prisma.importing.update({
+  //       where,
+  //       data
+  //     });
+  //   }
 }

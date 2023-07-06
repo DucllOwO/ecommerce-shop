@@ -1,23 +1,17 @@
 import React, { FC, useState } from 'react'
 import { Table } from 'antd';
 import { TableProps } from '../../interface/TableProps';
-import { isClickOnATableCell } from '../../helper/checkEventClick';
-import EditableCell from './EditableCell';
 import { IImporting } from '../../interface/Importing';
-import dayjs from 'dayjs'
 import { formatNumberWithComma, formatToFullDate } from '../../helper/utils';
+import { compareDates, compareNumber } from '../../helper/tableSorter';
 
 interface ImportingTableProps extends TableProps {
   data: IImporting[],
   setIsModalOpen: Function,
-  setIsReadOnly: Function,
   setSelectedItem: Function
 }
 
-const ImportingListTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setIsReadOnly, setSelectedItem }) => {
-  const [editingKey, setEditingKey] = useState<string | undefined>('');
-
-  const isEditing = (record: IImporting) => record.id.toString() === editingKey;
+const ImportingListTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, setSelectedItem }) => {
 
   const columns = [
     {
@@ -29,58 +23,39 @@ const ImportingListTable: FC<ImportingTableProps> = ({ data, setIsModalOpen, set
       title: 'Ngày nhập',
       dataIndex: 'date',
       key: 'date',
+      sorter: (a: IImporting, b: IImporting) => compareDates(a.date, b.date),
       render: (_: any, record: IImporting) => (<p>{formatToFullDate(record.date)}</p>)
     },
     {
       title: 'Tổng số lượng nhập',
       dataIndex: 'total_amount',
       key: 'total_amount',
+      sorter: (a: IImporting, b: IImporting) => compareNumber(a.total_amount, b.total_amount),
       render: (text: number) => <p>{formatNumberWithComma(text)}</p>
     },
     {
       title: 'Tổng tiền',
       dataIndex: 'total_cost',
       key: 'total_cost',
+      sorter: (a: IImporting, b: IImporting) => compareNumber(a.total_cost, b.total_cost),
       render: (text: number) => <p>{formatNumberWithComma(text)}</p>
     },
   ];
-
-  const mergedColumns = columns.map((col) => {
-    return {
-      ...col,
-      onCell: (record: IImporting) => ({
-        record,
-        inputType: col.dataIndex === 'discount' ? 'number' : 'text',
-        dataIndex: col.dataIndex,
-        title: col.title,
-        editing: isEditing(record),
-      }),
-    };
-  });
 
   return (
     <>
       <Table
         rowKey={(record) => record.id}
-        columns={mergedColumns}
+        columns={columns}
         dataSource={data}
         onRow={(record, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
-              if (isClickOnATableCell(event)) {
-                setIsModalOpen((prev: boolean) => !prev)
-                setIsReadOnly(true);
-                setSelectedItem(record);
-              }
+              setIsModalOpen((prev: boolean) => !prev)
+              setSelectedItem(record);
             }, // click row
           };
         }}
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
-        rowClassName="editable-row"
       />
     </>
   )

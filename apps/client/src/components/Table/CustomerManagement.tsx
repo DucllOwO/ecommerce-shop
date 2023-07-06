@@ -3,20 +3,9 @@ import { Table } from 'antd';
 import { TableProps } from '../../interface/TableProps';
 import { isClickOnATableCell } from '../../helper/checkEventClick';
 import CustomerModal from '../Modal/CustomerModal';
-import { IUser } from '../../interface/User';
 import dayjs from 'dayjs';
-
-// export interface CustomerType {
-//   id: string;
-//   email: string;
-//   address: string;
-//   avatar?: string;
-//   firstName: string;
-//   lastName: string;
-//   phoneNumber: string;
-//   logged_date: string;
-//   product_viewed?: string[];
-// }
+import IUser from '../../interface/User';
+import { compareNumber } from '../../helper/tableSorter';
 
 interface CustomerManagementTable extends TableProps {
   data?: IUser[],
@@ -27,6 +16,7 @@ const columns = [
     title: 'ID',
     dataIndex: 'id',
     key: 'id',
+    sorter: (a: IUser, b: IUser) => compareNumber(a.id, b.id),
   },
   {
     title: 'Họ tên',
@@ -66,15 +56,14 @@ const CustomerManagementTable: FC<CustomerManagementTable> = ({ form, data, setD
 
   return (
     <>
-      <CustomerModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} data={selectedItem}/>
+      <CustomerModal isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} data={selectedItem} />
       <Table
         columns={columns}
         dataSource={data}
         onRow={(record: IUser, rowIndex) => {
           return {
             onClick: (event: React.MouseEvent) => {
-              if (isClickOnATableCell(event))
-              {
+              if (isClickOnATableCell(event)) {
                 setIsModalOpen(prev => !prev)
                 setSelectedItem(record)
               }
