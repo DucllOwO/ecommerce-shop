@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Area } from '@ant-design/plots';
+import { Line } from '@ant-design/plots';
 import { fetchReport } from '../../api/admin/dashboardAPI';
 import IYearly_report from '../../interface/YearlyReport';
 import IMonthly_report from '../../interface/MonthlyReport';
@@ -55,7 +55,7 @@ const LineChart = () => {
 
   };
 
-  return <Area {...config} />;
+  return <Line {...config} />;
 }
 
 export default LineChart

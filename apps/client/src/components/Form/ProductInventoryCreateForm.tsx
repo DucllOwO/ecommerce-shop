@@ -2,6 +2,8 @@ import React from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Form, FormInstance, Input, InputNumber, Row, Space, Typography } from 'antd';
 import { SIZES } from '../../constant/constant';
+import IProduct from '../../interface/Product';
+import IProduct_item from '../../interface/ProductItem';
 
 const inventoryData = [
   {

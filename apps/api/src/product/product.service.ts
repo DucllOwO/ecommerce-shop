@@ -68,6 +68,9 @@ export class ProductService {
     console.log(data);
     return this.prisma.product.create({
       data: { ...data },
+      include: {
+        product_item: true
+      }
     });
   }
 

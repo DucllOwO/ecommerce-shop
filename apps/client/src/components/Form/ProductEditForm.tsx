@@ -172,8 +172,8 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
             </Form.Item>
           </Descriptions.Item>
         </Descriptions>
-        <Divider />
-        <ProductInventoryCreateForm form={form} isReadOnly={true} />
+        {/* <Divider /> */}
+        {/* <ProductInventoryCreateForm form={form} isReadOnly={true} /> */}
       </Space>
     </Form>
   )
