@@ -72,12 +72,12 @@ export class ProductController {
   @Get('/active')
   findAllActive() {
     return this.productService.products({
-      where:{
+      where: {
         isActive: {
-          equals: true
-        }
-      }
-    });    
+          equals: true,
+        },
+      },
+    });
   }
 
   @Get()
@@ -118,8 +118,9 @@ export class ProductController {
   @Patch(':id')
   update(
     @Param('id') id: number,
-    @Body() updateProductDto: Prisma.ProductCreateInput,
+    @Body() updateProductDto: Prisma.ProductUpdateInput,
   ) {
+    this.logger.log('product update body', updateProductDto);
     return this.productService.updateProduct({
       where: { id: Number(id) },
       data: updateProductDto,

@@ -19,6 +19,7 @@ import SuccessAlert from '../Alert/SuccessAlert'
 import { formatNumberWithComma } from '../../helper/utils'
 import IProduct_item from '../../interface/ProductItem'
 import { createImport } from '../../api/admin/importAPI'
+import ErrorAlert from '../Alert/ErrorAlert'
 
 interface ProductModalProps extends ModalProps {
   action: string,
@@ -100,13 +101,17 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
         setIsModalOpen(false)
       }
       else if (selectedItem) {
-        console.log(data)
+        console.log("🚀 ~ file: ProductModal.tsx:105 ~ form.validateFields ~ data:", data)
         const newProduct = {
           name: data.name,
           slug: slugString,
           price: data.price,
           description: data.note,
-          discountID: data.discount ? data.discount : null,
+          discount: data.discount ? {
+            connect: {
+              id: getValueFromSelect(data.discount)
+            }
+          } : undefined,
           image: createImageName(imageList, slugString),
           HaveTag: {
             createMany: {
@@ -116,9 +121,15 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
               skipDuplicates: true
             }
           },
-          collectionID: data.collection ? data.collection : null,
+          collection: data.collection ? {
+            connect: {
+              id: getValueFromSelect(data.collection)
+            }
+          } : undefined,
+          isActive: data.isActive != null ? data.isActive : undefined
         };
-        console.log(newProduct);
+        console.log("🚀 ~ file: ProductModal.tsx:126 ~ form.validateFields ~ data.collection:", data.discount)
+        console.log("🚀 ~ file: ProductModal.tsx:121 ~ form.validateFields ~ newProduct:", newProduct)
         clearHaveTag(selectedItem).then(() => {
           updateProduct(newProduct, selectedItem.id).then((data) => {
             console.log(data)
@@ -174,12 +185,15 @@ const ProductModal: FC<ProductModalProps> = ({ isOpen, setIsModalOpen, action, s
   }
 }
 async function clearHaveTag(selectedItem: IProduct): Promise<any> {
-  return new Promise((resolve, reject) => {
-    selectedItem.HaveTag.forEach((item: IHaveTag) => {
-      deleteHaveTag(item);
-    })
-    resolve(true);
-  });
+  try {
+    let removeHaveTagPromise = selectedItem.HaveTag.map((item: IHaveTag) => {
+      return deleteHaveTag(item);
+    });
+
+    let result = await Promise.all(removeHaveTagPromise);
+  } catch (error) {
+    ErrorAlert('Có lỗi xảy ra khi xóa nhãn');
+  }
 }
 
 function importProduct(productCreateResponse: IProduct, formData: any) {
@@ -349,6 +363,10 @@ function renderModalContent(action: string, form: FormInstance<any>, tags: ITag[
     default:
       break;
   }
+}
+
+function getValueFromSelect(object: any) {
+  return object.value ? object.value : object
 }
 
 

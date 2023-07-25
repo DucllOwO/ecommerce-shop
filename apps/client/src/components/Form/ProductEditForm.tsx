@@ -128,7 +128,7 @@ const ProductEditForm: FC<ProductEditFormProps> = ({ form, collectionInit, disco
             {selectedItem?.sold}
           </Descriptions.Item>
           <Descriptions.Item label="Trạng thái" span={3}>
-            <Form.Item name={'collection'} initialValue={selectedItem.isActive ? true : false} style={FORM_NO_BOTTOM_MARGIN}>
+            <Form.Item name={'isActive'} initialValue={selectedItem.isActive ? true : false} style={FORM_NO_BOTTOM_MARGIN}>
               <Switch defaultChecked />
             </Form.Item>
           </Descriptions.Item>
