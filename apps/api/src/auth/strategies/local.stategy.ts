@@ -6,7 +6,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AuthService } from '../auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { AccountService } from 'src/account/account.service';
 import * as bcrypt from 'bcrypt';
@@ -15,7 +14,6 @@ import * as bcrypt from 'bcrypt';
 export class LocalStrategy extends PassportStrategy(Strategy) {
   private readonly logger = new Logger(LocalStrategy.name);
   constructor(
-    private authService: AuthService,
     private accountService: AccountService,
     private jwtService: JwtService,
   ) {

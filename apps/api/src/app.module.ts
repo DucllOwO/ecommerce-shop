@@ -26,6 +26,8 @@ import { RecommenderModule } from './recommender/recommender.module';
 import { ImportModule } from './import/import.module';
 import { PaymentModule } from './payment/payment.module';
 import { MailModule } from './mailer/mailer.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/guards/roles.guard';
 
 @Module({
   imports: [
@@ -56,7 +58,11 @@ import { MailModule } from './mailer/mailer.module';
     MailModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, {
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+  },
+],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

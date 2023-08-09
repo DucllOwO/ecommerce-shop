@@ -9,10 +9,11 @@ import {
   Delete,
   BadRequestException,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { VoucherService } from './voucher.service';
-import dayjs from 'dayjs';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('voucher')
 export class VoucherController {
@@ -21,6 +22,7 @@ export class VoucherController {
     private readonly helper: HelperService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   create(@Body() createVoucherDto: Prisma.VoucherCreateInput) {
     console.log(createVoucherDto);
@@ -47,7 +49,7 @@ export class VoucherController {
   }
 
 
-
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':code')
   update(
     @Param('code') code: string,
@@ -65,6 +67,7 @@ export class VoucherController {
     });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch('shutdown/:code')
   shutdownVoucher(@Param('code') code: string) {
     if (this.helper.isNullorUndefined(code)) throw new BadRequestException();

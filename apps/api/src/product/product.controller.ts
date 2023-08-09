@@ -13,6 +13,10 @@ import {
 import { ProductService } from './product.service';
 import { Prisma } from '@prisma/client';
 import { nfd } from 'unorm';
+import { UseGuards } from '@nestjs/common/decorators';
+import { AuthGuard } from '@nestjs/passport';
+import { Role } from 'src/auth/roles.enum';
+import { Roles } from 'src/auth/roles.decorator';
 
 @Controller('product')
 export class ProductController {
@@ -23,6 +27,7 @@ export class ProductController {
     private readonly recommenderService: RecommenderService,
   ) {}
 
+  @UseGuards(AuthGuard('jwt'))
   @Post()
   async create(@Body() createProductDto: Prisma.ProductCreateInput) {
     try {
@@ -31,10 +36,6 @@ export class ProductController {
       const products = await this.productService.products({});
 
       this.recommenderService.trainingRecommender(products);
-      console.log(
-        "🚀 ~ file: product.controller.ts:35 ~ ProductController ~ create ~ this.recommenderService.recommendForProduct('1'):",
-        this.recommenderService.recommendForProduct(respond.id.toString()),
-      );
 
       return respond;
     } catch (error) {
@@ -80,6 +81,7 @@ export class ProductController {
     });
   }
 
+  @Roles(Role.Admin)
   @Get()
   findAll(@Query() query: Prisma.ProductWhereInput) {
     return this.productService.products({
@@ -115,6 +117,7 @@ export class ProductController {
     return this.productService.product({ id: Number(id) });
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
   update(
     @Param('id') id: number,
