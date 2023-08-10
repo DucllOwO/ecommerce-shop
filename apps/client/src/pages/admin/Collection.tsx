@@ -2,12 +2,12 @@ import { Button, Form, Input, Space, Spin } from 'antd';
 import { useEffect, useState, ChangeEvent } from 'react'
 import CollectionTable from '../../components/Table/CollectionTable'
 import ICollection from '../../interface/Collection';
-import { fetchAllCollection } from '../../api/admin/productAPI';
 import CollectionCreateModal from '../../components/Modal/CollectionCreateModal';
 import { fetchAllDiscounts } from '../../api/admin/DiscountAPI';
 import IDiscount from '../../interface/Discount';
 import { searchDatabyPropertyName } from '../../helper/tableSorter';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
+import { fetchAllCollection } from '../../api/admin/ProductAPI';
 
 const Collection = () => {
   const [form] = Form.useForm();

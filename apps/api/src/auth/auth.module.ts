@@ -1,4 +1,4 @@
-import { MailService } from 'src/Mailer/mailer.service';
+import { MailService } from '../mailer/mailer.service';
 import { MailModule } from '../mailer/mailer.module';
 import { PrismaModule } from './../prisma/prisma.module';
 import { AccountModule } from './../account/account.module';

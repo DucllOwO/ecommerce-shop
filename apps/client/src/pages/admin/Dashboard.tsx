@@ -15,9 +15,8 @@ import { fetchTopTenMostViewed } from '../../api/productAPI'
 import IOrder from '../../interface/Order'
 import IUser from '../../interface/User'
 import { fetchAllCustomers } from '../../api/admin/CustomerAPI'
-import { fetchAllProducts } from '../../api/CustomerAPI'
 import { fetchAllOrders } from '../../api/admin/OrderAPI'
-import { fetchActiveProduct } from '../../api/admin/productAPI'
+import { fetchActiveProduct } from '../../api/admin/ProductAPI'
 
 const { Meta } = Card;
 
@@ -43,7 +42,7 @@ const Dashboard = () => {
     })
     fetchAllOrders().then((data) => {
       setOrder(data.data)
-  })
+    })
   }, [])
 
   return (

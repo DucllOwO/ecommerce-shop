@@ -6,7 +6,7 @@ import { FORM_NO_BOTTOM_MARGIN } from '../../constant/styles'
 import ProductInventoryCreateForm from './ProductInventoryCreateForm'
 import ProductFormProps from '../../interface/ProductFormProps'
 import IProduct from '../../interface/Product'
-import { deleteImage, updateProduct } from '../../api/admin/productAPI'
+import { deleteImage, updateProduct } from '../../api/admin/ProductAPI'
 
 interface ProductEditFormProps extends ProductFormProps {
   selectedItem: IProduct,

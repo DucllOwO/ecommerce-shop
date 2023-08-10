@@ -4,7 +4,6 @@ import { FC, useEffect, useState } from 'react'
 import { ModalProps } from '../../interface/ModalProps'
 import ProductInventoryTable from '../Table/Product/ProductInventoryTable'
 import ITag from '../../interface/Tag'
-import { fetchAllCollection, postProduct, updateProduct, uploadImage } from '../../api/admin/productAPI'
 import ICollection from '../../interface/Collection'
 import { fetchAllDiscounts } from '../../api/admin/DiscountAPI'
 import IDiscount from '../../interface/Discount'
@@ -20,6 +19,7 @@ import { formatNumberWithComma } from '../../helper/utils'
 import IProduct_item from '../../interface/ProductItem'
 import { createImport } from '../../api/admin/importAPI'
 import ErrorAlert from '../Alert/ErrorAlert'
+import { fetchAllCollection, postProduct, updateProduct, uploadImage } from '../../api/admin/ProductAPI'
 
 interface ProductModalProps extends ModalProps {
   action: string,

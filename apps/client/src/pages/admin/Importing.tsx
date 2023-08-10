@@ -1,13 +1,13 @@
 import { Input, Space, Spin } from 'antd';
 import { useState, useEffect, ChangeEvent } from 'react'
 import ImportingModal from '../../components/Modal/ImportingModal';
-import ImportingTable from '../../components/Table/ImportingTable'
-import { fetchAllProducts } from '../../api/admin/productAPI';
+import ImportingTable from '../../components/Table/ImportingTable';
 import ImportingReadModal from '../../components/Modal/ImportingReadModal';
 import IProduct from '../../interface/Product';
 import { searchDatabyPropertyName } from '../../helper/tableSorter';
 import ErrorAlert from '../../components/Alert/ErrorAlert';
 import ImportingQuantityModal from '../../components/Modal/ImportingQuantityModal';
+import { fetchAllProducts } from '../../api/admin/ProductAPI';
 
 const Importing = () => {
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
